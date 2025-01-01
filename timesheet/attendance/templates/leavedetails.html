@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Attendance{% endblock title %}
+
+{% block style %}
+
+{% endblock %}
+
+{% block content %}
+<main id="main" class="main">
+    <div class="card">
+        <div class="card-body mt-4">
+            <!--pagetitle-->
+            <div class="d-flex justify-content-between">
+                <div class="pagetitle">
+                    <h1>Leave Details</h1>
+                    <nav>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+                            <li class="breadcrumb-item active">Leave Details</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+
+            <section class="section leavedetails">
+            <!--Button Section-->
+                <div class="btn-toolbar justify-content-between " role="toolbar" aria-label="Toolbar with button groups">
+                    <div class="btn-group" role="group" aria-label="First group">
+                      <!--User Dropdown-->
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-outline-secondary dropdown-toggle " data-bs-toggle="dropdown" aria-expanded="false">
+                            Users
+                            </button>
+                            <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">User1</a></li>
+                            <li><a class="dropdown-item" href="#">User2</a></li>
+                            <li><a class="dropdown-item" href="#">Admin</a></li>
+                            </ul>
+                        </div>
+
+                        <!--Charts -->
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-outline-secondary dropdown-toggle " data-bs-toggle="dropdown" aria-expanded="false">
+                                Charts
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Barchart</a></li>
+                                <li><a class="dropdown-item" href="#">Flowchart</a></li>
+                            </ul>
+                        </div>
+
+                        <!--Status-->
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-outline-secondary dropdown-toggle " data-bs-toggle="dropdown" aria-expanded="false">
+                                All Status
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Approved</a></li>
+                                <li><a class="dropdown-item" href="#">Declined</a></li>
+                                <li><a class="dropdown-item" href="#">Pending</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!--Requeste Button-->
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                        Requeste Leave
+                    </button>
+                    
+                    <!-- Modal -->
+                    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Requested Details</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                            ...
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-success btn-sm">Save</button>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                    <!--table-->
+                    <table id="leavedetails-table" class="table table-striped display nowrap mt-4" style="width:100%">
+                        <thead>
+                            <tr class="table-primary">
+                                <th>Requested Date</th>
+                                <th>Type</th>
+                                <th>From</th>
+                                <th>To</th>
+                                <th>Approval</th>
+                                {% if not request.user.is_staff%}
+                                    <th>User</th>
+                                {%else%}
+                                    <th>Approved By</th>
+                                {% endif %}
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Feb 8, 2024</td>
+                                <td>Sick Leave</td>
+                                <td>Feb 9, 2024</td>
+                                <td>Feb 9, 2024</td>
+                                <td>Approved</td>
+                                {% if not request.user.is_staff %}
+                                    <td>User</td>
+                                {% else %}
+                                    <td>admin</td>
+                                {% endif %}
+                                <td>
+                                    <i class="fa-regular fa-pen-to-square"></i>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </div>
+    </div>
+</main><!-- End #main -->
+
+<!--all scripts-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous">
+</script>
+
+<!-- for table -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<!--propper js for dropdown-->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+
+{% endblock %}
