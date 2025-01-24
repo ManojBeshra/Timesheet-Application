@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Task{% endblock title %}
+{% block page-title %}Task{% endblock page-title %}
+
+{% block content %}
+
+    <!-- ====================================
+        ——— CONTENT WRAPPER
+        ===================================== -->
+<div class="content-wrapper">
+    <div class="content">                
+        <!-- Issue Table -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card card-default">
+                    <div class="card-header">
+                        {% comment %} <h2>Issue Records</h2> {% endcomment %}
+
+                        <!--Add Issue Buttons-->
+                        <div class="btn-group mr-3 mb-4" role="group" aria-label="Basic example">
+                            <button type="button" class="btn btn-outline-success ">Add Issue</button>
+                        </div>
+
+                        <!--Dropdown Filters-->
+                        <div class="dropdown">
+                            <div class="btn-group mr-3 mb-4" role="group" aria-label="Button group with nested dropdown">
+                                <!--User-->
+                                <div class="btn-group" role="group">
+                                    <button id="userbtnGroupDrop" type="button" class="btn btn-outline-danger dropdown-toggle" data-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="false">
+                                    User
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="userbtnGroupDrop">
+                                    <a class="dropdown-item" href="#">Dropdown link</a>
+                                    <a class="dropdown-item" href="#">Dropdown link</a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock  %}
+  
