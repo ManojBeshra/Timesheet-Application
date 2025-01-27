@@ -4,10 +4,14 @@
 {% block page-title %}Task{% endblock page-title %}
 <!--style-->
 {% block style %}
-{% endblock style %}
+             
+{% endblock %}
+
+
 
 
 {% block content %}
+
 
     <!-- ====================================
     ——— CONTENT WRAPPER
@@ -15,6 +19,7 @@
     <div class="content-wrapper">
         <div class="content">
             <div class="card card-default">
+
 
                 <!--Button Section-->
                 <div class="card-header">
@@ -43,6 +48,7 @@
                                             <input type="text" class="form-control" id="title" aria-describedby="titleHelp" placeholder="Enter Title">
                                         </div>
 
+
                                         <!--customer-->
                                         <div class="form-group col-6">
                                             <label for="exampleFormControlSelect12">customer</label>
@@ -55,11 +61,13 @@
                                             </select>
                                         </div>
 
+
                                         <!--Short Description-->
                                         <div class="form-group col-12">
                                             <label for="exampleFormControlTextarea1">Short Description</label>
                                             <textarea class="form-control" id="exampleFormControlTextarea1" rows="1"></textarea>
                                         </div>
+
 
                                         <!--Task Type-->
                                         <div class="form-group col-6">
@@ -72,11 +80,13 @@
                                             </select>
                                         </div>
 
+
                                         <!--Date Opened-->
                                         <div class="form-group col-6">
                                             <label for="date">Date Opened</label>
                                             <input type="date" class="form-control" id="date" aria-describedby="dateHelp" >
                                         </div>
+
 
                                         <!--Assigned User-->
                                         <div class="form-group col-6">
@@ -90,6 +100,7 @@
                                             </select>
                                         </div>
 
+
                                         <!--Priority-->
                                         <div class="form-group col-6">
                                             <label for="exampleFormControlSelect12">Priority</label>
@@ -99,6 +110,7 @@
                                             <option>Low</option>
                                             </select>
                                         </div>
+
 
                                         <!--Comments-->
                                         <div class="form-group col-12">
@@ -126,146 +138,111 @@
                             <a class="dropdown-item" href="#">user2</a>
                         </div>
                     </div>
-                </div>
 
+                </div>
+                 
                 <!--Issue Section-->
                 <div class="card-body">
                     <div class="row">
-                        <!--New-->
-                         <div class="col-lg-6 col-xl-3 " >
-                            <div class="card  mb-4 p-0 border-primary" style="height: 450px;">
-                                <a  class="btn btn-primary ">New</a>
-                                {% comment %} <div class="card-body"> {% endcomment %}
-                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2">
-                                        <p class="card-text text-dark pb-1 pt-1">Lorem</p>
-                                        <p class="card-text pb-1">Lorem ipsum dolor sit amet, </p>
-                                    </div>
-                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2">
-                                        <p class="card-text text-dark pb-1 pt-1">Lorem</p>
-                                        <p class="card-text pb-1">Lorem ipsum dolor sit amet, </p>
-                                    </div>
-                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2">
-                                        <p class="card-text text-dark pb-1 pt-1">Lorem</p>
-                                        <p class="card-text pb-1">Lorem ipsum dolor sit amet, </p>
-                                    </div>
-                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2">
-                                        <p class="card-text text-dark pb-1 pt-1">Lorem</p>
-                                        <p class="card-text pb-1">Lorem ipsum dolor sit amet, </p>
-                                    </div>
-                                {% comment %} </div> {% endcomment %}
-                            </div>
-                        </div>
-                         <!--In Progress-->
-                         <div class="col-lg-6 col-xl-3">
-                            <div class="card  mb-4 p-0 border-info" style="height: 450px;">
-                                <a  class="btn btn-info ">header</a>
-                                {% comment %} <div class="card-body"> {% endcomment %}
-                                    <!--<div class="card shadow-sm pl-2 mt-3 ml-3 mr-3">
-                                        <div class="card-body">
-                                          <h5 class="card-title">Title</h5>
-                                          <p class="card-text">This card has a larger shadow.</p>
-                                        </div>
-                                    </div>-->
-                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2">
-                                        <p class="card-text text-dark pb-1 pt-1">Lorem</p>
-                                        <p class="card-text pb-1">Lorem ipsum dolor sit amet, </p>
-                                    </div>
-                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2">
-                                        <p class="card-text text-dark pb-1 pt-1">Lorem</p>
-                                        <p class="card-text pb-1">Lorem ipsum dolor sit amet, </p>
-                                    </div>
-                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2">
-                                        <p class="card-text text-dark pb-1 pt-1">Lorem</p>
-                                        <p class="card-text pb-1">Lorem ipsum dolor sit amet, </p>
-                                    </div>
-                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2">
-                                        <p class="card-text text-dark pb-1 pt-1">Lorem</p>
-                                        <p class="card-text pb-1">Lorem ipsum dolor sit amet, </p>
-                                    </div>
-                                {% comment %} </div> {% endcomment %}
-                            </div>
-                        </div>
-                        <!--Hold-->
+                        <!-- New -->
                         <div class="col-lg-6 col-xl-3">
-                            <div class="card  mb-4 p-0 border-secondary" style="height: 450px;">
-                                <a  class="btn btn-secondary ">Hold</a>
-                                {% comment %} <div class="card-body"> {% endcomment %}
-                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2">
-                                        <p class="card-text text-dark pb-1 pt-1">Lorem</p>
-                                        <p class="card-text pb-1">Lorem ipsum dolor sit amet, </p>
+                            <div class="card mb-4 p-0 border-primary">
+                                <a class="btn btn-primary">New</a>
+                                <div class="card-body" ondrop="drop(event)" ondragover="allowDrop(event)">
+                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2" id="new1" draggable="true" ondragstart="drag(event)">
+                                        <p class="card-text text-dark pb-1 pt-1">Power BI Issues</p>
+                                        <p class="card-text pb-1">This issue has been resolved and is under the business review........</p>
+                                        <a href="{% url 'taskdetails' %}" class="btn btn-secondary btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
                                     </div>
-                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2">
-                                        <p class="card-text text-dark pb-1 pt-1">Lorem</p>
-                                        <p class="card-text pb-1">Lorem ipsum dolor sit amet, </p>
-                                    </div>
-                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2">
-                                        <p class="card-text text-dark pb-1 pt-1">Lorem</p>
-                                        <p class="card-text pb-1">Lorem ipsum dolor sit amet, </p>
-                                    </div>
-                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2">
-                                        <p class="card-text text-dark pb-1 pt-1">Lorem</p>
-                                        <p class="card-text pb-1">Lorem ipsum dolor sit amet, </p>
-                                    </div>
-                                {% comment %} </div> {% endcomment %}
+                                </div>
                             </div>
                         </div>
-                        <!--Completed-->
+                
+                        <!-- In Progress -->
                         <div class="col-lg-6 col-xl-3">
-                            <div class="card  mb-4 p-0 border-success" style="height: 450px;">
-                                <a  class="btn btn-success ">Completed</a>
-                                {% comment %} <div class="card-body"> {% endcomment %}
-                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2">
-                                        <p class="card-text text-dark pb-1 pt-1">Lorem</p>
-                                        <p class="card-text pb-1">Lorem ipsum dolor sit amet, </p>
+                            <div class="card mb-4 p-0 border-info">
+                                <a class="btn btn-info">In Progress</a>
+                                <div class="card-body" ondrop="drop(event)" ondragover="allowDrop(event)">
+                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2" id="new1" draggable="true" ondragstart="drag(event)">
+                                        <p class="card-text text-dark pb-1 pt-1">Power BI Issues</p>
+                                        <p class="card-text pb-1">This issue has been resolved and is under the business review........</p>
+                                        <a href="{% url 'taskdetails' %}" class="btn btn-secondary btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
                                     </div>
-                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2">
-                                        <p class="card-text text-dark pb-1 pt-1">Lorem</p>
-                                        <p class="card-text pb-1">Lorem ipsum dolor sit amet, </p>
-                                    </div>
-                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2">
-                                        <p class="card-text text-dark pb-1 pt-1">Lorem</p>
-                                        <p class="card-text pb-1">Lorem ipsum dolor sit amet, </p>
-                                    </div>
-                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2">
-                                        <p class="card-text text-dark pb-1 pt-1">Lorem</p>
-                                        <p class="card-text pb-1">Lorem ipsum dolor sit amet, </p>
-                                    </div>
-                                {% comment %} </div> {% endcomment %}
+                                </div>
                             </div>
                         </div>
-                        <!--Canceled-->
-                        <div class="col-lg-6 col-xl-3 " >
-                            <div class="card  mb-4 p-0 border-danger" style="height: 450px;">
-                                <a  class="btn btn-danger ">Canceled</a>
-                                {% comment %} <div class="card-header bg-danger text-white d-flex justify-content-center align-item-center" style="height: 30px;">
-                                    CANCELED
-                                </div> {% endcomment %}
-                                {% comment %} <div class="card-body"> {% endcomment %}
-                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2">
-                                        <p class="card-text text-dark pb-1 pt-1">Lorem</p>
-                                        <p class="card-text pb-1">Lorem ipsum dolor sit amet, </p>
+                
+                        <!-- Hold -->
+                        <div class="col-lg-6 col-xl-3">
+                            <div class="card mb-4 p-0 border-secondary">
+                                <a class="btn btn-secondary">Hold</a>
+                                <div class="card-body" ondrop="drop(event)" ondragover="allowDrop(event)">
+                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2" id="hold1" draggable="true" ondragstart="drag(event)">
+                                        <p class="card-text text-dark pb-1 pt-1">Issues....</p>
+                                        <p class="card-text pb-1">Tasks........</p>
+                                        <a href="{% url 'taskdetails' %}" class="btn btn-secondary btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
                                     </div>
-                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2">
-                                        <p class="card-text text-dark pb-1 pt-1">Lorem</p>
-                                        <p class="card-text pb-1">Lorem ipsum dolor sit amet, </p>
-                                    </div>
-                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2">
-                                        <p class="card-text text-dark pb-1 pt-1">Lorem</p>
-                                        <p class="card-text pb-1">Lorem ipsum dolor sit amet, </p>
-                                    </div>
-                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2">
-                                        <p class="card-text text-dark pb-1 pt-1">Lorem</p>
-                                        <p class="card-text pb-1">Lorem ipsum dolor sit amet, </p>
-                                    </div>
-                                {% comment %} </div> {% endcomment %}
+                                </div>
                             </div>
                         </div>
-                                             
+                
+                        <!-- Completed -->
+                        <div class="col-lg-6 col-xl-3">
+                            <div class="card mb-4 p-0 border-success">
+                                <a class="btn btn-success">Completed</a>
+                                <div class="card-body" ondrop="drop(event)" ondragover="allowDrop(event)">
+                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2" id="completed1" draggable="true" ondragstart="drag(event)">
+                                        <p class="card-text text-dark pb-1 pt-1">Issues....</p>
+                                        <p class="card-text pb-1">Tasks........</p>
+                                        <a href="{% url 'taskdetails' %}" class="btn btn-secondary btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                
+                        <!-- Canceled -->
+                        <div class="col-lg-6 col-xl-3">
+                            <div class="card mb-4 p-0 border-danger">
+                                <a class="btn btn-danger">Canceled</a>
+                                <div class="card-body" ondrop="drop(event)" ondragover="allowDrop(event)">
+                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2" id="canceled1" draggable="true" ondragstart="drag(event)">
+                                        <p class="card-text text-dark pb-1 pt-1">Issues....</p>
+                                        <p class="card-text pb-1">Tasks........</p>
+                                        <a href="{% url 'taskdetails' %}" class="btn btn-secondary btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+   
 
+
+    <script>
+        function allowDrop(ev) {
+          ev.preventDefault();
+        }
+       
+        function drag(ev) {
+          ev.dataTransfer.setData("text", ev.target.id);
+        }
+       
+        function drop(ev) {
+          ev.preventDefault();
+          const data = ev.dataTransfer.getData("text");
+          const draggedElement = document.getElementById(data);
+          const target = ev.target.closest('.card-body');
+          if (target && draggedElement) {
+            target.appendChild(draggedElement);
+          }
+        }
+    </script>
+   
 {% endblock  %}
-  
+ 
+
+
+
