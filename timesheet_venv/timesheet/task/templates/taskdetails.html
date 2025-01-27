@@ -7,7 +7,12 @@
 {% endblock style %}
 
 
+
+
 {% block content %}
+
+
+
 
 
 
@@ -19,6 +24,7 @@
             <div class="card card-default">
                 <div class="card-header">
 
+
                     <!--Task Details-->
                     <form class="form-group col-12">
                         <div class="form-group col-12">
@@ -27,6 +33,7 @@
                                 <label for="ticketname">Ticket Name</label>
                                 <input type="text" class="form-control" id="ticketname" aria-describedby="ticketnameeHelp" placeholder="Enter Name">
                             </div>
+
 
                             <!--customer-->
                             <div class="form-group col-6">
@@ -41,6 +48,7 @@
                             </div>
                         </div>
 
+
                         <div class="form-group col-12 d-flex">
                             <!--Ticket Type-->
                             <div class="form-group col-4">
@@ -53,11 +61,13 @@
                                 </select>
                             </div>
 
+
                             <!--Date Opened-->
                             <div class="form-group col-4">
                                 <label for="date">Date Opened</label>
-                                <input type="date" class="form-control" id="date" aria-describedby="dateHelp" >
+                                <input type="date" class="form-control" id="date" aria-describedby="dateHelp"  readonly>
                             </div>
+
 
                             <!--Priority-->
                             <div class="form-group col-4">
@@ -69,6 +79,8 @@
                                 </select>
                             </div>
                         </div>
+
+
 
 
                         <div class="form-group col-12 d-flex">
@@ -84,11 +96,13 @@
                                 </select>
                             </div>
 
+
                             <!--Last Updated-->
                             <div class="form-group col-4">
                                 <label for="date">Last Updated</label>
                                 <input type="date" class="form-control" id="lastupdate" aria-describedby="lastupdateHelp" >
                             </div>
+
 
                             <!--State-->
                             <div class="form-group col-4">
@@ -103,11 +117,13 @@
                             </div>
                         </div>
 
+
                         <!--Short Description-->
                         <div class="form-group col-12">
                             <label for="exampleFormControlTextarea1">Short Description</label>
                             <textarea class="form-control" id="exampleFormControlTextarea1" rows="5"></textarea>
                         </div>
+
 
                         <!--Comments-->
                         <div class="form-group col-12">
@@ -115,12 +131,14 @@
                             <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
                         </div>
 
+
                         <!--footer-->
                         <div class="modal-footer ">
-                            <button type="button" class="btn btn-danger  btn-sm" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-danger  btn-sm" data-dismiss="modal"><a href="{% url 'task' %} " style="text-decoration:none; color:white">Close</a></button>
                             <button type="submit" class="btn btn-success btn-sm">Save Changes</button>
                         </div>
                     </form>
+
 
                     <!--User Comments-->
                     <form class="form-group col-12">
@@ -130,17 +148,21 @@
                             <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
                         </div>
 
+
                         <!--footer-->
                         <div class="modal-footer ">
                             <button type="submit" class="btn btn-success btn-sm">Add Comments</button>
                         </div>
                     </form>
 
+
                 </div>
             </div>
         </div>
     </div>
-  
-        
+ 
+       
+
 
 {% endblock  %}
+

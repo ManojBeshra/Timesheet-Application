@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 {% load static %}
 {% block title %}Task{% endblock title %}
@@ -10,7 +11,13 @@
 
 
 
+
+
+
+
 {% block content %}
+
+
 
 
     <!-- ====================================
@@ -21,13 +28,17 @@
             <div class="card card-default">
 
 
+
+
                 <!--Button Section-->
                 <div class="card-header">
+
 
                      <!--Add Issue Buttons-->
                     <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#exampleModalForm">
                         Add Issue
                     </button>
+
 
                      <!-- Form Modal -->
                     <div class="modal fade" id="exampleModalForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalFormTitle"
@@ -49,6 +60,8 @@
                                         </div>
 
 
+
+
                                         <!--customer-->
                                         <div class="form-group col-6">
                                             <label for="exampleFormControlSelect12">customer</label>
@@ -62,11 +75,15 @@
                                         </div>
 
 
+
+
                                         <!--Short Description-->
                                         <div class="form-group col-12">
                                             <label for="exampleFormControlTextarea1">Short Description</label>
                                             <textarea class="form-control" id="exampleFormControlTextarea1" rows="1"></textarea>
                                         </div>
+
+
 
 
                                         <!--Task Type-->
@@ -81,11 +98,27 @@
                                         </div>
 
 
+
+
                                         <!--Date Opened-->
+                                   
                                         <div class="form-group col-6">
                                             <label for="date">Date Opened</label>
-                                            <input type="date" class="form-control" id="date" aria-describedby="dateHelp" >
+                                            <input type="date" class="form-control" id="date" aria-describedby="dateHelp" min="" max="">
                                         </div>
+               
+                                        <script>
+                                            // Get the current date
+                                            const currentDate = new Date().toISOString().split('T')[0];
+                                           
+                                            // Set the min and max values to the current date
+                                            const dateInput = document.getElementById('date');
+                                            dateInput.value = currentDate;
+                                            dateInput.setAttribute('min', currentDate);  // Disable past dates
+                                            dateInput.setAttribute('max', currentDate);  // Disable future dates
+                                        </script>
+
+
 
 
                                         <!--Assigned User-->
@@ -101,6 +134,8 @@
                                         </div>
 
 
+
+
                                         <!--Priority-->
                                         <div class="form-group col-6">
                                             <label for="exampleFormControlSelect12">Priority</label>
@@ -112,6 +147,8 @@
                                         </div>
 
 
+
+
                                         <!--Comments-->
                                         <div class="form-group col-12">
                                             <label for="exampleFormControlTextarea1">Comments</label>
@@ -121,12 +158,13 @@
                                 </div>
                                 <!--footer-->
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-danger btn-pill" data-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-success btn-pill">Add</button>
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-success ">Add</button>
                                 </div>
                             </div>
                         </div>
                     </div>
+
 
                     <!--Dropdown Filters-->
                     <div class="btn-group " role="group" aria-label="Basic example">
@@ -139,6 +177,7 @@
                         </div>
                     </div>
 
+
                 </div>
                  
                 <!--Issue Section-->
@@ -148,7 +187,7 @@
                         <div class="col-lg-6 col-xl-3">
                             <div class="card mb-4 p-0 border-primary">
                                 <a class="btn btn-primary">New</a>
-                                <div class="card-body" ondrop="drop(event)" ondragover="allowDrop(event)">
+                                <div class="card-body p-4" ondrop="drop(event)" ondragover="allowDrop(event)">
                                     <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2" id="new1" draggable="true" ondragstart="drag(event)">
                                         <p class="card-text text-dark pb-1 pt-1">Power BI Issues</p>
                                         <p class="card-text pb-1">This issue has been resolved and is under the business review........</p>
@@ -157,13 +196,13 @@
                                 </div>
                             </div>
                         </div>
-                
+               
                         <!-- In Progress -->
                         <div class="col-lg-6 col-xl-3">
                             <div class="card mb-4 p-0 border-info">
                                 <a class="btn btn-info">In Progress</a>
-                                <div class="card-body" ondrop="drop(event)" ondragover="allowDrop(event)">
-                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2" id="new1" draggable="true" ondragstart="drag(event)">
+                                <div class="card-body p-4" ondrop="drop(event)" ondragover="allowDrop(event)">
+                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2" id="progress1" draggable="true" ondragstart="drag(event)">
                                         <p class="card-text text-dark pb-1 pt-1">Power BI Issues</p>
                                         <p class="card-text pb-1">This issue has been resolved and is under the business review........</p>
                                         <a href="{% url 'taskdetails' %}" class="btn btn-secondary btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
@@ -171,12 +210,12 @@
                                 </div>
                             </div>
                         </div>
-                
+               
                         <!-- Hold -->
                         <div class="col-lg-6 col-xl-3">
                             <div class="card mb-4 p-0 border-secondary">
                                 <a class="btn btn-secondary">Hold</a>
-                                <div class="card-body" ondrop="drop(event)" ondragover="allowDrop(event)">
+                                <div class="card-body p-4" ondrop="drop(event)" ondragover="allowDrop(event)">
                                     <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2" id="hold1" draggable="true" ondragstart="drag(event)">
                                         <p class="card-text text-dark pb-1 pt-1">Issues....</p>
                                         <p class="card-text pb-1">Tasks........</p>
@@ -185,12 +224,12 @@
                                 </div>
                             </div>
                         </div>
-                
+               
                         <!-- Completed -->
                         <div class="col-lg-6 col-xl-3">
                             <div class="card mb-4 p-0 border-success">
                                 <a class="btn btn-success">Completed</a>
-                                <div class="card-body" ondrop="drop(event)" ondragover="allowDrop(event)">
+                                <div class="card-body p-4" ondrop="drop(event)" ondragover="allowDrop(event)">
                                     <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2" id="completed1" draggable="true" ondragstart="drag(event)">
                                         <p class="card-text text-dark pb-1 pt-1">Issues....</p>
                                         <p class="card-text pb-1">Tasks........</p>
@@ -199,12 +238,12 @@
                                 </div>
                             </div>
                         </div>
-                
+               
                         <!-- Canceled -->
                         <div class="col-lg-6 col-xl-3">
                             <div class="card mb-4 p-0 border-danger">
                                 <a class="btn btn-danger">Canceled</a>
-                                <div class="card-body" ondrop="drop(event)" ondragover="allowDrop(event)">
+                                <div class="card-body p-4" ondrop="drop(event)" ondragover="allowDrop(event)">
                                     <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2" id="canceled1" draggable="true" ondragstart="drag(event)">
                                         <p class="card-text text-dark pb-1 pt-1">Issues....</p>
                                         <p class="card-text pb-1">Tasks........</p>
@@ -219,6 +258,8 @@
         </div>
     </div>
    
+
+
 
 
     <script>
@@ -243,6 +284,15 @@
    
 {% endblock  %}
  
+
+
+
+
+
+
+
+
+
 
 
 
