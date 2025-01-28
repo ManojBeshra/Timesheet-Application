@@ -5,20 +5,14 @@
 {% block page-title %}Task{% endblock page-title %}
 <!--style-->
 {% block style %}
-             
+    #titlebg{
+            width: auto; /* Ensures the button width adjusts based on content */
+            display: inline-block; /* Ensures it behaves like an inline element with block-level properties */
+            max-width: 100%; /* Allows the button to grow to fit its container */        
+    }
 {% endblock %}
 
-
-
-
-
-
-
-
 {% block content %}
-
-
-
 
     <!-- ====================================
     ——— CONTENT WRAPPER
@@ -27,18 +21,13 @@
         <div class="content">
             <div class="card card-default">
 
-
-
-
                 <!--Button Section-->
                 <div class="card-header">
-
 
                      <!--Add Issue Buttons-->
                     <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#exampleModalForm">
                         Add Issue
                     </button>
-
 
                      <!-- Form Modal -->
                     <div class="modal fade" id="exampleModalForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalFormTitle"
@@ -46,7 +35,7 @@
                         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalFormTitle">Add Ticket</h5>
+                                    <h5 class="modal-title" id="tickettitle">Add Ticket</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">×</span>
                                     </button>
@@ -59,13 +48,10 @@
                                             <input type="text" class="form-control" id="title" aria-describedby="titleHelp" placeholder="Enter Title">
                                         </div>
 
-
-
-
                                         <!--customer-->
                                         <div class="form-group col-6">
                                             <label for="exampleFormControlSelect12">customer</label>
-                                            <select class="form-control" id="exampleFormControlSelect12" >
+                                            <select class="form-control" id="customerlist" >
                                             <option>liberty1</option>
                                             <option>liberty2</option>
                                             <option>liberty3</option>
@@ -74,22 +60,16 @@
                                             </select>
                                         </div>
 
-
-
-
                                         <!--Short Description-->
                                         <div class="form-group col-12">
                                             <label for="exampleFormControlTextarea1">Short Description</label>
-                                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="1"></textarea>
+                                            <textarea class="form-control" id="shortdescriptionarea" rows="1"></textarea>
                                         </div>
-
-
-
 
                                         <!--Task Type-->
                                         <div class="form-group col-6">
                                             <label for="exampleFormControlSelect12">Task Type</label>
-                                            <select class="form-control" id="exampleFormControlSelect12">
+                                            <select class="form-control" id="tasktypelist">
                                             <option>Incident</option>
                                             <option>Operational Change</option>
                                             <option>Standard Enhancement</option>
@@ -97,34 +77,16 @@
                                             </select>
                                         </div>
 
-
-
-
                                         <!--Date Opened-->
-                                   
                                         <div class="form-group col-6">
                                             <label for="date">Date Opened</label>
                                             <input type="date" class="form-control" id="date" aria-describedby="dateHelp" min="" max="">
                                         </div>
                
-                                        <script>
-                                            // Get the current date
-                                            const currentDate = new Date().toISOString().split('T')[0];
-                                           
-                                            // Set the min and max values to the current date
-                                            const dateInput = document.getElementById('date');
-                                            dateInput.value = currentDate;
-                                            dateInput.setAttribute('min', currentDate);  // Disable past dates
-                                            dateInput.setAttribute('max', currentDate);  // Disable future dates
-                                        </script>
-
-
-
-
                                         <!--Assigned User-->
                                         <div class="form-group col-6">
                                             <label for="exampleFormControlSelect12">Assigned User</label>
-                                            <select class="form-control" id="exampleFormControlSelect12">
+                                            <select class="form-control" id="assigneduserlist">
                                             <option>user1</option>
                                             <option>user2</option>
                                             <option>user3</option>
@@ -133,26 +95,20 @@
                                             </select>
                                         </div>
 
-
-
-
                                         <!--Priority-->
                                         <div class="form-group col-6">
                                             <label for="exampleFormControlSelect12">Priority</label>
-                                            <select class="form-control" id="exampleFormControlSelect12">
+                                            <select class="form-control" id="prioritylist">
                                             <option>High</option>
                                             <option>Medium</option>
                                             <option>Low</option>
                                             </select>
                                         </div>
 
-
-
-
                                         <!--Comments-->
                                         <div class="form-group col-12">
                                             <label for="exampleFormControlTextarea1">Comments</label>
-                                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="2"></textarea>
+                                            <textarea class="form-control" id="commentsarea" rows="2"></textarea>
                                         </div>
                                     </form>
                                 </div>
@@ -165,7 +121,6 @@
                         </div>
                     </div>
 
-
                     <!--Dropdown Filters-->
                     <div class="btn-group " role="group" aria-label="Basic example">
                         <button type="button" class="btn btn-outline-danger dropdown-toggle" id="userbtnGroupDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -177,7 +132,6 @@
                         </div>
                     </div>
 
-
                 </div>
                  
                 <!--Issue Section-->
@@ -186,12 +140,18 @@
                         <!-- New -->
                         <div class="col-lg-6 col-xl-3">
                             <div class="card mb-4 p-0 border-primary">
-                                <a class="btn btn-primary">New</a>
-                                <div class="card-body p-4" ondrop="drop(event)" ondragover="allowDrop(event)">
+                                <a class="btn btn-primary" id="new">New</a>
+                                <div class="card-body p-4" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 350px; overflow-y: auto;">
                                     <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2" id="new1" draggable="true" ondragstart="drag(event)">
-                                        <p class="card-text text-dark pb-1 pt-1">Power BI Issues</p>
-                                        <p class="card-text pb-1">This issue has been resolved and is under the business review........</p>
-                                        <a href="{% url 'taskdetails' %}" class="btn btn-secondary btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
+                                        <p class="card-text pb-1 pt-1 pr-2">
+                                            <a class="btn" id="titlebg" style="color: white; padding: 2px 5px; font-size: 0.75rem; max-width: 100%;">Power Bi Support</a>
+                                        </p>
+                                        <p class="card-text pb-1">
+                                            This issue has been resolved and is under the business review...
+                                        </p>
+                                        <a  href="{% url 'taskdetails' %}" class="btn btn-info btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
+                                        <!--fetch the priority value here-->
+                                        <div id="priorityvalue" style="visibility: hidden;">High</div> 
                                     </div>
                                 </div>
                             </div>
@@ -201,11 +161,11 @@
                         <div class="col-lg-6 col-xl-3">
                             <div class="card mb-4 p-0 border-info">
                                 <a class="btn btn-info">In Progress</a>
-                                <div class="card-body p-4" ondrop="drop(event)" ondragover="allowDrop(event)">
+                                <div class="card-body p-4" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 350px; overflow-y: auto;">
                                     <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2" id="progress1" draggable="true" ondragstart="drag(event)">
                                         <p class="card-text text-dark pb-1 pt-1">Power BI Issues</p>
                                         <p class="card-text pb-1">This issue has been resolved and is under the business review........</p>
-                                        <a href="{% url 'taskdetails' %}" class="btn btn-secondary btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
+                                        <a href="{% url 'taskdetails' %}" class="btn btn-info btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
                                     </div>
                                 </div>
                             </div>
@@ -213,13 +173,13 @@
                
                         <!-- Hold -->
                         <div class="col-lg-6 col-xl-3">
-                            <div class="card mb-4 p-0 border-secondary">
-                                <a class="btn btn-secondary">Hold</a>
-                                <div class="card-body p-4" ondrop="drop(event)" ondragover="allowDrop(event)">
+                            <div class="card mb-4 p-0 border-warning">
+                                <a class="btn btn-warning text-white">Hold</a>
+                                <div class="card-body p-4" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 350px; overflow-y: auto;">
                                     <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2" id="hold1" draggable="true" ondragstart="drag(event)">
                                         <p class="card-text text-dark pb-1 pt-1">Issues....</p>
                                         <p class="card-text pb-1">Tasks........</p>
-                                        <a href="{% url 'taskdetails' %}" class="btn btn-secondary btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
+                                        <a href="{% url 'taskdetails' %}" class="btn btn-info btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
                                     </div>
                                 </div>
                             </div>
@@ -229,11 +189,11 @@
                         <div class="col-lg-6 col-xl-3">
                             <div class="card mb-4 p-0 border-success">
                                 <a class="btn btn-success">Completed</a>
-                                <div class="card-body p-4" ondrop="drop(event)" ondragover="allowDrop(event)">
+                                <div class="card-body p-4" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 350px; overflow-y: auto;">
                                     <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2" id="completed1" draggable="true" ondragstart="drag(event)">
                                         <p class="card-text text-dark pb-1 pt-1">Issues....</p>
                                         <p class="card-text pb-1">Tasks........</p>
-                                        <a href="{% url 'taskdetails' %}" class="btn btn-secondary btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
+                                        <a href="{% url 'taskdetails' %}" class="btn btn-info btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
                                     </div>
                                 </div>
                             </div>
@@ -243,11 +203,11 @@
                         <div class="col-lg-6 col-xl-3">
                             <div class="card mb-4 p-0 border-danger">
                                 <a class="btn btn-danger">Canceled</a>
-                                <div class="card-body p-4" ondrop="drop(event)" ondragover="allowDrop(event)">
+                                <div class="card-body p-4" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 350px; overflow-y: auto;">
                                     <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2" id="canceled1" draggable="true" ondragstart="drag(event)">
                                         <p class="card-text text-dark pb-1 pt-1">Issues....</p>
                                         <p class="card-text pb-1">Tasks........</p>
-                                        <a href="{% url 'taskdetails' %}" class="btn btn-secondary btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
+                                        <a href="{% url 'taskdetails' %}" class="btn btn-info btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
                                     </div>
                                 </div>
                             </div>
@@ -258,10 +218,7 @@
         </div>
     </div>
    
-
-
-
-
+    <!--for drag/drop card-->
     <script>
         function allowDrop(ev) {
           ev.preventDefault();
@@ -281,7 +238,38 @@
           }
         }
     </script>
-   
+
+    <!--for Date Opened of Modal-->
+    <script>
+        // Get the current date
+        const currentDate = new Date().toISOString().split('T')[0];
+        // Set the min and max values to the current date
+        const dateInput = document.getElementById('date');
+        dateInput.value = currentDate;
+        dateInput.setAttribute('min', currentDate);  // Disable past dates
+        dateInput.setAttribute('max', currentDate);  // Disable future dates
+    </script>
+
+    <!--To Change the bg color of title based on Priority-->
+    <script>
+        // Function to dynamically change the background color
+        function updatePriorityColor() {
+            const priorityValue = document.getElementById('priorityvalue').textContent.trim();
+            const titlebg = document.getElementById('titlebg');
+            
+            if (priorityValue === 'High') {
+                titlebg.style.backgroundColor = 'red';
+            } else if (priorityValue === 'Medium') {
+                titlebg.style.backgroundColor = '#FFBF00';
+            } else if (priorityValue === 'Low') {
+                titlebg.style.backgroundColor = 'green';
+            }
+        }
+    
+        // Call the function to update the background color
+        updatePriorityColor();
+    </script>
+
 {% endblock  %}
  
 

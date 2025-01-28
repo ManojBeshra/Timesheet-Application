@@ -7,3 +7,4 @@ def task(request):
 
 def taskdetails(request):
     return render(request, 'taskdetails.html')
+
