@@ -39,18 +39,5 @@ def add_task(request):
         )
         tickets.save()
 
-        # ticket.objects.create(
-             
-        #     ticket_name=ticket_name,
-        #     customer=customer,
-        #     short_description=short_description,
-        #     task_type=task_type,
-        #     assigned_user=assigned_user,
-        #     priority=priority,
-        #     comments=comments,
-        # )
-
-        # queryset = ticket.objects.all()
-
-
+       
     return render(request, 'task.html')
