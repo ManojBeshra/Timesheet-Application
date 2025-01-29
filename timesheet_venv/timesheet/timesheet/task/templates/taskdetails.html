@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Task{% endblock title %}
+{% block page-title %}Task Details{% endblock page-title %}
+<!--style-->
+{% block style %}
+{% endblock style %}
+
+{% block content %}
+
+
+    <!-- ====================================
+    ——— CONTENT WRAPPER
+    ===================================== -->
+    <div class="content-wrapper">
+        <div class="content">
+            <div class="card card-default">
+                <div class="card-header">
+
+                    <!--Task Details-->
+                    <form class="form-group col-12">
+                        <div class="form-group col-12">
+                            <!--Ticket Name-->
+                            <div class="form-group col-6">
+                                <label for="ticketname">Ticket Name</label>
+                                <input type="text" class="form-control" id="ticketname" aria-describedby="ticketnameeHelp" placeholder="Enter Name">
+                            </div>
+
+                            <!--customer-->
+                            <div class="form-group col-6">
+                                <label for="exampleFormControlSelect12">Customer</label>
+                                <select class="form-control" id="exampleFormControlSelect12" >
+                                <option>liberty1</option>
+                                <option>liberty2</option>
+                                <option>liberty3</option>
+                                <option>liberty4</option>
+                                <option>liberty5</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-12 d-flex">
+                            <!--Ticket Type-->
+                            <div class="form-group col-4">
+                                <label for="exampleFormControlSelect12">Ticket Type</label>
+                                <select class="form-control" id="exampleFormControlSelect12">
+                                <option>Incident</option>
+                                <option>Operational Change</option>
+                                <option>Standard Enhancement</option>
+                                <option>Normal Enhancement</option>
+                                </select>
+                            </div>
+
+                            <!--Date Opened-->
+                            <div class="form-group col-4">
+                                <label for="date">Date Opened</label>
+                                <input type="date" class="form-control" id="date" aria-describedby="dateHelp"  readonly>
+                            </div>
+
+                            <!--Priority-->
+                            <div class="form-group col-4">
+                                <label for="exampleFormControlSelect12">Priority</label>
+                                <select class="form-control" id="exampleFormControlSelect12">
+                                <option>High</option>
+                                <option>Medium</option>
+                                <option>Low</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-12 d-flex">
+                            <!--Assigned To-->
+                            <div class="form-group col-4">
+                                <label for="exampleFormControlSelect12">Assigned To</label>
+                                <select class="form-control" id="exampleFormControlSelect12">
+                                <option>user1</option>
+                                <option>user2</option>
+                                <option>user3</option>
+                                <option>user4</option>
+                                <option>user5</option>
+                                </select>
+                            </div>
+
+                            <!--Last Updated-->
+                            <div class="form-group col-4">
+                                <label for="date">Last Updated</label>
+                                <input type="date" class="form-control" id="lastupdate" aria-describedby="lastupdateHelp" >
+                            </div>
+
+                            <!--State-->
+                            <div class="form-group col-4">
+                                <label for="exampleFormControlSelect12">State</label>
+                                <select class="form-control" id="exampleFormControlSelect12">
+                                    <option>New</option>
+                                    <option>In Progress</option>
+                                    <option>Completed</option>
+                                    <option>Hold</option>
+                                    <option>Cancel</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!--Short Description-->
+                        <div class="form-group col-12">
+                            <label for="exampleFormControlTextarea1">Short Description</label>
+                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="5"></textarea>
+                        </div>
+
+                        <!--Comments-->
+                        <div class="form-group col-12">
+                            <label for="exampleFormControlTextarea1">Comments</label>
+                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                        </div>
+
+                        <!--footer-->
+                        <div class="modal-footer ">
+                            <button type="button" class="btn btn-danger  btn-sm" data-dismiss="modal"><a href="{% url 'task' %} " style="text-decoration:none; color:white">Close</a></button>
+                            <button type="submit" class="btn btn-success btn-sm">Save Changes</button>
+                        </div>
+                    </form>
+
+                    <!--User Comments-->
+                    <form class="form-group col-12">
+                        <!--User Comments-->
+                        <div class="form-group col-12">
+                            <label for="exampleFormControlTextarea1">Add Comments</label>
+                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                        </div>
+
+                        <!--footer-->
+                        <div class="modal-footer ">
+                            <button type="submit" class="btn btn-success btn-sm">Add Comments</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock  %}
+
