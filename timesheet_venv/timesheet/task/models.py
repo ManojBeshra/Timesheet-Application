@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from customer.models import customer
 
 # Create your models here.
 
@@ -9,8 +10,7 @@ class priority_type(models.Model):
         return f"{self.priority_name}"
 
 
-class task_type(models.Model):
-  tasktype_id = models.IntegerField(primary_key= True)
+class ticket_type(models.Model):
   name = models.CharField(max_length=100, null = True)
 
   def __str__(self):
@@ -20,13 +20,13 @@ class task_type(models.Model):
 
 class ticket(models.Model):
     ticket_name = models.CharField(max_length=200, null=False)
-    customer = models.ForeignKey('customer.customer_contact', on_delete=models.CASCADE, null=True)
-    ticket_type = models.CharField(max_length=200, null=True)
+    customer = models.ForeignKey(customer, on_delete=models.CASCADE, null=True)
+    ticket_type = models.ForeignKey(ticket_type, on_delete=models.CASCADE, null=True)
     date_opened = models.DateField(null=True)
     priority = models.ForeignKey(priority_type, on_delete=models.CASCADE, null = True)
     assigned_to = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     last_updated = models.DateTimeField(null=True)
-    state = models.CharField(max_length=50, null=True)
+    # state = models.CharField(max_length=50, null=True)
     short_description = models.CharField(max_length=200, null=True)
     comments = models.CharField(max_length=200, null=True)
     user_comments = models.CharField(max_length=200, null=True)

@@ -21,7 +21,19 @@ def add_task(request):
         comments = request.POST.get('comments')
 
         # Create and save the new task
-        ticket = ticket(
+        # ticket = ticket(
+        #     ticket_name=ticket_name,
+        #     customer=customer,
+        #     short_description=short_description,
+        #     task_type=task_type,
+        #     assigned_user=assigned_user,
+        #     priority=priority,
+        #     comments=comments,
+        # )
+        # ticket.save()
+
+        ticket.objects.create(
+             
             ticket_name=ticket_name,
             customer=customer,
             short_description=short_description,
@@ -30,6 +42,8 @@ def add_task(request):
             priority=priority,
             comments=comments,
         )
-        ticket.save()
-        return redirect('taskdetails', task_id=task.id)
+
+        queryset = ticket.objects.all()
+
+
     return render(request, 'task.html')
