@@ -1,0 +1,211 @@
+
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Task{% endblock title %}
+{% block page-title %}Task Details{% endblock page-title %}
+<!--style-->
+{% block style %}
+{% endblock style %}
+
+<script src="{% static 'plugins/daterangepicker/moment.min.js' %}"></script>
+<script src="{% static 'plugins/daterangepicker/daterangepicker.js' %}"></script>
+
+
+
+{% block content %}
+
+
+
+
+
+
+<!-- ====================================
+    ——— CONTENT WRAPPER
+    ===================================== -->
+    <div class="content-wrapper">
+        <div class="content">
+            <div class="card card-default">
+                <div class="card-header">
+
+
+                    <!--Task Details-->
+                    <form class="form-group col-12" method="POST">
+                        {% csrf_token %}
+                        
+                        <div class="form-group col-12">
+                            <!--Ticket Name-->
+                            <div class="form-group col-6">
+                                <label for="ticketname">Ticket Name</label>
+                                <input type="text" class="form-control" id="ticketname" name = "ticket_name" aria-describedby="ticketnameeHelp" placeholder="Enter Name" value="{{ ticket.ticket_name }}">
+                            </div>
+
+
+                            <!--customer-->
+
+                        <div class="form-group col-12">
+                            <label for="customer">Customer</label>
+
+                            <select class="form-control" id="customer" name="customer">
+                                {% for i in customers %}
+                                <option value="{{ i.id }}" {% if i.id == ticket.customer_id %}selected{% endif %}>
+                                    {{ i.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+
+
+                        
+                            <!--Ticket Type-->
+                            <!-- <div class="form-group col-4">
+                                <label for="ticket_type">Ticket Type</label>
+
+                            <select class="form-control" id="ticket_type" name="ticket_type">
+                                {% for i in task_types %}
+                                <option value="{{ i.id }}" {% if i.id == ticket.ticket_type_tasktype_id %}selected{% endif %}>
+                                    {{ i.name }}
+                                </option>
+                                
+                                {% endfor %}
+                            </select>
+                            
+                            </div> -->
+
+
+                            <!--Date Opened-->
+                            <div class="form-group col-4">
+                                <label for="date_opened">Date Opened</label>
+                                <input
+                                    type="date"
+                                    class="form-control"
+                                    id="date_opened"
+                                    name="date_opened"
+                                    value="{{ ticket.date_opened|date:'Y-m-d' }}"
+                                />
+                            </div>
+
+
+                            <!--Priority-->
+                            <div class="form-group col-4">
+                                <label for="priority">Priority</label>
+
+                                <select class="form-control" id="priority_type" name="priority">
+                                    {% for i in priority_types %}
+                                    <option value="{{ i.id }}" {% if i.id == ticket.priority_id %}selected{% endif %}>
+                                        {{ i.priority_name }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+
+                            </div>
+
+
+
+                            <!--Assigned To-->
+                            <div class="form-group col-4">
+                                <label for="assigned_to">Assigned To</label>
+                                <select class="form-control" id="assigned_to" name="assigned_to">
+                                    {% for i in users %}
+                                    <option value="{{ i.id }}" {% if i.id == ticket.assigned_to_id %}selected{% endif %}>
+                                        {{ i.username }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <!--Last Updated-->
+                            <div class="form-group col-4">
+                                <label for="last_updated">Last Updated</label>
+                                <input
+                                    type="date"
+                                    class="form-control"
+                                    id="last_updated"
+                                    name="last_updated"
+                                    value="{{ ticket.last_updated|date:'Y-m-d' }}"
+                                />
+                            </div>
+
+
+                            <!-- State
+                            <div class="form-group col-4">
+                                <label for="state">State</label>
+
+                                <select class="form-control" id="state" name="state">
+                                    {% for i in states %}
+                                    <option value="{{ i.id }}" {% if i.id == ticket.state_id %}selected{% endif %}>
+                                        {{ i.state_name }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div> -->
+
+
+                        <!--Short Description-->
+                        <div class="form-group col-12">
+                            <label for="short_description">Short Description</label>
+                            <textarea
+                                class="form-control"
+                                id="short_description"
+                                name="short_description"
+                                rows="5"
+                                value="{{ ticket.short_description }}"
+                            >{{ ticket.short_description }}</textarea>
+                        </div>
+
+
+                        <!--Comments-->
+                        <div class="form-group col-12">
+                            <label for="comments">Comments</label>
+                            <textarea
+                                class="form-control"
+                                id="comments"
+                                name="comments"
+                                rows="3"
+                            >{{ ticket.comments }}</textarea>
+                        </div>
+
+                    
+
+
+                    <!--User Comments-->
+                    <div class="form-group col-12">
+                        <label for="comments">User Comments</label>
+                        <textarea
+                            class="form-control"
+                            id="user_comments"
+                            name="user_comments"
+                            rows="3"
+                        >{{ ticket.user_comments }}</textarea>
+                    </div>
+
+                    
+                    <!-- Footer -->
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success btn-sm" >Save Changes</button>
+                            <button type="button" class="btn btn-danger btn-sm">
+                                <a href="{% url 'task' %}" style="text-decoration:none; color:white">Close</a>
+                            </button>
+                        </div>
+                    </form>
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                            <ul>
+                            {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                     <li><strong>{{ field }}:</strong> {{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+ 
+       
+
+
+{% endblock  %}

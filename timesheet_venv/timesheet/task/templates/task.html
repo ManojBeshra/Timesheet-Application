@@ -1,4 +1,3 @@
-
 {% extends "base.html" %}
 {% load static %}
 {% block title %}Task{% endblock title %}
@@ -115,7 +114,7 @@
                                 <!--footer-->
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-success ">Add</button>
+                                    <button type="button" id = "addTaskButton" class="btn btn-success ">Add</button>
                                 </div>
                             </div>
                         </div>
@@ -127,12 +126,16 @@
                             User
                         </button>
                         <div class="dropdown-menu" aria-labelledby="userbtnGroupDrop">
-                            <a class="dropdown-item" href="#">user1</a>
-                            <a class="dropdown-item" href="#">user2</a>
+                            <a class="dropdown-item" href="{% url 'task' %}">Show all</a>
+                            {% for i in users %}
+                                <a class="dropdown-item" href="{% url 'filterTaskByUser' i.id %}">
+                                    {{ i.username }}
+                                </a>
+                            {% endfor %}
+                            
                         </div>
                     </div>
 
-                </div>
                  
                 <!--Issue Section-->
                 <div class="card-body">
@@ -142,17 +145,21 @@
                             <div class="card mb-4 p-0 border-primary">
                                 <a class="btn btn-primary" id="new">New</a>
                                 <div class="card-body p-4" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 350px; overflow-y: auto;">
-                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2" id="new1" draggable="true" ondragstart="drag(event)">
-                                        <p class="card-text pb-1 pt-1 pr-2">
-                                            <a class="btn" id="titlebg" style="color: white; padding: 2px 5px; font-size: 0.75rem; max-width: 100%;">Power Bi Support</a>
-                                        </p>
-                                        <p class="card-text pb-1">
-                                            This issue has been resolved and is under the business review...
-                                        </p>
-                                        <a  href="{% url 'taskdetails' %}" class="btn btn-info btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
-                                        <!--fetch the priority value here-->
-                                        <div id="priorityvalue" style="visibility: hidden;">High</div> 
-                                    </div>
+                                    {% for task in tasks %}
+                                        {% if task.state_id == 1 %}
+                                            <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2" id="new1" draggable="true" ondragstart="drag(event)">
+                                                <p class="card-text pb-1 pt-1 pr-2">
+                                                    <a class="btn" id="titlebg" style="color: white; padding: 2px 5px; font-size: 0.75rem; max-width: 100%;">{{ task.ticket_type }}</a>
+                                                </p>
+                                                <p class="card-text pb-1">
+                                                    {{ task.ticket_name }}
+                                                </p>
+                                                <a  href="{% url 'taskdetails' task.id %}" class="btn btn-info btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
+                                                <!--fetch the priority value here-->
+                                                <div id="priorityvalue" style="visibility: hidden;">High</div> 
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>
@@ -162,11 +169,21 @@
                             <div class="card mb-4 p-0 border-info">
                                 <a class="btn btn-info">In Progress</a>
                                 <div class="card-body p-4" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 350px; overflow-y: auto;">
-                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2" id="progress1" draggable="true" ondragstart="drag(event)">
-                                        <p class="card-text text-dark pb-1 pt-1">Power BI Issues</p>
-                                        <p class="card-text pb-1">This issue has been resolved and is under the business review........</p>
-                                        <a href="{% url 'taskdetails' %}" class="btn btn-info btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
-                                    </div>
+                                    {% for task in tasks %}
+                                        {% if task.state_id == 2 %}
+                                            <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2" id="new1" draggable="true" ondragstart="drag(event)">
+                                                <p class="card-text pb-1 pt-1 pr-2">
+                                                    <a class="btn" id="titlebg" style="color: white; padding: 2px 5px; font-size: 0.75rem; max-width: 100%;">{{ task.ticket_type }}</a>
+                                                </p>
+                                                <p class="card-text pb-1">
+                                                    {{ task.ticket_name }}
+                                                </p>
+                                                <a  href="{% url 'taskdetails' task.id %}" class="btn btn-info btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
+                                                <!--fetch the priority value here-->
+                                                <div id="priorityvalue" style="visibility: hidden;">High</div> 
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>
@@ -176,12 +193,21 @@
                             <div class="card mb-4 p-0 border-warning">
                                 <a class="btn btn-warning text-white">Hold</a>
                                 <div class="card-body p-4" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 350px; overflow-y: auto;">
-                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2" id="hold1" draggable="true" ondragstart="drag(event)">
-                                        <p class="card-text text-dark pb-1 pt-1">Issues....</p>
-                                        <p class="card-text pb-1">Tasks........</p>
-                                        <a href="{% url 'taskdetails' %}" class="btn btn-info btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
-                                    </div>
-                                </div>
+                                    {% for task in tasks %}
+                                        {% if task.state_id == 3 %}
+                                            <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2" id="new1" draggable="true" ondragstart="drag(event)">
+                                                <p class="card-text pb-1 pt-1 pr-2">
+                                                    <a class="btn" id="titlebg" style="color: white; padding: 2px 5px; font-size: 0.75rem; max-width: 100%;">{{ task.ticket_type }}</a>
+                                                </p>
+                                                <p class="card-text pb-1">
+                                                    {{ task.ticket_name }}
+                                                </p>
+                                                <a  href="{% url 'taskdetails' task.id %}" class="btn btn-info btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
+                                                <!--fetch the priority value here-->
+                                                <div id="priorityvalue" style="visibility: hidden;">High</div> 
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}                                 </div>
                             </div>
                         </div>
                
@@ -190,11 +216,21 @@
                             <div class="card mb-4 p-0 border-success">
                                 <a class="btn btn-success">Completed</a>
                                 <div class="card-body p-4" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 350px; overflow-y: auto;">
-                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2" id="completed1" draggable="true" ondragstart="drag(event)">
-                                        <p class="card-text text-dark pb-1 pt-1">Issues....</p>
-                                        <p class="card-text pb-1">Tasks........</p>
-                                        <a href="{% url 'taskdetails' %}" class="btn btn-info btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
-                                    </div>
+                                    {% for task in tasks %}
+                                        {% if task.state_id == 4 %}
+                                            <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2" id="new1" draggable="true" ondragstart="drag(event)">
+                                                <p class="card-text pb-1 pt-1 pr-2">
+                                                    <a class="btn" id="titlebg" style="color: white; padding: 2px 5px; font-size: 0.75rem; max-width: 100%;">{{ task.ticket_type }}</a>
+                                                </p>
+                                                <p class="card-text pb-1">
+                                                    {{ task.ticket_name }}
+                                                </p>
+                                                <a  href="{% url 'taskdetails' task.id %}" class="btn btn-info btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
+                                                <!--fetch the priority value here-->
+                                                <div id="priorityvalue" style="visibility: hidden;">High</div> 
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>
@@ -204,11 +240,21 @@
                             <div class="card mb-4 p-0 border-danger">
                                 <a class="btn btn-danger">Canceled</a>
                                 <div class="card-body p-4" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 350px; overflow-y: auto;">
-                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2" id="canceled1" draggable="true" ondragstart="drag(event)">
-                                        <p class="card-text text-dark pb-1 pt-1">Issues....</p>
-                                        <p class="card-text pb-1">Tasks........</p>
-                                        <a href="{% url 'taskdetails' %}" class="btn btn-info btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
-                                    </div>
+                                    {% for task in tasks %}
+                                    {% if task.state_id == 5 %}
+                                        <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2" id="new1" draggable="true" ondragstart="drag(event)">
+                                            <p class="card-text pb-1 pt-1 pr-2">
+                                                <a class="btn" id="titlebg" style="color: white; padding: 2px 5px; font-size: 0.75rem; max-width: 100%;">{{ task.ticket_type }}</a>
+                                            </p>
+                                            <p class="card-text pb-1">
+                                                {{ task.ticket_name }}
+                                            </p>
+                                            <a  href="{% url 'taskdetails' task.id %}" class="btn btn-info btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
+                                            <!--fetch the priority value here-->
+                                            <div id="priorityvalue" style="visibility: hidden;">High</div> 
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
                                 </div>
                             </div>
                         </div>
@@ -237,6 +283,43 @@
             target.appendChild(draggedElement);
           }
         }
+        
+        document.getElementById("addTaskButton").addEventListener("click", function () {
+            // Capture form data
+            const title = document.getElementById("title").value;
+            const assigned_user = document.getElementById("assigneduserlist").value;
+            const priority = document.getElementById("prioritylist").value;
+            const ticket_type = document.getElementById("tasktypelist").value;
+            const customer = document.getElementById("customerlist").value;
+            const short_description = document.getElementById("shortdescriptionarea").value;
+        
+           
+            
+        
+            // Create the task card
+            const taskCard = document.createElement("div");
+            taskCard.classList.add("card", "shadow-lg", "pl-2", "mt-2", "ml-2", "mr-2");
+            taskCard.innerHTML = `
+                <div class="position-relative">
+                <p class="card-text text-dark pb-1 pt-1">${title}</p>
+                <p class="card-text pb-1">${assigned_user}</p>
+                <p class="card-text pb-1">${ticket_type}</p>
+                <p class="card-text pb-1">${customer}</p>
+                <a href="{% url 'taskdetails' task.id %}" class="btn btn-secondary btn-sm position-absolute" 
+                    style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem; color: inherit; text-decoration: none;">
+                    View
+                </a>
+            `;
+        
+            // Append to the "New" section
+            const newTaskSection = document.getElementById("new1").parentElement;
+            newTaskSection.appendChild(taskCard);
+        
+            // Reset form and close modal
+            document.querySelector("form").reset();
+            $('#exampleModalForm').modal('hide');
+        });
+        
     </script>
 
     <!--for Date Opened of Modal-->
@@ -272,15 +355,3 @@
 
 {% endblock  %}
  
-
-
-
-
-
-
-
-
-
-
-
-
