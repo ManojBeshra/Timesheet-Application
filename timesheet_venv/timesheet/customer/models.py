@@ -1,10 +1,14 @@
 from django.db import models
 
 # Create your models here.
+class customer_status(models.Model):
+  status_name = models.CharField( max_length=50)
+
+  def __str__(self):
+    return self.status_name
 
 class customer(models.Model):
   name = models.CharField(max_length=100, null = True)
-  company = models.ForeignKey('company.company', on_delete=models.CASCADE, null = True)
   city = models.CharField(max_length=100, null = True)
   state = models.CharField(max_length=100, null = True)
   zipcode = models.CharField(max_length=100, null = True)
@@ -13,10 +17,10 @@ class customer(models.Model):
   phone = models.CharField(max_length=100, null = True)
   contract_hr = models.IntegerField(null = True)
   create_date = models.DateField(null = True)
-  status = models.BooleanField(null = True)
+  status = models.ForeignKey(customer_status, on_delete= models.SET_NULL, null=True)
 
   def __str__(self):
-    return f"{self.name} of {self.company.name}"
+    return self.name
 
 
 

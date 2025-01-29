@@ -144,7 +144,9 @@
                         <div class="col-lg-6 col-xl-3">
                             <div class="card mb-4 p-0 border-primary">
                                 <a class="btn btn-primary" id="new">New</a>
+                                
                                 <div class="card-body p-4" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 350px; overflow-y: auto;">
+<<<<<<< HEAD
                                     {% for task in tasks %}
                                         {% if task.state_id == 1 %}
                                             <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2" id="new1" draggable="true" ondragstart="drag(event)">
@@ -160,7 +162,24 @@
                                             </div>
                                         {% endif %}
                                     {% endfor %}
+=======
+                                    {%for i in ticketlist %}
+                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2" id="{{i}}" draggable="true" ondragstart="drag(event)">
+                                        <p class="card-text pb-1 pt-1 pr-2">
+                                            <a class="btn" id="titlebg" style=" padding: 2px 5px; font-size: 0.75rem; max-width: 100%;">{{i.ticket_type}}</a>
+                                        </p>
+                                        <p class="card-text pb-1">
+                                            {{ i.ticket_name }}
+                                        </p>
+                                        
+                                        <a  href="{% url 'taskdetails' %}" class="btn btn-info btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
+                                        <!--fetch the priority value here-->
+                                        <div id="priorityvalue" style="visibility: hidden;">High</div> 
+                                    </div>
+                                {%endfor%}
+>>>>>>> 8f95ff82a44f516a4511ed59abcd22c373fbcee2
                                 </div>
+                                
                             </div>
                         </div>
                
@@ -284,6 +303,7 @@
           }
         }
         
+<<<<<<< HEAD
         document.getElementById("addTaskButton").addEventListener("click", function () {
             // Capture form data
             const title = document.getElementById("title").value;
@@ -319,9 +339,55 @@
             document.querySelector("form").reset();
             $('#exampleModalForm').modal('hide');
         });
+=======
+        
+>>>>>>> 8f95ff82a44f516a4511ed59abcd22c373fbcee2
         
     </script>
 
+    <script> 
+        document.getElementById("addTaskButton").addEventListener("click", function () {
+            // Capture form data
+            const title = document.getElementById("title").value;
+            const assigned_user = document.getElementById("assigneduserlist").value;
+            const priority = document.getElementById("prioritylist").value;
+            const ticket_type = document.getElementById("tasktypelist").value;
+            const customer = document.getElementById("customerlist").value;
+            const short_description = document.getElementById("shortdescriptionarea").value;
+            const comments = document.getElementById("commentsarea").value;
+        
+           
+            
+        
+        
+            data={
+                title: title,
+                customerlist: customer,
+                shortdescriptionarea: short_description,
+                tickettypelist : ticket_type,
+                assigneduserlist : assigned_user,
+                prioritylist : priority,
+                commentsarea : comments
+            }
+
+        $.ajax(
+            {
+                method:"POST",
+                url: "{% url 'add_task' %}",
+                //left side --> views.py
+             data : data, 
+                success: function( data ) 
+                {
+                    // Reset form and close modal
+                    document.querySelector("form").reset();
+                    $('#exampleModalForm').modal('hide');
+                    location.reload();
+                }
+        }) ;
+
+            
+        });
+    </script>
     <!--for Date Opened of Modal-->
     <script>
         // Get the current date
@@ -336,7 +402,7 @@
     <!--To Change the bg color of title based on Priority-->
     <script>
         // Function to dynamically change the background color
-        function updatePriorityColor() {
+        {% comment %} function updatePriorityColor() {
             const priorityValue = document.getElementById('priorityvalue').textContent.trim();
             const titlebg = document.getElementById('titlebg');
             
@@ -347,7 +413,7 @@
             } else if (priorityValue === 'Low') {
                 titlebg.style.backgroundColor = 'green';
             }
-        }
+        } {% endcomment %}
     
         // Call the function to update the background color
         updatePriorityColor();
