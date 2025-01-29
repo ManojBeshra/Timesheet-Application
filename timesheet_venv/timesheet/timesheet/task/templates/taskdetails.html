@@ -18,30 +18,31 @@
                 <div class="card-header">
 
                     <!--Task Details-->
-                    <form class="form-group col-12">
+                    <form class="form-group col-12" method = "POST">
+                        {% csrf_token %}
                         <div class="form-group col-12">
                             <!--Ticket Name-->
                             <div class="form-group col-6">
-                                <label for="ticketname">Ticket Name</label>
-                                <input type="text" class="form-control" id="ticketname" aria-describedby="ticketnameeHelp" placeholder="Enter Name">
+                                <label for="ticket_name">Ticket Name</label>
+                                <input type="text" class="form-control" id="ticketname" name = "ticket_name" aria-describedby="ticketnameeHelp" placeholder="Enter Name" value="{{ ticket.ticket_name }}">
                             </div>
 
                             <!--customer-->
                             <div class="form-group col-6">
-                                <label for="exampleFormControlSelect12">Customer</label>
-                                <select class="form-control" id="exampleFormControlSelect12" >
-                                <option>liberty1</option>
-                                <option>liberty2</option>
-                                <option>liberty3</option>
-                                <option>liberty4</option>
-                                <option>liberty5</option>
+                                <label for="customer">Customer</label>
+                                <select class="form-control" id="customer" name = "customer" >
+                                {% for i in customers %}
+                                <option value="{{ i.id }}" {% if i.id == ticket.customer_id %}selected{% endif %}>
+                                    {{ i.name }}
+                                </option>
+                                {% endfor %}
                                 </select>
                             </div>
                         </div>
 
                         <div class="form-group col-12 d-flex">
                             <!--Ticket Type-->
-                            <div class="form-group col-4">
+                            <!-- <div class="form-group col-4">
                                 <label for="exampleFormControlSelect12">Ticket Type</label>
                                 <select class="form-control" id="exampleFormControlSelect12">
                                 <option>Incident</option>
@@ -49,21 +50,23 @@
                                 <option>Standard Enhancement</option>
                                 <option>Normal Enhancement</option>
                                 </select>
-                            </div>
+                            </div> -->
 
                             <!--Date Opened-->
                             <div class="form-group col-4">
-                                <label for="date">Date Opened</label>
-                                <input type="date" class="form-control" id="date" aria-describedby="dateHelp"  readonly>
+                                <label for="date_opened">Date Opened</label>
+                                <input type="date" class="form-control" id="date_opened" aria-describedby="dateHelp" name = "date_opened" value="{{ ticket.date_opened|date:'Y-m-d' }}" readonly>
                             </div>
 
                             <!--Priority-->
                             <div class="form-group col-4">
-                                <label for="exampleFormControlSelect12">Priority</label>
-                                <select class="form-control" id="exampleFormControlSelect12">
-                                <option>High</option>
-                                <option>Medium</option>
-                                <option>Low</option>
+                                <label for="priority">Priority</label>
+                                <select class="form-control" id="priority_type" name = "priority">
+                                    {% for i in priority_types %}
+                                    <option value="{{ i.id }}" {% if i.id == ticket.priority_id %}selected{% endif %}>
+                                        {{ i.priority_name }}
+                                    </option>
+                                    {% endfor %}
                                 </select>
                             </div>
                         </div>
@@ -71,24 +74,24 @@
                         <div class="form-group col-12 d-flex">
                             <!--Assigned To-->
                             <div class="form-group col-4">
-                                <label for="exampleFormControlSelect12">Assigned To</label>
-                                <select class="form-control" id="exampleFormControlSelect12">
-                                <option>user1</option>
-                                <option>user2</option>
-                                <option>user3</option>
-                                <option>user4</option>
-                                <option>user5</option>
+                                <label for="assigned_to">Assigned To</label>
+                                <select class="form-control" id="assigned_to" name = "assigned_to">
+                                    {% for i in users %}
+                                    <option value="{{ i.id }}" {% if i.id == ticket.assigned_to_id %}selected{% endif %}>
+                                        {{ i.username }}
+                                    </option>
+                                    {% endfor %}
                                 </select>
                             </div>
 
                             <!--Last Updated-->
                             <div class="form-group col-4">
-                                <label for="date">Last Updated</label>
-                                <input type="date" class="form-control" id="lastupdate" aria-describedby="lastupdateHelp" >
+                                <label for="last_updated">Last Updated</label>
+                                <input type="date" class="form-control" id="last_updated" name= "last_updated" aria-describedby="lastupdateHelp" value="{{ ticket.last_updated|date:'Y-m-d' }}">
                             </div>
 
                             <!--State-->
-                            <div class="form-group col-4">
+                            <!-- <div class="form-group col-4">
                                 <label for="exampleFormControlSelect12">State</label>
                                 <select class="form-control" id="exampleFormControlSelect12">
                                     <option>New</option>
@@ -97,41 +100,50 @@
                                     <option>Hold</option>
                                     <option>Cancel</option>
                                 </select>
-                            </div>
+                            </div> -->
                         </div>
 
                         <!--Short Description-->
                         <div class="form-group col-12">
-                            <label for="exampleFormControlTextarea1">Short Description</label>
-                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="5"></textarea>
+                            <label for="short_description">Short Description</label>
+                            <textarea class="form-control" id="short_description" name = "short_description" rows="5">{{ ticket.short_description }}</textarea>
                         </div>
 
                         <!--Comments-->
                         <div class="form-group col-12">
-                            <label for="exampleFormControlTextarea1">Comments</label>
-                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                            <label for="comments">Comments</label>
+                            <textarea class="form-control" id="comments" name="comments" rows="3">{{ ticket.comments }}</textarea>
                         </div>
 
                         <!--footer-->
                         <div class="modal-footer ">
-                            <button type="button" class="btn btn-danger  btn-sm" data-dismiss="modal"><a href="{% url 'task' %} " style="text-decoration:none; color:white">Close</a></button>
-                            <button type="submit" class="btn btn-success btn-sm">Save Changes</button>
+                            <button type="submit" class="btn btn-success btn-sm" >Save Changes</button>
+                            <button type="button" class="btn btn-danger btn-sm">
+                                <a href="{% url 'task' %}" style="text-decoration:none; color:white">Close</a>
+                            </button>
                         </div>
                     </form>
 
+
+                
                     <!--User Comments-->
+
                     <form class="form-group col-12">
+                        
+                        {% csrf_token %}
                         <!--User Comments-->
                         <div class="form-group col-12">
-                            <label for="exampleFormControlTextarea1">Add Comments</label>
-                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                            <label for="user_comments">User Comments</label>
+                            <textarea class="form-control" id="user_comments" name = "user_comments" rows="3" {% if user.is_superuser %}readonly{% endif %}>{{ ticket.user_comments }}</textarea>
                         </div>
 
-                        <!--footer-->
-                        <div class="modal-footer ">
-                            <button type="submit" class="btn btn-success btn-sm">Add Comments</button>
+                        
+                        <div class="modal-footer "{% if user.is_superuser %}hidden{% endif %}>
+                            <button type="submit" class="btn btn-success btn-sm" >Add Comments</button>
                         </div>
+                        
                     </form>
+
 
                 </div>
             </div>
@@ -140,4 +152,3 @@
 
 
 {% endblock  %}
-

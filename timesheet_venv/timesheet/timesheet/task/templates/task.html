@@ -52,11 +52,11 @@
                                         <div class="form-group col-6">
                                             <label for="exampleFormControlSelect12">customer</label>
                                             <select class="form-control" id="customerlist" >
-                                            <option>liberty1</option>
-                                            <option>liberty2</option>
-                                            <option>liberty3</option>
-                                            <option>liberty4</option>
-                                            <option>liberty5</option>
+                                                {% for i in customers %}
+                                                    <option value="{{ i.id }}" {% if i.id == ticket.customer_id %}selected{% endif %}>
+                                                        {{ i.name }}
+                                                    </option>
+                                                {% endfor %}
                                             </select>
                                         </div>
 
@@ -70,10 +70,11 @@
                                         <div class="form-group col-6">
                                             <label for="exampleFormControlSelect12">Task Type</label>
                                             <select class="form-control" id="tasktypelist">
-                                            <option>Incident</option>
-                                            <option>Operational Change</option>
-                                            <option>Standard Enhancement</option>
-                                            <option>Normal Enhancement</option>
+                                                {% for i in tickettype %}
+                                                    <option value="{{ i.id }}" {% if i.id == ticket.tickettype_id %}selected{% endif %}>
+                                                        {{ i.name }}
+                                                    </option>
+                                                {% endfor %}
                                             </select>
                                         </div>
 
@@ -87,11 +88,11 @@
                                         <div class="form-group col-6">
                                             <label for="exampleFormControlSelect12">Assigned User</label>
                                             <select class="form-control" id="assigneduserlist">
-                                            <option>user1</option>
-                                            <option>user2</option>
-                                            <option>user3</option>
-                                            <option>user4</option>
-                                            <option>user5</option>
+                                                {% for i in users %}
+                                                    <option value="{{ i.id }}" {% if i.id == ticket.assigned_to_id %}selected{% endif %}>
+                                                        {{ i.username }}
+                                                    </option>
+                                                {% endfor %}
                                             </select>
                                         </div>
 
@@ -99,9 +100,11 @@
                                         <div class="form-group col-6">
                                             <label for="exampleFormControlSelect12">Priority</label>
                                             <select class="form-control" id="prioritylist">
-                                            <option>High</option>
-                                            <option>Medium</option>
-                                            <option>Low</option>
+                                                {% for i in priority %}
+                                                    <option value="{{ i.id }}" {% if i.id == ticket.priority_id %}selected{% endif %}>
+                                                        {{ i.priority_name }}
+                                                    </option>
+                                                {% endfor %}
                                             </select>
                                         </div>
 
@@ -127,8 +130,13 @@
                             User
                         </button>
                         <div class="dropdown-menu" aria-labelledby="userbtnGroupDrop">
-                            <a class="dropdown-item" href="#">user1</a>
-                            <a class="dropdown-item" href="#">user2</a>
+                            <a class="dropdown-item" href="{% url 'task' %}">Show all</a>
+                            {% for i in users %}
+                                <a class="dropdown-item" href="{% url 'filterTaskByUser' i.id %}">
+                                    {{ i.username }}
+                                </a>
+                            {% endfor %}
+                            
                         </div>
                     </div>
 
@@ -152,7 +160,7 @@
                                             {{ i.ticket_name }}
                                         </p>
                                         
-                                        <a  href="{% url 'taskdetails' %}" class="btn btn-info btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
+                                        <a  href="{% url 'taskdetails' i.id %}" class="btn btn-info btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
                                         <!--fetch the priority value here-->
                                         <div id="priorityvalue" style="visibility: hidden;">High</div> 
                                     </div>
@@ -167,11 +175,20 @@
                             <div class="card mb-4 p-0 border-info">
                                 <a class="btn btn-info">In Progress</a>
                                 <div class="card-body p-4" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 350px; overflow-y: auto;">
-                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2" id="progress1" draggable="true" ondragstart="drag(event)">
-                                        <p class="card-text text-dark pb-1 pt-1">Power BI Issues</p>
-                                        <p class="card-text pb-1">This issue has been resolved and is under the business review........</p>
-                                        <a href="{% url 'taskdetails' %}" class="btn btn-info btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
+                                    <!-- {%for i in ticketlist %}
+                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2" id="{{i}}" draggable="true" ondragstart="drag(event)">
+                                        <p class="card-text pb-1 pt-1 pr-2">
+                                            <a class="btn" id="titlebg" style=" padding: 2px 5px; font-size: 0.75rem; max-width: 100%;">{{i.ticket_type}}</a>
+                                        </p>
+                                        <p class="card-text pb-1">
+                                            {{ i.ticket_name }}
+                                        </p>
+                                        
+                                        <a  href="{% url 'taskdetails' i.id %}" class="btn btn-info btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
+                                       
+                                        <div id="priorityvalue" style="visibility: hidden;">High</div> 
                                     </div>
+                                {%endfor%} -->
                                 </div>
                             </div>
                         </div>
@@ -181,11 +198,20 @@
                             <div class="card mb-4 p-0 border-warning">
                                 <a class="btn btn-warning text-white">Hold</a>
                                 <div class="card-body p-4" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 350px; overflow-y: auto;">
-                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2" id="hold1" draggable="true" ondragstart="drag(event)">
-                                        <p class="card-text text-dark pb-1 pt-1">Issues....</p>
-                                        <p class="card-text pb-1">Tasks........</p>
-                                        <a href="{% url 'taskdetails' %}" class="btn btn-info btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
+                                    <!-- {%for i in ticketlist %}
+                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2" id="{{i}}" draggable="true" ondragstart="drag(event)">
+                                        <p class="card-text pb-1 pt-1 pr-2">
+                                            <a class="btn" id="titlebg" style=" padding: 2px 5px; font-size: 0.75rem; max-width: 100%;">{{i.ticket_type}}</a>
+                                        </p>
+                                        <p class="card-text pb-1">
+                                            {{ i.ticket_name }}
+                                        </p>
+                                        
+                                        <a  href="{% url 'taskdetails' i.id %}" class="btn btn-info btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
+ 
+                                        <div id="priorityvalue" style="visibility: hidden;">High</div> 
                                     </div>
+                                {%endfor%} -->
                                 </div>
                             </div>
                         </div>
@@ -195,11 +221,20 @@
                             <div class="card mb-4 p-0 border-success">
                                 <a class="btn btn-success">Completed</a>
                                 <div class="card-body p-4" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 350px; overflow-y: auto;">
-                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2" id="completed1" draggable="true" ondragstart="drag(event)">
-                                        <p class="card-text text-dark pb-1 pt-1">Issues....</p>
-                                        <p class="card-text pb-1">Tasks........</p>
-                                        <a href="{% url 'taskdetails' %}" class="btn btn-info btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
+                                    <!-- {%for i in ticketlist %}
+                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2" id="{{i}}" draggable="true" ondragstart="drag(event)">
+                                        <p class="card-text pb-1 pt-1 pr-2">
+                                            <a class="btn" id="titlebg" style=" padding: 2px 5px; font-size: 0.75rem; max-width: 100%;">{{i.ticket_type}}</a>
+                                        </p>
+                                        <p class="card-text pb-1">
+                                            {{ i.ticket_name }}
+                                        </p>
+                                        
+                                        <a  href="{% url 'taskdetails' i.id %}" class="btn btn-info btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
+
+                                        <div id="priorityvalue" style="visibility: hidden;">High</div> 
                                     </div>
+                                {%endfor%} -->
                                 </div>
                             </div>
                         </div>
@@ -209,11 +244,20 @@
                             <div class="card mb-4 p-0 border-danger">
                                 <a class="btn btn-danger">Canceled</a>
                                 <div class="card-body p-4" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 350px; overflow-y: auto;">
-                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2" id="canceled1" draggable="true" ondragstart="drag(event)">
-                                        <p class="card-text text-dark pb-1 pt-1">Issues....</p>
-                                        <p class="card-text pb-1">Tasks........</p>
-                                        <a href="{% url 'taskdetails' %}" class="btn btn-info btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
+                                    <!-- {%for i in ticketlist %}
+                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2" id="{{i}}" draggable="true" ondragstart="drag(event)">
+                                        <p class="card-text pb-1 pt-1 pr-2">
+                                            <a class="btn" id="titlebg" style=" padding: 2px 5px; font-size: 0.75rem; max-width: 100%;">{{i.ticket_type}}</a>
+                                        </p>
+                                        <p class="card-text pb-1">
+                                            {{ i.ticket_name }}
+                                        </p>
+                                        
+                                        <a  href="{% url 'taskdetails' i.id %}" class="btn btn-info btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
+
+                                        <div id="priorityvalue" style="visibility: hidden;">High</div> 
                                     </div>
+                                {%endfor%} -->
                                 </div>
                             </div>
                         </div>
