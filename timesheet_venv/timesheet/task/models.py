@@ -22,26 +22,30 @@ class state(models.Model):
    def __str__(self):
     return f"{self.state_name}"
 
+
 class ticket(models.Model):
-    ticket_name = models.CharField(max_length=200, null=False)
+    ticket_id = models.CharField(max_length = 200, null = False)
+    ticket_title = models.CharField(max_length=200, null=False)
     customer = models.ForeignKey(customer, on_delete=models.CASCADE, null=True)
     ticket_type = models.ForeignKey(ticket_type, on_delete=models.CASCADE, null=True)
     date_opened = models.DateField(null=True)
     priority = models.ForeignKey(priority_type, on_delete=models.CASCADE, null = True)
-    assigned_to = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    assigned_to = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name="assigned_to")
     last_updated = models.DateTimeField(null=True)
+    last_updated_by = models.ForeignKey(User, on_delete=models.CASCADE, null = True, related_name="last_updated_by")
     state = models.ForeignKey(state, on_delete=models.CASCADE, null=True)
     short_description = models.CharField(max_length=200, null=True)
-    comments = models.CharField(max_length=200, blank=True, null=True)
-    user_comments = models.CharField(max_length=200, default="")
+    closed_date = models.DateField(null=True)
+    solution = models.CharField(max_length=500, null=True)
 
-
-class ticket_detail(models.Model):
-    ticket = models.ForeignKey(ticket, on_delete=models.CASCADE, null=True)
-    date = models.DateTimeField(auto_now_add=True, null=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    detail = models.CharField(max_length=300, null=True)
 
     def __str__(self):
-        return f"{self.ticket.ticket_name}"
+        return f"{self.ticket_title}"
     
+class ticket_update_history(models.Model):
+    updated_on = models.DateTimeField(null = True)
+    updated_by = models.ForeignKey(User, on_delete=models.CASCADE, null = True)
+    changes = models.CharField(max_length=500, null = True)
+
+    def __str__(self):
+        return f"{self.changes}"

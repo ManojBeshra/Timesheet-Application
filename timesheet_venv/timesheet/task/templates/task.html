@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Task{% endblock title %}
-{% block page-title %}Task{% endblock page-title %}
+{% block title %}Ticket{% endblock title %}
+{% block page-title %}Ticket{% endblock page-title %}
 <!--style-->
 {% block style %}
     #titlebg{
@@ -25,7 +25,7 @@
 
                      <!--Add Issue Buttons-->
                     <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#exampleModalForm">
-                        Add Issue
+                        Add Ticket
                     </button>
 
                      <!-- Form Modal -->
@@ -60,11 +60,7 @@
                                             </select>
                                         </div>
 
-                                        <!--Short Description-->
-                                        <div class="form-group col-12">
-                                            <label for="exampleFormControlTextarea1">Short Description</label>
-                                            <textarea class="form-control" id="shortdescriptionarea" rows="1"></textarea>
-                                        </div>
+                                        
 
                                         <!--Ticket Type-->
                                         <div class="form-group col-6">
@@ -86,7 +82,7 @@
                
                                         <!--Assigned User-->
                                         <div class="form-group col-4">
-                                            <label for="exampleFormControlSelect12">Assigned User</label>
+                                            <label for="exampleFormControlSelect12">Assigned To</label>
                                             <select class="form-control" id="assigneduserlist">
                                                 {% for i in users %}
                                                     <option value="{{ i.id }}" {% if i.id == ticket.assigned_to_id %}selected{% endif %}>
@@ -120,10 +116,10 @@
                                             </select>
                                         </div>
 
-                                        <!--Comments-->
+                                        <!--Short Description-->
                                         <div class="form-group col-12">
-                                            <label for="exampleFormControlTextarea1">Comments</label>
-                                            <textarea class="form-control" id="commentsarea" rows="2"></textarea>
+                                            <label for="exampleFormControlTextarea1">Short Description</label>
+                                            <textarea class="form-control" id="shortdescriptionarea" rows="1"></textarea>
                                         </div>
                                     </form>
                                 </div>
@@ -154,155 +150,44 @@
 
                 </div>
                  
-                <!--Issue Section-->
                 <div class="card-body">
-                    <div class="row">
-                        <!-- New -->
-                        <div class="col-lg-6 col-xl-3">
-                            <div class="card mb-4 p-0 border-primary">
-                                <a class="btn btn-primary" id="new">New</a>
-                                
-                                <div class="card-body p-4 " ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 350px; overflow-y: auto;">
-                                    {%for i in ticketlist %}
-                                    <div class="card shadow-lg pl-2 mb-3" id="{{i}}" draggable="true" ondragstart="drag(event)">
-                                        <p class="card-text pb-1 pt-1 pr-2">
-                                            <a class="btn" id="titlebg" style=" padding: 2px 5px;  max-width: 100%;">{{i.ticket_type}}</a>
-                                        </p>
-                                        <p class="card-text pb-1">
-                                            {{ i.ticket_name }}
-                                        </p>
-                                        
-                                        <a  href="{% url 'taskdetails' i.id %}" class="btn btn-info btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
-                                        <!--fetch the priority value here-->
-                                        <div id="priorityvalue" style="visibility: hidden;">High</div> 
-                                    </div>
-                                {%endfor%}
-                                </div>
-                                
-                            </div>
-                        </div>
-               
-                        <!-- In Progress -->
-                        <div class="col-lg-6 col-xl-3">
-                            <div class="card mb-4 p-0 border-info">
-                                <a class="btn btn-info">In Progress</a>
-                                <div class="card-body p-4" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 350px; overflow-y: auto;">
-                                    <!-- {%for i in ticketlist %}
-                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2" id="{{i}}" draggable="true" ondragstart="drag(event)">
-                                        <p class="card-text pb-1 pt-1 pr-2">
-                                            <a class="btn" id="titlebg" style=" padding: 2px 5px; font-size: 0.75rem; max-width: 100%;">{{i.ticket_type}}</a>
-                                        </p>
-                                        <p class="card-text pb-1">
-                                            {{ i.ticket_name }}
-                                        </p>
-                                        
-                                        <a  href="{% url 'taskdetails' i.id %}" class="btn btn-info btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
-                                       
-                                        <div id="priorityvalue" style="visibility: hidden;">High</div> 
-                                    </div>
-                                {%endfor%} -->
-                                </div>
-                            </div>
-                        </div>
-               
-                        <!-- Hold -->
-                        <div class="col-lg-6 col-xl-3">
-                            <div class="card mb-4 p-0 border-warning">
-                                <a class="btn btn-warning text-white">Hold</a>
-                                <div class="card-body p-4" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 350px; overflow-y: auto;">
-                                    <!-- {%for i in ticketlist %}
-                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2" id="{{i}}" draggable="true" ondragstart="drag(event)">
-                                        <p class="card-text pb-1 pt-1 pr-2">
-                                            <a class="btn" id="titlebg" style=" padding: 2px 5px; font-size: 0.75rem; max-width: 100%;">{{i.ticket_type}}</a>
-                                        </p>
-                                        <p class="card-text pb-1">
-                                            {{ i.ticket_name }}
-                                        </p>
-                                        
-                                        <a  href="{% url 'taskdetails' i.id %}" class="btn btn-info btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
- 
-                                        <div id="priorityvalue" style="visibility: hidden;">High</div> 
-                                    </div>
-                                {%endfor%} -->
-                                </div>
-                            </div>
-                        </div>
-               
-                        <!-- Completed -->
-                        <div class="col-lg-6 col-xl-3">
-                            <div class="card mb-4 p-0 border-success">
-                                <a class="btn btn-success">Completed</a>
-                                <div class="card-body p-4" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 350px; overflow-y: auto;">
-                                    <!-- {%for i in ticketlist %}
-                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2" id="{{i}}" draggable="true" ondragstart="drag(event)">
-                                        <p class="card-text pb-1 pt-1 pr-2">
-                                            <a class="btn" id="titlebg" style=" padding: 2px 5px; font-size: 0.75rem; max-width: 100%;">{{i.ticket_type}}</a>
-                                        </p>
-                                        <p class="card-text pb-1">
-                                            {{ i.ticket_name }}
-                                        </p>
-                                        
-                                        <a  href="{% url 'taskdetails' i.id %}" class="btn btn-info btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
+                    <table id="productsTable" class="table table-hover table-product" style="width:100%">
+                      <thead>
+                        <tr>
+                          <th>ID</th>
+                          <th>Type</th>
+                          <th>Title</th>
+                          <th>Assigned To</th>
+                          <th>Date Opened</th>
+                          <th>Customer</th>
+                          <th>Updated on</th>
+                          <th>Updated by</th>
+                          <th>State</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
 
-                                        <div id="priorityvalue" style="visibility: hidden;">High</div> 
-                                    </div>
-                                {%endfor%} -->
-                                </div>
-                            </div>
-                        </div>
-               
-                        <!-- Canceled -->
-                        <div class="col-lg-6 col-xl-3">
-                            <div class="card mb-4 p-0 border-danger">
-                                <a class="btn btn-danger">Canceled</a>
-                                <div class="card-body p-4" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 350px; overflow-y: auto;">
-                                    <!-- {%for i in ticketlist %}
-                                    <div class="card shadow-lg pl-2 mt-2 ml-2 mr-2" id="{{i}}" draggable="true" ondragstart="drag(event)">
-                                        <p class="card-text pb-1 pt-1 pr-2">
-                                            <a class="btn" id="titlebg" style=" padding: 2px 5px; font-size: 0.75rem; max-width: 100%;">{{i.ticket_type}}</a>
-                                        </p>
-                                        <p class="card-text pb-1">
-                                            {{ i.ticket_name }}
-                                        </p>
-                                        
-                                        <a  href="{% url 'taskdetails' i.id %}" class="btn btn-info btn-sm position-absolute" style="bottom: 5px; right: 5px; padding: 2px 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View </a>
+                      <tbody>
+                        <tr>
+                          <td>2332</td>
+                          <td>24541</td>
+                          <td>27</td>
+                          <td>1</td>
+                          <td>2</td>
+                          <td>4</td>
+                          <td>18</td>
+                          <td>18</td>
+                          <td>18</td>
+                          <td><a  href="" class="btn btn-info btn-sm position-absolute" style="bottom: 5px; right: 5px; font-size: 0.75rem;" style="color: inherit; text-decoration: none;">View</a></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
 
-                                        <div id="priorityvalue" style="visibility: hidden;">High</div> 
-                                    </div>
-                                {%endfor%} -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
    
-    <!--for drag/drop card-->
-    <script>
-        function allowDrop(ev) {
-          ev.preventDefault();
-        }
-       
-        function drag(ev) {
-          ev.dataTransfer.setData("text", ev.target.id);
-        }
-       
-        function drop(ev) {
-          ev.preventDefault();
-          const data = ev.dataTransfer.getData("text");
-          const draggedElement = document.getElementById(data);
-          const target = ev.target.closest('.card-body');
-          if (target && draggedElement) {
-            target.appendChild(draggedElement);
-          }
-        }
-        
-        
-        
-    </script>
-
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -361,26 +246,6 @@
         dateInput.value = currentDate;
         dateInput.setAttribute('min', currentDate);  // Disable past dates
         dateInput.setAttribute('max', currentDate);  // Disable future dates
-    </script>
-
-    <!--To Change the bg color of title based on Priority-->
-    <script>
-        // Function to dynamically change the background color
-        {% comment %} function updatePriorityColor() {
-            const priorityValue = document.getElementById('priorityvalue').textContent.trim();
-            const titlebg = document.getElementById('titlebg');
-            
-            if (priorityValue === 'High') {
-                titlebg.style.backgroundColor = 'red';
-            } else if (priorityValue === 'Medium') {
-                titlebg.style.backgroundColor = '#FFBF00';
-            } else if (priorityValue === 'Low') {
-                titlebg.style.backgroundColor = 'green';
-            }
-        } {% endcomment %}
-    
-        // Call the function to update the background color
-        updatePriorityColor();
     </script>
 
 {% endblock  %}

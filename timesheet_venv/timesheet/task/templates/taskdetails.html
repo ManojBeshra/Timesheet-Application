@@ -23,8 +23,8 @@
                         <div class="form-group col-12">
                             <!--Ticket Name-->
                             <div class="form-group col-6">
-                                <label for="ticket_name">Ticket Name</label>
-                                <input type="text" class="form-control" id="ticketname" name = "ticket_name" aria-describedby="ticketnameeHelp" placeholder="Enter Name" value="{{ ticket.ticket_name }}">
+                                <label for="ticket_title">Ticket Title</label>
+                                <input type="text" class="form-control" id="ticketname" name = "ticket_title" aria-describedby="ticketnameeHelp" placeholder="Enter Name" value="{{ ticket.ticket_title }}">
                             </div>
 
                             <!--customer-->
@@ -112,7 +112,7 @@
 
                         <!--Comments-->
                         <div class="form-group col-12">
-                            <label for="comments">Comments</label>
+                            <label for="comments">Comments1</label>
                             <textarea class="form-control" id="comments" name="comments" rows="3">{{ ticket.comments }}</textarea>
                         </div>
 
@@ -146,7 +146,7 @@
                         {% csrf_token %}
                         <!--User Comments-->
                         <div class="form-group col-12">
-                            <label for="user_comments">User Comments</label>
+                            <label for="user_comments">Add Comments</label>
                             <textarea class="form-control" id="user_comments" name = "user_comments" rows="3" {% if user.is_superuser %}readonly{% endif %}>{{ ticket.user_comments }}</textarea>
                         </div>
 
