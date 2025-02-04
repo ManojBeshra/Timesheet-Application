@@ -55,6 +55,21 @@
         white-space: normal; /* Allow text to wrap */
     }
 
+    .i-circle {
+        display: inline-block;
+        color: #fff;
+        border-radius: 50%;
+        font-size: 15px;
+        line-height: 20px; /* set to same size as width, height */
+        width: 20px;
+        height: 20px;
+        text-align: center;
+    }
+
+    
+    
+
+
 {% endblock %}
 
 {% block content %}
@@ -184,7 +199,11 @@
                     <!--Dropdown Filters-->
                     <div class="btn-group " role="group" aria-label="Basic example">
                         <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn" id="userbtnGroupDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            User
+                            {% if selected_user %}
+                                {{ selected_user.username }}
+                            {% else %}
+                                 User
+                            {% endif %}
                         </button>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userbtnGroupDrop">
                             <a class="dropdown-item" href="{% url 'task' %}">Show all</a>
@@ -210,22 +229,38 @@
                     <table id="productsTable" class="table table-hover table-product" style="width:100%">
                       <thead>
                         <tr>
-                          <th>ID&nbsp&nbsp</th>
-                          <th>Type&nbsp&nbsp</th>
-                          <th>Title&nbsp&nbsp</th>
-                          <th>Assigned To&nbsp&nbsp</th>
-                          <th>Date Opened&nbsp&nbsp</th>
-                          <th>Customer&nbsp&nbsp</th>
-                          <th>Updated on&nbsp&nbsp</th>
-                          <th>Updated by&nbsp&nbsp</th>
-                          <th>State&nbsp&nbsp</th>
-                          <th>Actions&nbsp&nbsp</th>
+                            <th>Priority</th>
+                            <th>ID&nbsp&nbsp</th>
+                            <th>Type&nbsp&nbsp</th>
+                            <th>Title&nbsp&nbsp</th>
+                            <th>Assigned To&nbsp&nbsp</th>
+                            <th>Date Opened&nbsp&nbsp</th>
+                            <th>Customer&nbsp&nbsp</th>
+                            <th>Updated on&nbsp&nbsp</th>
+                            <th>Updated by&nbsp&nbsp</th>
+                            <th>State&nbsp&nbsp</th>
+                            <th>Actions&nbsp&nbsp</th>
                         </tr>
                       </thead>
 
                       <tbody>
                         {% for i in ticketlist %}
                             <tr>
+                                <td >
+
+                                    {% if i.priority.priority_name == "High" %}
+                                    <span style="background-color: #ff0000;" class="i-circle">H</span>
+                                    {% endif %}
+
+                                    {% if i.priority.priority_name == "Medium" %}
+                                    <span style="background-color: #16e63f;" class="i-circle">M</span>
+                                    {% endif %}
+
+                                    {% if i.priority.priority_name == "Low" %}
+                                    <span style="background-color: #e4b233;" class="i-circle">L</span>
+                                    {% endif %}
+
+                                </td>
                                 <td>{{i.ticket_id}}</td>
                                 <td>{{i.ticket_type}}</td>
                                 <td>{{i.ticket_title}}</td>

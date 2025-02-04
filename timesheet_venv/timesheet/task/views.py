@@ -86,10 +86,15 @@ def taskdetails(request, ticket_id):
 
 def filterTaskByUser(request, id):
     users = User.objects.all()
-    user = get_object_or_404(User, pk=id) 
-    tasks = ticket.objects.filter(assigned_to=user)  
+    tasks = ticket.objects.all()
     states = state.objects.all()
-    return render(request, 'task.html', {'users': users, 'ticketlist': tasks, 'states': states})
+    selected_user = get_object_or_404(User, pk=id)
+    tasks = tasks.filter(assigned_to=selected_user)
+    
+    return render(request, 'task.html', {'users': users, 'ticketlist': tasks, 'states': states, 'selected_user': selected_user})
+
+
+
 
 
 
@@ -106,8 +111,10 @@ def taskhistory(request):
 
 def filterTaskByUserforHistory(request, id):
     users = User.objects.all()
-    user = get_object_or_404(User, pk=id) 
+    selected_user = get_object_or_404(User, pk=id)
     completed_state = get_object_or_404(state, state_name = "Completed")
-    tasks = ticket.objects.filter(state = completed_state, assigned_to = user)
+    tasks = ticket.objects.filter(state = completed_state, assigned_to = selected_user)
     states = state.objects.all()
-    return render(request, 'taskhistory.html', {'users': users, "tasks": tasks, 'states': states})
+
+
+    return render(request, 'taskhistory.html', {'users': users, "tasks": tasks, 'states': states , 'selected_user': selected_user})

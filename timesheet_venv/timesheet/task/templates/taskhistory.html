@@ -68,11 +68,22 @@
 
                 <!--Button Section-->
                 <div class="card-header">
+                    
+                    <!--Back to All Tickets-->
+
+                    <a href = "{% url 'task' %}" class="btn btn-outline-success small-btn" >
+                        Back to All Tickets
+                    </a>
+
 
                     <!--Dropdown Filters-->
                     <div class="btn-group " role="group" aria-label="Basic example">
-                        <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn" id="userbtnGroupDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            User
+                        <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn"   id="userbtnGroupDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {% if selected_user %}
+                                {{ selected_user.username }}
+                            {% else %}
+                                 User
+                            {% endif %}
                         </button>
                         <div class="dropdown-menu dropdown-menu-left" aria-labelledby="userbtnGroupDrop">
                             <a class="dropdown-item" href="{% url 'taskhistory' %}">Show all</a>
@@ -84,6 +95,7 @@
                             
                         </div>
                     </div>
+
 
                 </div>
                  
@@ -107,6 +119,7 @@
                       <tbody>
                         {% for i in tasks %}
                             <tr>
+                                
                                 <td>{{i.ticket_id}}</td>
                                 <td>{{i.ticket_type}}</td>
                                 <td>{{i.ticket_title}}</td>
