@@ -369,6 +369,30 @@ $(document).ready(function () {
   NProgress.done();
 
   /*======== 14. DATA TABLE ========*/
+  // var productsTable = $("#productsTable");
+  // if (productsTable.length != 0) {
+  //   productsTable.DataTable({
+  //     info: false,
+  //     lengthChange: false,
+  //     lengthMenu: [
+  //       [5, 10, 15, -1],
+  //       [5, 10, 15, "All"],
+  //     ],
+  //     scrollX: true,
+  //     order: [[2, "asc"]],
+  //     columnDefs: [
+  //       {
+  //         // orderable: false,
+  //         // targets: [, 0, 6, -1],
+  //       },
+  //     ],
+  //     language: {
+  //       search: "_INPUT_",
+  //       searchPlaceholder: "Search...",
+  //     },
+  //   });
+  // }
+
   var productsTable = $("#productsTable");
   if (productsTable.length != 0) {
     productsTable.DataTable({
@@ -380,31 +404,52 @@ $(document).ready(function () {
       ],
       scrollX: true,
       order: [[2, "asc"]],
+      searching: false, // Disable search
       columnDefs: [
         {
-          orderable: false,
-          targets: [, 0, 6, -1],
+          orderable: true, // Make all columns orderable
+          targets: "_all", // Apply to all columns
         },
       ],
       language: {
         search: "_INPUT_",
-        searchPlaceholder: "Search...",
+        searchPlaceholder: "Search...", // This can be removed since searching is disabled
       },
+      // Add the dom option to customize the layout
+      dom: '<"top"i>rt<"bottom"lp><"clear">',
     });
   }
+
+
+  // var productSale = $("#product-sale");
+  // if (productSale.length != 0) {
+  //   productSale.DataTable({
+  //     info: false,
+  //     paging: false,
+  //     searching: false,
+  //     scrollX: true,
+  //     order: [[0, "asc"]],
+  //     columnDefs: [
+  //       {
+  //         orderable: false,
+  //         targets: [-1],
+  //       },
+  //     ],
+  //   });
+  // }
 
   var productSale = $("#product-sale");
   if (productSale.length != 0) {
     productSale.DataTable({
       info: false,
       paging: false,
-      searching: false,
+      searching: false, // Disable search
       scrollX: true,
       order: [[0, "asc"]],
       columnDefs: [
         {
-          orderable: false,
-          targets: [-1],
+          orderable: true, // Make all columns orderable
+          targets: "_all", // Apply to all columns
         },
       ],
     });
