@@ -62,6 +62,8 @@ def add_task(request):
 
     return JsonResponse({"success": False, "message": "Invalid request"}, status=400)
 
+
+
 def taskdetails(request, ticket_id):
     ticket_instance = get_object_or_404(ticket, pk=ticket_id)
     if request.method == 'POST':
@@ -80,6 +82,8 @@ def taskdetails(request, ticket_id):
     task_types = ticket_type.objects.all()
     return render(request, 'taskdetails.html', {'form': form, 'users': users,  'ticket': ticket_instance, 'customers': customers, 'priority_types':priority_types, 'states': states, 'task_types': task_types})
 
+
+
 def filterTaskByUser(request, id):
     users = User.objects.all()
     user = get_object_or_404(User, pk=id) 
@@ -90,3 +94,20 @@ def filterTaskByUser(request, id):
 
 
 
+def taskhistory(request):
+    users = User.objects.all()
+    completed_state = get_object_or_404(state, state_name = "Completed")
+    tasks = ticket.objects.filter(state = completed_state)
+
+    return render(request, "taskhistory.html", {"tasks": tasks, "users": users})
+
+
+
+
+def filterTaskByUserforHistory(request, id):
+    users = User.objects.all()
+    user = get_object_or_404(User, pk=id) 
+    completed_state = get_object_or_404(state, state_name = "Completed")
+    tasks = ticket.objects.filter(state = completed_state, assigned_to = user)
+    states = state.objects.all()
+    return render(request, 'taskhistory.html', {'users': users, "tasks": tasks, 'states': states})

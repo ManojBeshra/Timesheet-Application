@@ -7,4 +7,6 @@ urlpatterns = [
     path('taskdetails/<int:ticket_id>',views.taskdetails, name='taskdetails'),
     path('task/filter/<int:id>/', views.filterTaskByUser, name='filterTaskByUser'),
     path('add/',views.add_task, name='add_task'),
+    path('taskhistory/', views.taskhistory, name ="taskhistory"),
+    path('taskhistory/filter/<int:id>/', views.filterTaskByUserforHistory, name = "filterTaskByUserforHistory")
 ]

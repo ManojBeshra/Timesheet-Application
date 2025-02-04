@@ -69,10 +69,13 @@
                 <!--Button Section-->
                 <div class="card-header">
 
+
+
                      <!--Add Issue Buttons-->
                     <button type="button" class="btn btn-outline-success small-btn" data-toggle="modal" data-target="#exampleModalForm">
                         Add Ticket
                     </button>
+
 
                      <!-- Form Modal -->
                     <div class="modal fade" id="exampleModalForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalFormTitle"
@@ -194,7 +197,14 @@
                         </div>
                     </div>
 
+                    <!--Ticket History Buttons-->
+
+                    <a href = "{% url 'taskhistory' %}" class="btn btn-outline-success small-btn" >
+                        Ticket History
+                    </a>
                 </div>
+
+                                    
                  
                 <div class="card-body">
                     <table id="productsTable" class="table table-hover table-product" style="width:100%">
@@ -214,18 +224,20 @@
                       </thead>
 
                       <tbody>
-                        <tr>
-                          <td>2332</td>
-                          <td>24541</td>
-                          <td>27</td>
-                          <td>1</td>
-                          <td>2</td>
-                          <td>4</td>
-                          <td>18</td>
-                          <td>18</td>
-                          <td>18</td>
-                          <td><a  href="" class="btn btn-info view-small-btn" >View</a></td>
-                        </tr>
+                        {% for i in ticketlist %}
+                            <tr>
+                                <td>{{i.ticket_id}}</td>
+                                <td>{{i.ticket_type}}</td>
+                                <td>{{i.ticket_title}}</td>
+                                <td>{{i.assigned_to}}</td>
+                                <td>{{i.date_opened}}</td>
+                                <td>{{i.customer}}</td>
+                                <td>{{i.last_updated}}</td>
+                                <td>{{i.last_updated_by}}</td>
+                                <td>{{i.state}}</td>
+                                <td><a  href="{% url 'taskdetails' i.id %}" class="btn btn-info view-small-btn" >View</a></td>
+                            </tr>
+                        {% endfor %}
                       </tbody>
                     </table>
                   </div>
