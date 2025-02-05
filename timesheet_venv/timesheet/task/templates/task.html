@@ -102,8 +102,8 @@
                                         {% csrf_token %}
                                         <!--Title-->
                                         <div class="form-group col-12">
-                                            <label for="title">Title</label>
-                                            <input type="text" class="form-control" id="tickettitle" name="ticket_title" aria-describedby="titleHelp" placeholder="Enter Title">
+                                            <label for="ticket_title">Title</label>
+                                            <input type="text" class="form-control" id="ticket_title" name="ticket_title" aria-describedby="titleHelp" placeholder="Enter Title">
                                         </div>
 
                                         <!--customer-->
@@ -287,13 +287,14 @@
     <script>
         document.getElementById("addTaskButton").addEventListener("click", function () {
             const assigned_users = $("#assigneduserlist").val();  // Use `.val()` for multiple selections
+            const title = $("#ticket_title").val();  // Corrected ID
         
             $.ajax({
                 method: "POST",
                 url: "{% url 'add_task' %}",
                 data: {
                     csrfmiddlewaretoken: document.querySelector('[name=csrfmiddlewaretoken]').value,
-                    ticket_title: $("#tickettitle").val(),
+                    ticket_title: $("#ticket_title").val(),
                     //title: title,
                     customerlist: $("#customerlist").val(),
                     tickettypelist: $("#tasktypelist").val(),
