@@ -44,13 +44,13 @@
                             <div class="form-group col-12">
                                 <label for="ticket_title">Title</label>
                                 <input type="text" class="form-control" id="ticketname" name="ticket_title" 
-                                       value="{{ ticket.ticket_title }}" >
+                                       value="{{ ticket.ticket_title }}" {% if not request.user.is_superuser %}readonly{% endif %} >
                             </div>
                     
                             <!-- Customer -->
                             <div class="form-group col-6">
                                 <label for="customer">Customer</label>
-                                <select class="form-control" id="customer" name="customer" >
+                                <select class="form-control" id="customer" name="customer" {% if not request.user.is_superuser %}disabled{% endif %}>
                                     {% for i in customers %}
                                     <option value="{{ i.id }}" {% if i.id == ticket.customer_id %}selected{% endif %}> 
                                         {{ i.name }}
@@ -62,9 +62,9 @@
                             <!-- Priority -->
                             <div class="form-group col-6">
                                 <label for="priority">Priority</label>
-                                <select class="form-control" id="prioritylist" name="priority" >
+                                <select class="form-control" id="prioritylist" name="priority" {% if not request.user.is_superuser %}disabled{% endif %}>
                                     {% for i in priority_types %}
-                                    <option value="{{ i.id }}" {% if i.id == ticket.priority_id %}selected{% endif %}>
+                                    <option value="{{ i.id }}" {% if i.id == ticket.priority_id %}selected{% endif %} >
                                         {{ i.priority_name }}
                                     </option>
                                     {% endfor %}
@@ -82,13 +82,13 @@
                             <div class="form-group col-6">
                                 <label for="last_updated">Last Updated</label>
                                 <input type="date" class="form-control" id="last_updated" name="last_updated"
-                                       value="{{ ticket.last_updated|date:'Y-m-d' }}" >
+                                       value="{{ ticket.last_updated|date:'Y-m-d' }}" {% if not request.user.is_superuser %}readonly{% endif %}>
                             </div>
                     
                             <!-- Assigned To -->
                             <div class="form-group col-12">
                                 <label for="assigned_to">Assigned To</label>
-                                <select class="js-example-basic-multiple form-control" id="assigned_to" name="assigned_to" style="width: 100%; " multiple >
+                                <select class="js-example-basic-multiple form-control" id="assigned_to" name="assigned_to" style="width: 100%; " multiple {% if not request.user.is_superuser %}disabled{% endif %} >
                                     {% for i in users %}
                                     <option value="{{ i.id }}" {% if i in ticket.assigned_to.all %}selected{% endif %}>
                                         {{ i.username }}
@@ -101,7 +101,7 @@
                             <div class="form-group col-12">
                                 <label for="short_description">Short Description</label>
                                 <textarea class="form-control" id="short_description" name="short_description" rows="3"
-                                          >{{ ticket.short_description }}</textarea>
+                                {% if not request.user.is_superuser %}readonly{% endif %}>{{ ticket.short_description }}</textarea>
                             </div>
                     
                             <!-- Solution -->
@@ -113,7 +113,7 @@
                             <!-- State -->
                             <div class="form-group col-6">
                                 <label for="statelist">State</label>
-                                <select class="form-control" id="statelist" name="state" >
+                                <select class="form-control" id="statelist" name="state" {% if not request.user.is_superuser %}disabled{% endif %} >
                                     {% for i in states %}
                                     <option value="{{ i.id }}" {% if i.id == ticket.state_id %}selected{% endif %}>
                                         {{ i.state_name }}

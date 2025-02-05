@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Ticket{% endblock title %}
-{% block page-title %}Ticket{% endblock page-title %}
+{% block title %}Ticket History{% endblock title %}
+{% block page-title %}Ticket History{% endblock page-title %}
 <!--style-->
 {% block style %}
     .small-btn {
@@ -75,7 +75,7 @@
                     </a>
 
                     <!--Dropdown Filters-->
-                    <div class="btn-group " role="group" aria-label="Basic example">
+                    <div class="btn-group " role="group" aria-label="Basic example" {% if not request.user.is_superuser %}hidden{% endif %}>
                         <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn"   id="userbtnGroupDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             {% if selected_user %}
                                 {{ selected_user.username }}
@@ -101,14 +101,11 @@
                       <thead>
                         <tr>
                           <th>ID&nbsp&nbsp</th>
-                          <th>Type&nbsp&nbsp</th>
-                          <th>Title&nbsp&nbsp</th>
-                          <th>Assigned To&nbsp&nbsp</th>
-                          <th>Date Opened&nbsp&nbsp</th>
                           <th>Customer&nbsp&nbsp</th>
-                          <th>Updated on&nbsp&nbsp</th>
-                          <th>Updated by&nbsp&nbsp</th>
-                          <th>State&nbsp&nbsp</th>
+                          <th>Assigned To&nbsp&nbsp</th>
+                          <th>Title&nbsp&nbsp</th>
+                          <th>Details</th>
+                          <th>Closed Date</th>
                           <th>Actions&nbsp&nbsp</th>
                         </tr>
                       </thead>
@@ -116,16 +113,16 @@
                       <tbody>
                         {% for i in tasks %}
                             <tr>
-                                
                                 <td>{{i.ticket_id}}</td>
-                                <td>{{i.ticket_type}}</td>
-                                <td>{{i.ticket_title}}</td>
-                                <td>{{i.assigned_to}}</td>
-                                <td>{{i.date_opened}}</td>
                                 <td>{{i.customer}}</td>
+                                <td>
+                                    {% for user in i.assigned_to.all %}
+                                        {{ user.username }}{% if not forloop.last %}, {% endif %}
+                                    {% endfor %}
+                                </td>  
+                                <td>{{i.ticket_title}}</td>
+                                <td>{{i.short_description}}</td>
                                 <td>{{i.last_updated}}</td>
-                                <td>{{i.last_updated_by}}</td>
-                                <td>{{i.state}}</td>
                                 <td><a  href="{% url 'taskdetails' i.id%}" class="btn btn-info view-small-btn" >View</a></td>
                             </tr>
                         {% endfor %}

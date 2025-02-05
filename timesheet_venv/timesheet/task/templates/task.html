@@ -82,7 +82,7 @@
                 <div class="card-header">
 
                      <!--Add Issue Buttons-->
-                    <button type="button" class="btn btn-outline-success small-btn" data-toggle="modal" data-target="#exampleModalForm">
+                    <button type="button" class="btn btn-outline-success small-btn" data-toggle="modal" data-target="#exampleModalForm" {% if not request.user.is_superuser %}hidden{% endif %}>
                         Add Ticket
                     </button>
 
@@ -194,7 +194,7 @@
                     <!--user/ticke history button-->
                     <div class="d-flex justify-content-end " style="gap: 10px;">
                         <!--Dropdown Filters-->
-                        <div class="btn-group " role="group" aria-label="Basic example">
+                        <div class="btn-group " role="group" aria-label="Basic example" {% if not request.user.is_superuser %}hidden{% endif %}>
                             <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn " id="userbtnGroupDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 {% if selected_user %}
                                     {{ selected_user.username }}
@@ -214,7 +214,7 @@
                         </div>
 
                         <!--Ticket History Buttons-->
-                        <a href = "{% url 'taskhistory' %}" class="btn btn-outline-success small-btn d-flex justify-content-center align-items-center text-center" >
+                        <a href = "{% url 'taskhistory' %}" class="btn btn-outline-success small-btn d-flex justify-content-right align-items-center text-center" >
                             Ticket History
                         </a>
                     </div>
