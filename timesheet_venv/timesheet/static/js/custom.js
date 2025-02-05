@@ -398,9 +398,10 @@ $(document).ready(function () {
     productsTable.DataTable({
       info: false,
       lengthChange: false,
+      pageLength: 4,
       lengthMenu: [
-        [5, 10, 15, -1],
-        [5, 10, 15, "All"],
+        [4, 10, 15, -1],
+        [4, 10, 15, "All"],
       ],
       scrollX: true,
       order: [[2, "asc"]],

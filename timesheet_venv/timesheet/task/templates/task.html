@@ -66,6 +66,34 @@
         text-align: center;
     }
 
+    .title-column {
+        width: 650px;
+        min-width: 650px;
+        max-width: 900px;
+        word-wrap: break-word;
+      }
+    .type-column{
+        width: 150px;
+        min-width: 150px;
+        max-width: 200px;
+    }
+    .column{
+        width: 400px;
+        min-width: 400px;
+        max-width: 400px;
+    }
+
+      {% comment %} .title-link {
+        color:rgb(136, 137, 139);
+        text-decoration: none;
+        transition: color 0.3s ease-in-out;
+      }
+      
+      .title-link:hover {
+        color:white;
+        text-decoration: none;
+      } {% endcomment %}
+
 
 {% endblock %}
 
@@ -233,11 +261,11 @@
                 <div class="card-body">
                     <table id="productsTable" class="table table-hover table-product" style="width:100%">
                       <thead>
-                        <tr>
+                        <tr class="column">
                             <th>Priority&nbsp&nbsp</th>
                             <th>ID&nbsp&nbsp</th>
-                            <th>Type&nbsp&nbsp</th>
-                            <th>Title&nbsp&nbsp</th>
+                            <th class = "type-column">Type&nbsp&nbsp</th>
+                            <th class="title-column">Title&nbsp&nbsp</th>
                             <th>Assigned To&nbsp&nbsp</th>
                             <th>Date Opened&nbsp&nbsp</th>
                             <th>Customer&nbsp&nbsp</th>
@@ -256,17 +284,19 @@
                                     <span style="background-color: #ff0000;" class="i-circle">H</span>
                                     {% endif %}
 
-                                    {% if i.priority.priority_name == "Medium" %}
-                                    <span style="background-color: #16e63f;" class="i-circle">M</span>
+                                    {% if i.priority.priority_name == "Low" %}
+                                    <span style="background-color: #16e63f;" class="i-circle">L</span>
                                     {% endif %}
 
-                                    {% if i.priority.priority_name == "Low" %}
-                                    <span style="background-color: #e4b233;" class="i-circle">L</span>
+                                    {% if i.priority.priority_name == "Medium" %}
+                                    <span style="background-color: #e4b233;" class="i-circle">M</span>
                                     {% endif %}
                                 </td>
                                 <td>{{i.ticket_id}}</td>
                                 <td>{{i.ticket_type}}</td>
+                                {% comment %} <td><a class="title-link" href="{% url 'taskdetails' i.id %}">{{i.ticket_title}}</a></td> {% endcomment %}
                                 <td>{{i.ticket_title}}</td>
+                                
                                 {% comment %} <td>{{i.assigned_to}}</td> {% endcomment %}
                                 <td>
                                     {% for user in i.assigned_to.all %}
