@@ -110,7 +110,7 @@
                 <div class="card-header">
 
                      <!--Add Issue Buttons-->
-                    <button type="button" class="btn btn-outline-success small-btn" data-toggle="modal" data-target="#exampleModalForm" {% if not request.user.is_superuser %}hidden{% endif %}>
+                    <button type="button" class="btn btn-outline-success small-btn" data-toggle="modal" data-target="#exampleModalForm" {% if not request.user.is_staff %}hidden{% endif %}>
                         Add Ticket
                     </button>
 
@@ -130,7 +130,7 @@
                                         {% csrf_token %}
 
                                         <!--ID-->
-                                        <div class="form-group col-4">
+                                        <div class="form-group col-4" hidden>
                                             <label for="ticket_id">Ticket ID</label>
                                             <input type="text" class="form-control" id="ticket_id" name="ticket_id" aria-describedby="titleHelp" placeholder="Enter ID">
                                         </div> 
@@ -230,7 +230,7 @@
                     <!--user/ticket history button-->
                     <div class="d-flex justify-content-end " style="gap: 10px;">
                         <!--Dropdown Filters-->
-                        <div class="btn-group " role="group" aria-label="Basic example" {% if not request.user.is_superuser %}hidden{% endif %}>
+                        <div class="btn-group " role="group" aria-label="Basic example" {% if not request.user.is_staff %}hidden{% endif %}>
                             <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn " id="userbtnGroupDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 {% if selected_user %}
                                     {{ selected_user.username }}
@@ -263,7 +263,7 @@
                       <thead>
                         <tr class="column">
                             <th>Priority&nbsp&nbsp</th>
-                            <th>ID&nbsp&nbsp</th>
+                            <!-- <th>ID&nbsp&nbsp</th> -->
                             <th class = "type-column">Type&nbsp&nbsp</th>
                             <th class="title-column">Title&nbsp&nbsp</th>
                             <th>Assigned To&nbsp&nbsp</th>
@@ -292,7 +292,7 @@
                                     <span style="background-color: #e4b233;" class="i-circle">M</span>
                                     {% endif %}
                                 </td>
-                                <td>{{i.ticket_id}}</td>
+                                <!-- <td>{{i.ticket_id}}</td> -->
                                 <td>{{i.ticket_type}}</td>
                                 {% comment %} <td><a class="title-link" href="{% url 'taskdetails' i.id %}">{{i.ticket_title}}</a></td> {% endcomment %}
                                 <td>{{i.ticket_title}}</td>

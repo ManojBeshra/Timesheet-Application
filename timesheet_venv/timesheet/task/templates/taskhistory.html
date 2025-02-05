@@ -75,7 +75,7 @@
                     </a>
 
                     <!--Dropdown Filters-->
-                    <div class="btn-group " role="group" aria-label="Basic example" {% if not request.user.is_superuser %}hidden{% endif %}>
+                    <div class="btn-group " role="group" aria-label="Basic example" {% if not request.user.is_staff %}hidden{% endif %}>
                         <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn"   id="userbtnGroupDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             {% if selected_user %}
                                 {{ selected_user.username }}
@@ -100,7 +100,7 @@
                     <table id="productsTable" class="table table-hover table-product" style="width:100%">
                       <thead>
                         <tr>
-                          <th>ID&nbsp&nbsp</th>
+                          <!-- <th>ID&nbsp&nbsp</th> -->
                           <th>Customer&nbsp&nbsp</th>
                           <th>Assigned To&nbsp&nbsp</th>
                           <th>Title&nbsp&nbsp</th>
@@ -113,7 +113,7 @@
                       <tbody>
                         {% for i in tasks %}
                             <tr>
-                                <td>{{i.ticket_id}}</td>
+                                <!-- <td>{{i.ticket_id}}</td> -->
                                 <td>{{i.customer}}</td>
                                 <td>
                                     {% for user in i.assigned_to.all %}
