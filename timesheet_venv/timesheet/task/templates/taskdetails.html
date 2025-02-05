@@ -45,13 +45,13 @@
                             <div class="form-group col-12">
                                 <label for="ticket_title">Title</label>
                                 <input type="text" class="form-control" id="ticketname" name="ticket_title" 
-                                       value="{{ ticket.ticket_title }}" {% if not request.user.is_superuser %}readonly{% endif %} >
+                                       value="{{ ticket.ticket_title }}" {% if not request.user.is_staff %}readonly{% endif %} >
                             </div>
                     
                             <!-- Customer -->
                             <div class="form-group col-6">
                                 <label for="customer">Customer</label>
-                                <select class="form-control" id="customer" name="customer" {% if not request.user.is_superuser %}disabled{% endif %}>
+                                <select class="form-control" id="customer" name="customer" {% if not request.user.is_staff %}disabled{% endif %}>
                                     {% for i in customers %}
                                     <option value="{{ i.id }}" {% if i.id == ticket.customer_id %}selected{% endif %}> 
                                         {{ i.name }}
@@ -63,7 +63,7 @@
                             <!-- Priority -->
                             <div class="form-group col-6">
                                 <label for="priority">Priority</label>
-                                <select class="form-control" id="priority" name="priority" {% if not request.user.is_superuser %}disabled{% endif %}>
+                                <select class="form-control" id="priority" name="priority" {% if not request.user.is_staff %}disabled{% endif %}>
                                     {% for i in priority_types %}
                                     <option value="{{ i.id }}" {% if i.id == ticket.priority_id %}selected{% endif %} >
                                         {{ i.priority_name }}
@@ -83,25 +83,20 @@
                             <div class="form-group col-4">
                                 <label for="last_updated">Last Updated</label>
                                 <input type="date" class="form-control" id="last_updated" name="last_updated"
-                                       value="{{ ticket.last_updated|date:'Y-m-d' }}" {% if not request.user.is_superuser %}readonly{% endif %}>
+                                       value="{{ ticket.last_updated|date:'Y-m-d' }}" {% if not request.user.is_staff %}readonly{% endif %}>
                             </div>
 
                             <!-- Last Updated by -->
-                            <div class="form-group col-4">
-                                <label for="assigned_to">Updated by</label>
-                                <select class="js-example-basic-multiple form-control" id="last_updated_by" name="last_updated_by" style="width: 100%; " {% if not request.user.is_superuser %}disabled{% endif %} >
-                                    {% for i in users %}
-                                    <option value="{{ i.id }}" {% if i.id == ticket.last_updated_by.id %}selected{% endif %}>
-                                        {{ i.username }}
-                                    </option>
-                                    {% endfor %}
-                                </select>
-                            </div> 
 
+                            <div class="form-group col-4">
+                                <label for="last_updated_by">Updated by</label>
+                                <input type="text" class="form-control" value="{{ request.user.username }}" readonly>
+                            </div>
+                            
                             <!-- Assigned To -->
                             <div class="form-group col-12">
                                 <label for="assigned_to">Assigned To</label>
-                                <select class="js-example-basic-multiple form-control" id="assigned_to" name="assigned_to" style="width: 100%; " multiple {% if not request.user.is_superuser %}disabled{% endif %} >
+                                <select class="js-example-basic-multiple form-control" id="assigned_to" name="assigned_to" style="width: 100%; " multiple {% if not request.user.is_staff %}disabled{% endif %} >
                                     {% for i in users %}
                                     <option value="{{ i.id }}" {% if i in ticket.assigned_to.all %}selected{% endif %}>
                                         {{ i.username }}
@@ -111,13 +106,11 @@
                             </div> 
 
 
-
-                    
                             <!-- Short Description -->
                             <div class="form-group col-12">
                                 <label for="short_description">Short Description</label>
                                 <textarea class="form-control" id="short_description" name="short_description" rows="3"
-                                {% if not request.user.is_superuser %}readonly{% endif %}>{{ ticket.short_description }}</textarea>
+                                {% if not request.user.is_staff %}readonly{% endif %}>{{ ticket.short_description }}</textarea>
                             </div>
                     
                             <!-- Solution -->
@@ -129,7 +122,7 @@
                             <!-- State -->
                             <div class="form-group col-6">
                                 <label for="statelist">State</label>
-                                <select class="form-control" id="statelist" name="state" {% if not request.user.is_superuser %}disabled{% endif %} >
+                                <select class="form-control" id="statelist" name="state" {% if not request.user.is_staff %}disabled{% endif %} >
                                     {% for i in states %}
                                     <option value="{{ i.id }}" {% if i.id == ticket.state_id %}selected{% endif %}>
                                         {{ i.state_name }}

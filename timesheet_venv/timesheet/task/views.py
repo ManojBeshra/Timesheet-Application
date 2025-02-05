@@ -81,6 +81,7 @@ def taskdetails(request, ticket_id):
         form = TicketForm(request.POST, instance=ticket_instance)
 
         if form.is_valid():
+            ticket_instance.last_updated_by = request.user  # Set logged-in user
             form.save()
             print("Assigned Users:", request.POST.getlist('assigned_to'))
 

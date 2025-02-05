@@ -20,7 +20,6 @@ class TicketForm(forms.ModelForm):
             "priority",
             "assigned_to",
             "last_updated",
-            "last_updated_by",
             "state",
             "short_description",
             "solution",
