@@ -37,7 +37,7 @@ class ticket(models.Model):
     state = models.ForeignKey(state, on_delete=models.CASCADE, null=True)
     short_description = models.CharField(max_length=200, null=True)
     closed_date = models.DateField(null=True)
-    solution = models.TextField(max_length=500, default="")
+    solution = models.TextField(max_length=500, default="", null = True)
 
 
     def __str__(self):

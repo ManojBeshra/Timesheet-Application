@@ -82,11 +82,15 @@ def taskdetails(request, ticket_id):
 
         if form.is_valid():
             form.save()
+            print("Assigned Users:", request.POST.getlist('assigned_to'))
+
             form.instance.assigned_to.set(request.POST.getlist('assigned_to'))  # Handle ManyToManyField
             return redirect('task')
 
     else:
+        
         form = TicketForm(instance=ticket_instance)
+        print("Form Errors:", form.errors)
 
     users = User.objects.all()
     customers = customer.objects.all()

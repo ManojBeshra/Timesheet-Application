@@ -40,6 +40,7 @@
                     <form class="form-group col-12" method="POST" action="{% url 'taskdetails' ticket.id %}">
                         {% csrf_token %}
                         <div class="row">
+
                             <!-- Ticket Title -->
                             <div class="form-group col-12">
                                 <label for="ticket_title">Title</label>
@@ -62,7 +63,7 @@
                             <!-- Priority -->
                             <div class="form-group col-6">
                                 <label for="priority">Priority</label>
-                                <select class="form-control" id="prioritylist" name="priority" {% if not request.user.is_superuser %}disabled{% endif %}>
+                                <select class="form-control" id="priority" name="priority" {% if not request.user.is_superuser %}disabled{% endif %}>
                                     {% for i in priority_types %}
                                     <option value="{{ i.id }}" {% if i.id == ticket.priority_id %}selected{% endif %} >
                                         {{ i.priority_name }}
@@ -72,19 +73,31 @@
                             </div>
                     
                             <!-- Date Opened (Read-Only) -->
-                            <div class="form-group col-6">
+                            <div class="form-group col-4">
                                 <label for="date_opened">Date Opened</label>
                                 <input type="date" class="form-control" id="date_opened" name="date_opened"
                                        value="{{ ticket.date_opened|date:'Y-m-d' }}" readonly>
                             </div>
                     
                             <!-- Last Updated -->
-                            <div class="form-group col-6">
+                            <div class="form-group col-4">
                                 <label for="last_updated">Last Updated</label>
                                 <input type="date" class="form-control" id="last_updated" name="last_updated"
                                        value="{{ ticket.last_updated|date:'Y-m-d' }}" {% if not request.user.is_superuser %}readonly{% endif %}>
                             </div>
-                    
+
+                            <!-- Last Updated by -->
+                            <div class="form-group col-4">
+                                <label for="assigned_to">Updated by</label>
+                                <select class="js-example-basic-multiple form-control" id="last_updated_by" name="last_updated_by" style="width: 100%; " {% if not request.user.is_superuser %}disabled{% endif %} >
+                                    {% for i in users %}
+                                    <option value="{{ i.id }}" {% if i.id == ticket.last_updated_by.id %}selected{% endif %}>
+                                        {{ i.username }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div> 
+
                             <!-- Assigned To -->
                             <div class="form-group col-12">
                                 <label for="assigned_to">Assigned To</label>
@@ -96,6 +109,9 @@
                                     {% endfor %}
                                 </select>
                             </div> 
+
+
+
                     
                             <!-- Short Description -->
                             <div class="form-group col-12">
@@ -136,5 +152,7 @@
             </div>
         </div>
     </div>
+
+    
 
 {% endblock  %}
