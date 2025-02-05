@@ -30,6 +30,7 @@ def task(request):
 def add_task(request):
     if request.method == 'POST':
         try:
+            ticket_id = request.POST.get('ticket_id')
             ticket_title = request.POST.get('ticket_title')
             #ticket_title = request.POST.get('ticket_title') 
             #print(f"Ticket Title2: {ticket_title}")
@@ -49,6 +50,7 @@ def add_task(request):
 
             # Create new ticket
             new_ticket = ticket(
+                ticket_id = ticket_id,
                 ticket_title=ticket_title,
                 customer=customer_obj,
                 ticket_type=ticket_type_obj,

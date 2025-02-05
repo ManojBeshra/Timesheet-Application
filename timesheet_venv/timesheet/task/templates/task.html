@@ -100,6 +100,14 @@
                                 <div class="modal-body">
                                     <form class="row g-3" id="taskForm" method="POST">
                                         {% csrf_token %}
+
+                                        <!--ID-->
+                                        <div class="form-group col-4">
+                                            <label for="ticket_id">Ticket ID</label>
+                                            <input type="text" class="form-control" id="ticket_id" name="ticket_id" aria-describedby="titleHelp" placeholder="Enter ID">
+                                        </div> 
+
+
                                         <!--Title-->
                                         <div class="form-group col-12">
                                             <label for="ticket_title">Title</label>
@@ -214,7 +222,7 @@
                         </div>
 
                         <!--Ticket History Buttons-->
-                        <a href = "{% url 'taskhistory' %}" class="btn btn-outline-success small-btn d-flex justify-content-right align-items-center text-center" >
+                        <a href = "{% url 'taskhistory' %}" class="btn btn-outline-success small-btn d-flex justify-content-center align-items-center text-center" >
                             Ticket History
                         </a>
                     </div>
@@ -294,6 +302,7 @@
                 url: "{% url 'add_task' %}",
                 data: {
                     csrfmiddlewaretoken: document.querySelector('[name=csrfmiddlewaretoken]').value,
+                    ticket_id: $("#ticket_id").val(),
                     ticket_title: $("#ticket_title").val(),
                     //title: title,
                     customerlist: $("#customerlist").val(),

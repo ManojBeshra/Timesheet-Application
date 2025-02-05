@@ -14,7 +14,6 @@ class TicketForm(forms.ModelForm):
     class Meta:
         model = ticket
         fields = [
-            
             "ticket_title",
             "customer",
             "ticket_type",
