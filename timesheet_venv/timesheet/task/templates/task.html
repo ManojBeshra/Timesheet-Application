@@ -66,9 +66,6 @@
         text-align: center;
     }
 
-    
-    
-
 
 {% endblock %}
 
@@ -84,15 +81,12 @@
                 <!--Button Section-->
                 <div class="card-header">
 
-
-
                      <!--Add Issue Buttons-->
                     <button type="button" class="btn btn-outline-success small-btn" data-toggle="modal" data-target="#exampleModalForm">
                         Add Ticket
                     </button>
 
-
-                     <!-- Form Modal -->
+                    <!-- Form Modal -->
                     <div class="modal fade" id="exampleModalForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalFormTitle"
                         aria-hidden="true">
                         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
@@ -104,16 +98,16 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <form class="row g-3" id="taskForm">
+                                    <form class="row g-3" id="taskForm" method="POST">
                                         {% csrf_token %}
                                         <!--Title-->
-                                        <div class="form-group col-6">
+                                        <div class="form-group col-12">
                                             <label for="title">Title</label>
-                                            <input type="text" class="form-control" id="title" aria-describedby="titleHelp" placeholder="Enter Title">
+                                            <input type="text" class="form-control" id="tickettitle" name="ticket_title" aria-describedby="titleHelp" placeholder="Enter Title">
                                         </div>
 
                                         <!--customer-->
-                                        <div class="form-group col-6">
+                                        <div class="form-group col-4">
                                             <label for="exampleFormControlSelect12">customer</label>
                                             <select class="form-control" id="customerlist" >
                                                 {% for i in customers %}
@@ -124,12 +118,11 @@
                                             </select>
                                         </div>
 
-                                        
-
                                         <!--Ticket Type-->
-                                        <div class="form-group col-6">
+                                        <div class="form-group col-4">
                                             <label for="exampleFormControlSelect12">Ticket Type</label>
                                             <select class="form-control" id="tasktypelist">
+                                                <option value="" selected>Select</option>
                                                 {% for i in tickettype %}
                                                     <option value="{{ i.id }}" {% if i.id == ticket.tickettype_id %}selected{% endif %}>
                                                         {{ i.name }}
@@ -139,27 +132,16 @@
                                         </div>
 
                                         <!--Date Opened-->
-                                        <div class="form-group col-6">
+                                        <div class="form-group col-4">
                                             <label for="date">Date Opened</label>
                                             <input type="date" class="form-control" id="date" aria-describedby="dateHelp" min="" max="">
                                         </div>
                
-                                        <!--Assigned User-->
-                                        <div class="form-group col-4">
-                                            <label for="exampleFormControlSelect12">Assigned To</label>
-                                            <select class="form-control" id="assigneduserlist">
-                                                {% for i in users %}
-                                                    <option value="{{ i.id }}" {% if i.id == ticket.assigned_to_id %}selected{% endif %}>
-                                                        {{ i.username }}
-                                                    </option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
-
                                         <!--Priority-->
-                                        <div class="form-group col-4">
+                                        <div class="form-group col-6">
                                             <label for="exampleFormControlSelect12">Priority</label>
                                             <select class="form-control" id="prioritylist">
+                                                <option value="" selected>Select</option>
                                                 {% for i in priority %}
                                                     <option value="{{ i.id }}" {% if i.id == ticket.priority_id %}selected{% endif %}>
                                                         {{ i.priority_name }}
@@ -169,9 +151,10 @@
                                         </div>
 
                                         <!--State-->
-                                        <div class="form-group col-4">
+                                        <div class="form-group col-6">
                                             <label for="exampleFormControlSelect12">State</label>
                                             <select class="form-control" id="statelist">
+                                                <option value="" selected>Select</option>
                                                 {% for i in state %}
                                                     <option value="{{ i.id }}" {% if i.id == ticket.state_id %}selected{% endif %}>
                                                         {{ i.state_name }}
@@ -180,56 +163,70 @@
                                             </select>
                                         </div>
 
+                                        <!--Assigned To-->
+                                        <div class="form-group col-12">
+                                            <label for="exampleFormControlSelect12">Assigned To</label>
+                                            <select id="assigneduserlist" class="js-example-basic-multiple form-control " name="states[]" multiple="multiple" style="width: 100%; ">
+                                                {% for i in users %}
+                                                    <option value="{{ i.id }}" {% if i.id == ticket.assigned_to_id %}selected{% endif %}>
+                                                        {{ i.username }}
+                                                    </option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+
                                         <!--Short Description-->
                                         <div class="form-group col-12">
                                             <label for="exampleFormControlTextarea1">Short Description</label>
-                                            <textarea class="form-control" id="shortdescriptionarea" rows="1"></textarea>
+                                            <textarea class="form-control" id="shortdescriptionarea" rows="2"></textarea>
                                         </div>
                                     </form>
                                 </div>
                                 <!--footer-->
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-danger small-btn" data-dismiss="modal">Close</button>
-                                    <button type="button" id = "addTaskButton small-btn" class="btn btn-success ">Add</button>
+                                    <button type="button" id="addTaskButton" class="btn btn-success small-btn">Add</button>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!--Dropdown Filters-->
-                    <div class="btn-group " role="group" aria-label="Basic example">
-                        <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn" id="userbtnGroupDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {% if selected_user %}
-                                {{ selected_user.username }}
-                            {% else %}
-                                 User
-                            {% endif %}
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userbtnGroupDrop">
-                            <a class="dropdown-item" href="{% url 'task' %}">Show all</a>
-                            {% for i in users %}
-                                <a class="dropdown-item" href="{% url 'filterTaskByUser' i.id %}">
-                                    {{ i.username }}
-                                </a>
-                            {% endfor %}
-                            
+                    <!--user/ticke history button-->
+                    <div class="d-flex justify-content-end " style="gap: 10px;">
+                        <!--Dropdown Filters-->
+                        <div class="btn-group " role="group" aria-label="Basic example">
+                            <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn " id="userbtnGroupDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {% if selected_user %}
+                                    {{ selected_user.username }}
+                                {% else %}
+                                    User
+                                {% endif %}
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userbtnGroupDrop">
+                                <a class="dropdown-item" href="{% url 'task' %}">Show all</a>
+                                {% for i in users %}
+                                    <a class="dropdown-item" href="{% url 'filterTaskByUser' i.id %}">
+                                        {{ i.username }}
+                                    </a>
+                                {% endfor %}
+                                
+                            </div>
                         </div>
+
+                        <!--Ticket History Buttons-->
+                        <a href = "{% url 'taskhistory' %}" class="btn btn-outline-success small-btn d-flex justify-content-center align-items-center text-center" >
+                            Ticket History
+                        </a>
                     </div>
 
-                    <!--Ticket History Buttons-->
-
-                    <a href = "{% url 'taskhistory' %}" class="btn btn-outline-success small-btn" >
-                        Ticket History
-                    </a>
                 </div>
-
                                     
-                 
+                 <!--All Tickets-->
                 <div class="card-body">
                     <table id="productsTable" class="table table-hover table-product" style="width:100%">
                       <thead>
                         <tr>
-                            <th>Priority</th>
+                            <th>Priority&nbsp&nbsp</th>
                             <th>ID&nbsp&nbsp</th>
                             <th>Type&nbsp&nbsp</th>
                             <th>Title&nbsp&nbsp</th>
@@ -247,7 +244,6 @@
                         {% for i in ticketlist %}
                             <tr>
                                 <td >
-
                                     {% if i.priority.priority_name == "High" %}
                                     <span style="background-color: #ff0000;" class="i-circle">H</span>
                                     {% endif %}
@@ -259,23 +255,27 @@
                                     {% if i.priority.priority_name == "Low" %}
                                     <span style="background-color: #e4b233;" class="i-circle">L</span>
                                     {% endif %}
-
                                 </td>
                                 <td>{{i.ticket_id}}</td>
                                 <td>{{i.ticket_type}}</td>
                                 <td>{{i.ticket_title}}</td>
-                                <td>{{i.assigned_to}}</td>
+                                {% comment %} <td>{{i.assigned_to}}</td> {% endcomment %}
+                                <td>
+                                    {% for user in i.assigned_to.all %}
+                                        {{ user.username }}{% if not forloop.last %}, {% endif %}
+                                    {% endfor %}
+                                </td>                                
                                 <td>{{i.date_opened}}</td>
                                 <td>{{i.customer}}</td>
                                 <td>{{i.last_updated}}</td>
                                 <td>{{i.last_updated_by}}</td>
                                 <td>{{i.state}}</td>
-                                <td><a  href="{% url 'taskdetails' i.id %}" class="btn btn-info view-small-btn" >View</a></td>
+                                <td><a  href="{% url 'taskdetails' i.id %}" class="btn btn-outline-info view-small-btn" >View</a></td>
                             </tr>
                         {% endfor %}
                       </tbody>
                     </table>
-                  </div>
+                </div>
 
             </div>
         </div>
@@ -283,53 +283,39 @@
    
 
     {% comment %} <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> {% endcomment %}
+    <!--To add a Tickets-->
     <script>
         document.getElementById("addTaskButton").addEventListener("click", function () {
-            // Capture form data
-            const title = document.getElementById("title").value;
-            const assigned_user = document.getElementById("assigneduserlist").value;
-            const priority = document.getElementById("prioritylist").value;
-            const ticket_type = document.getElementById("tasktypelist").value;
-            const customer = document.getElementById("customerlist").value;
-            const short_description = document.getElementById("shortdescriptionarea").value;
-            const comments = document.getElementById("commentsarea").value;
-            const date_opened = document.getElementById("date").value;
-            const state = document.getElementById("statelist").value;
-        
-            // Get CSRF token
-            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            const assigned_users = $("#assigneduserlist").val();  // Use `.val()` for multiple selections
         
             $.ajax({
                 method: "POST",
                 url: "{% url 'add_task' %}",
                 data: {
-                    csrfmiddlewaretoken: csrftoken, // CSRF token for security
-                    title: title,
-                    customerlist: customer,
-                    shortdescriptionarea: short_description,
-                    tickettypelist: ticket_type,
-                    assigneduserlist: assigned_user,
-                    prioritylist: priority,
-                    commentsarea: comments,
-                    date: date_opened,
-                    statelist: state,
+                    csrfmiddlewaretoken: document.querySelector('[name=csrfmiddlewaretoken]').value,
+                    ticket_title: $("#tickettitle").val(),
+                    //title: title,
+                    customerlist: $("#customerlist").val(),
+                    tickettypelist: $("#tasktypelist").val(),
+                    date: $("#date").val(),
+                    prioritylist: $("#prioritylist").val(),
+                    statelist: $("#statelist").val(),
+                    assigneduserlist: assigned_users,  // Send as an array
+                    shortdescriptionarea: $("#shortdescriptionarea").val(),
                 },
                 success: function (data) {
-                    // Reset form and close modal
-                    document.querySelector("form").reset();
-                    $('#exampleModalForm').modal('hide');
-                    location.reload(); // Refresh the page to update tasks
+                    $("form")[0].reset();  
+                    $("#exampleModalForm").modal("hide");
+                    location.reload(); 
                 },
                 error: function (xhr, status, error) {
-                    console.log("Error:", error);
-                    alert("Failed to add task. Please try again.");
+                    console.log("Error:", xhr.responseText);  // Print error response
+                    alert("Failed to add ticket. Please try again.");
                 }
             });
         });
-        
     </script>
     
-
     <!--for Date Opened of Modal-->
     <script>
         // Get the current date

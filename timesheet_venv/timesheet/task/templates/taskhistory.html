@@ -70,11 +70,9 @@
                 <div class="card-header">
                     
                     <!--Back to All Tickets-->
-
-                    <a href = "{% url 'task' %}" class="btn btn-outline-success small-btn" >
+                    <a href = "{% url 'task' %}" class="btn btn-outline-success small-btn d-flex justify-content-center align-items-center text-center" >
                         Back to All Tickets
                     </a>
-
 
                     <!--Dropdown Filters-->
                     <div class="btn-group " role="group" aria-label="Basic example">
@@ -85,14 +83,13 @@
                                  User
                             {% endif %}
                         </button>
-                        <div class="dropdown-menu dropdown-menu-left" aria-labelledby="userbtnGroupDrop">
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userbtnGroupDrop">
                             <a class="dropdown-item" href="{% url 'taskhistory' %}">Show all</a>
                             {% for i in users %}
                                 <a class="dropdown-item" href="{% url 'filterTaskByUserforHistory' i.id %}">
                                     {{ i.username }}
                                 </a>
                             {% endfor %}
-                            
                         </div>
                     </div>
 

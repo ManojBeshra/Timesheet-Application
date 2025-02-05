@@ -1,12 +1,19 @@
 from django.contrib import admin
 from .models import ticket, ticket_update_history, ticket_type, priority_type, state
+from django.utils.html import format_html
 
 # Register your models here.
 class priority_admin(admin.ModelAdmin):
     list_display = ['id', 'priority_name']
 
 class ticket_admin(admin.ModelAdmin):
-    list_display = ['ticket_title','customer','ticket_type','date_opened','priority', 'assigned_to','last_updated', 'last_updated_by', 'state', 'short_description','closed_date','solution']
+    list_display = ['ticket_title','customer','ticket_type','date_opened','priority', 'get_assigned_users','last_updated', 'last_updated_by', 'state', 'short_description','closed_date','solution']
+
+    def get_assigned_users(self, obj):
+        return format_html("<br>".join([user.username for user in obj.assigned_to.all()]))  # Get all assigned users
+    
+    get_assigned_users.short_description = "Assigned Users"  # Column name in Admin Panel
+
 
 class state_admin(admin.ModelAdmin):
     list_display = ['id', 'state_name']
