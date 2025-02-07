@@ -77,13 +77,18 @@
         min-width: 150px;
         max-width: 200px;
     }
+    .state-column{
+        width: 90px;
+        min-width: 90px;
+        max-width: 100px;
+    }
     .column{
         width: 400px;
         min-width: 400px;
         max-width: 400px;
     }
 
-      {% comment %} .title-link {
+      .title-link {
         color:rgb(136, 137, 139);
         text-decoration: none;
         transition: color 0.3s ease-in-out;
@@ -92,7 +97,7 @@
       .title-link:hover {
         color:white;
         text-decoration: none;
-      } {% endcomment %}
+      } 
 
 
 {% endblock %}
@@ -188,7 +193,7 @@
 
                                         <!--State-->
                                         <div class="form-group col-6">
-                                            <label for="exampleFormControlSelect12">State</label>
+                                            <label for="exampleFormControlSelect12">Status</label>
                                             <select class="form-control" id="statelist">
                                                 <option value="" selected>Select</option>
                                                 {% for i in state %}
@@ -263,6 +268,7 @@
                       <thead>
                         <tr class="column">
                             <th>Priority&nbsp&nbsp</th>
+                            <th class = "state-column">Status&nbsp&nbsp</th>
                             <!-- <th>ID&nbsp&nbsp</th> -->
                             <th class = "type-column">Type&nbsp&nbsp</th>
                             <th class="title-column">Title&nbsp&nbsp</th>
@@ -273,15 +279,14 @@
                             <th>Customer&nbsp&nbsp</th>
                             <th>Updated on&nbsp&nbsp</th>
                             <th>Updated by&nbsp&nbsp</th>
-                            <th>State&nbsp&nbsp</th>
-                            <th>Actions&nbsp&nbsp</th>
+                            {% comment %} <th>Actions&nbsp&nbsp</th> {% endcomment %}
                         </tr>
                       </thead>
 
                       <tbody>
                         {% for i in ticketlist %}
                             <tr>
-                                <td >
+                                <td align="center">
                                     {% if i.priority.priority_name == "High" %}
                                     <span style="background-color: #ff0000;" class="i-circle">H</span>
                                     {% endif %}
@@ -294,10 +299,11 @@
                                     <span style="background-color: #e4b233;" class="i-circle">M</span>
                                     {% endif %}
                                 </td>
+                                <td>{{i.state}}</td>
                                 <!-- <td>{{i.ticket_id}}</td> -->
                                 <td>{{i.ticket_type}}</td>
-                                {% comment %} <td><a class="title-link" href="{% url 'taskdetails' i.id %}">{{i.ticket_title}}</a></td> {% endcomment %}
-                                <td>{{i.ticket_title}}</td>
+                                <td><a class="title-link" href="{% url 'taskdetails' i.id %}">{{i.ticket_title}}</a></td>
+                                {% comment %} <td>{{i.ticket_title}}</td> {% endcomment %}
                                 
                                 {% comment %} <td>{{i.assigned_to}}</td> {% endcomment %}
                                 <td {% if not request.user.is_staff %}hidden{% endif %}>
@@ -309,8 +315,7 @@
                                 <td>{{i.customer}}</td>
                                 <td>{{i.last_updated}}</td>
                                 <td>{{i.last_updated_by}}</td>
-                                <td>{{i.state}}</td>
-                                <td><a  href="{% url 'taskdetails' i.id %}" class="btn btn-outline-info view-small-btn" >View</a></td>
+                                {% comment %} <td><a  href="{% url 'taskdetails' i.id %}" class="btn btn-outline-info view-small-btn" >View</a></td> {% endcomment %}
                             </tr>
                         {% endfor %}
                       </tbody>

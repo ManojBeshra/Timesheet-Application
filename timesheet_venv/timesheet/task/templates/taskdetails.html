@@ -117,6 +117,9 @@
                             <div class="form-group col-12" {% if ticket.state.state_name != "Completed" %}hidden{% endif %}>
                                 <label for="solution">Solution</label>
                                 <textarea class="form-control" id="solution" name="solution" rows="4" >{{ ticket.solution }}</textarea>
+                            <div class="form-group col-12">
+                                <label for="solution">Operational Notes</label>
+                                <textarea class="form-control" id="solution" name="solution" rows="4">{{ ticket.solution }}</textarea>
                             </div>
                     
 
@@ -131,7 +134,7 @@
 
                             <!-- State -->
                             <div class="form-group col-6">
-                                <label for="statelist">State</label>
+                                <label for="statelist">Status</label>
                                 <select class="form-control" id="statelist" name="state" {% if not request.user.is_staff %}disabled{% endif %} >
                                     {% for i in states %}
                                     <option value="{{ i.id }}" {% if i.id == ticket.state_id %}selected{% endif %}>
