@@ -266,7 +266,9 @@
                             <!-- <th>ID&nbsp&nbsp</th> -->
                             <th class = "type-column">Type&nbsp&nbsp</th>
                             <th class="title-column">Title&nbsp&nbsp</th>
-                            <th>Assigned To&nbsp&nbsp</th>
+                            
+                            <th {% if not request.user.is_staff %}hidden{% endif %}>Assigned To&nbsp&nbsp</th>
+
                             <th>Date Opened&nbsp&nbsp</th>
                             <th>Customer&nbsp&nbsp</th>
                             <th>Updated on&nbsp&nbsp</th>
@@ -298,7 +300,7 @@
                                 <td>{{i.ticket_title}}</td>
                                 
                                 {% comment %} <td>{{i.assigned_to}}</td> {% endcomment %}
-                                <td>
+                                <td {% if not request.user.is_staff %}hidden{% endif %}>
                                     {% for user in i.assigned_to.all %}
                                         {{ user.username }}{% if not forloop.last %}, {% endif %}
                                     {% endfor %}

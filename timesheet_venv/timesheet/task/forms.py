@@ -19,7 +19,6 @@ class TicketForm(forms.ModelForm):
             "date_opened",
             "priority",
             "assigned_to",
-            "last_updated",
             "state",
             "short_description",
             "solution",
@@ -29,3 +28,14 @@ class TicketForm(forms.ModelForm):
             'last_updated': forms.DateInput(attrs={'type': 'date'}),
 
         }
+
+
+class SolutionForm(forms.ModelForm):
+
+    class Meta:
+        model = ticket
+        fields = [
+
+            "solution",
+        ]
+

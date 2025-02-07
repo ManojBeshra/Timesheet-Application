@@ -5,6 +5,7 @@ from .forms import TicketForm
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
+from django.utils import timezone
 
 # Create your views here.
 
@@ -15,8 +16,11 @@ def task(request):
     priority = priority_type.objects.all()
     statelist = state.objects.all()
     tickets = ticket.objects.all()
-    # for t in tickets:
-    #     print(f"Ticket Title: {t.ticket_title}")  # Ensure ticket_title is populated
+
+
+    if not request.user.is_staff:
+        tickets = tickets.filter(assigned_to=request.user)
+        
     return render(request, 'task.html', {
         'ticketlist':tickets, 
         'users':users, 
@@ -81,10 +85,13 @@ def taskdetails(request, ticket_id):
         form = TicketForm(request.POST, instance=ticket_instance)
 
         if form.is_valid():
-            ticket_instance.last_updated_by = request.user  # Set logged-in user
-            form.save()
-            print("Assigned Users:", request.POST.getlist('assigned_to'))
 
+            ticket_instance = form.save(commit=False)
+            
+            ticket_instance.last_updated = timezone.now()  
+            ticket_instance.last_updated_by = request.user  
+
+            ticket_instance.save()
             form.instance.assigned_to.set(request.POST.getlist('assigned_to'))  # Handle ManyToManyField
             return redirect('task')
 

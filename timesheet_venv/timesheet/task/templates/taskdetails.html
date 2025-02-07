@@ -80,17 +80,17 @@
                             </div>
                     
                             <!-- Last Updated -->
+
                             <div class="form-group col-4">
-                                <label for="last_updated">Last Updated</label>
-                                <input type="date" class="form-control" id="last_updated" name="last_updated"
-                                       value="{{ ticket.last_updated|date:'Y-m-d' }}" {% if not request.user.is_staff %}readonly{% endif %}>
+                                <label for="last_updated_by">Last updated</label>
+                                <input type="datetime" class="form-control" value="{{ ticket.last_updated }}" readonly>
                             </div>
 
                             <!-- Last Updated by -->
 
                             <div class="form-group col-4">
                                 <label for="last_updated_by">Updated by</label>
-                                <input type="text" class="form-control" value="{{ request.user.username }}" readonly>
+                                <input type="text" class="form-control" value="{{ ticket.last_updated_by }}" readonly>
                             </div>
                             
                             <!-- Assigned To -->
@@ -114,11 +114,21 @@
                             </div>
                     
                             <!-- Solution -->
-                            <div class="form-group col-12">
+                            <div class="form-group col-12" {% if ticket.state.state_name != "Completed" %}hidden{% endif %}>
                                 <label for="solution">Solution</label>
-                                <textarea class="form-control" id="solution" name="solution" rows="4">{{ ticket.solution }}</textarea>
+                                <textarea class="form-control" id="solution" name="solution" rows="4" >{{ ticket.solution }}</textarea>
                             </div>
                     
+
+
+                            <!-- Date Closed -->
+                            <div class="form-group col-4">
+                                <label for="date_opened">Date Closed</label>
+                                <input {% if not request.user.is_staff %}readonly{% endif %} type="date" class="form-control" id="closed_date" name="closed_date"
+                                        value="{{ ticket.closed_date }}" >
+                            </div>
+
+
                             <!-- State -->
                             <div class="form-group col-6">
                                 <label for="statelist">State</label>
@@ -134,7 +144,7 @@
                     
                         <!-- Footer -->
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-outline-success small-btn">Save Changes</button>
+                            <button {% if not request.user.is_staff %}hidden{% endif %} type="submit" class="btn btn-outline-success small-btn">Save Changes</button>
                             <a href="{% url 'task' %}" class="btn btn-outline-danger small-btn d-flex justify-content-center align-items-center text-center">
                                 Back
                             </a>
@@ -149,3 +159,8 @@
     
 
 {% endblock  %}
+
+
+<script>
+
+</script>
