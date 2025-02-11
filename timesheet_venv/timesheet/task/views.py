@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from .models import ticket, ticket_type, priority_type, state
 from customer.models import customer
 from .forms import TicketForm
@@ -9,6 +10,8 @@ from django.utils import timezone
 
 # Create your views here.
 
+
+@login_required
 def task(request):
     customers = customer.objects.all()
     users = User.objects.all()
@@ -30,6 +33,9 @@ def task(request):
         'state': statelist
         })
 
+
+
+@login_required
 @csrf_exempt
 def add_task(request):
     if request.method == 'POST':
@@ -77,7 +83,7 @@ def add_task(request):
     return JsonResponse({"success": False, "message": "Invalid request"}, status=400)
 
 
-#working
+@login_required
 def taskdetails(request, ticket_id):
     ticket_instance = get_object_or_404(ticket, pk=ticket_id)
 
@@ -90,6 +96,7 @@ def taskdetails(request, ticket_id):
             
             ticket_instance.last_updated = timezone.now()  
             ticket_instance.last_updated_by = request.user  
+            ticket_instance.closed_date = timezone.now()
 
             ticket_instance.save()
             form.instance.assigned_to.set(request.POST.getlist('assigned_to'))  # Handle ManyToManyField
@@ -117,7 +124,7 @@ def taskdetails(request, ticket_id):
     })
 
 
-
+@login_required
 def filterTaskByUser(request, id):
     users = User.objects.all()
     tasks = ticket.objects.all()
@@ -127,6 +134,9 @@ def filterTaskByUser(request, id):
     
     return render(request, 'task.html', {'users': users, 'ticketlist': tasks, 'states': states, 'selected_user': selected_user})
 
+
+
+@login_required
 def taskhistory(request):
     users = User.objects.all()
     completed_state = get_object_or_404(state, state_name = "Completed")
@@ -134,6 +144,8 @@ def taskhistory(request):
 
     return render(request, "taskhistory.html", {"tasks": tasks, "users": users})
 
+
+@login_required
 def filterTaskByUserforHistory(request, id):
     users = User.objects.all()
     selected_user = get_object_or_404(User, pk=id)

@@ -175,7 +175,7 @@
                                         <!--Date Opened-->
                                         <div class="form-group col-4">
                                             <label for="date">Date Opened</label>
-                                            <input type="date" class="form-control" id="date" aria-describedby="dateHelp" min="" max="">
+                                            <input type="date" class="form-control" id="date" aria-describedby="dateHelp" readonly>
                                         </div>
                
                                         <!--Priority-->
@@ -269,7 +269,6 @@
                         <tr class="column">
                             <th>Priority&nbsp&nbsp</th>
                             <th class = "state-column">Status&nbsp&nbsp</th>
-                            <!-- <th>ID&nbsp&nbsp</th> -->
                             <th class = "type-column">Type&nbsp&nbsp</th>
                             <th class="title-column">Title&nbsp&nbsp</th>
                             
@@ -285,38 +284,39 @@
 
                       <tbody>
                         {% for i in ticketlist %}
-                            <tr>
-                                <td align="center">
-                                    {% if i.priority.priority_name == "High" %}
-                                    <span style="background-color: #ff0000;" class="i-circle">H</span>
-                                    {% endif %}
+                            {% if i.state.state_name != "Completed" %}
+                                <tr>
+                                    <td align="center">
+                                        {% if i.priority.priority_name == "High" %}
+                                        <span style="background-color: #ff0000;" class="i-circle">H</span>
+                                        {% endif %}
 
-                                    {% if i.priority.priority_name == "Low" %}
-                                    <span style="background-color: #16e63f;" class="i-circle">L</span>
-                                    {% endif %}
+                                        {% if i.priority.priority_name == "Low" %}
+                                        <span style="background-color: #16e63f;" class="i-circle">L</span>
+                                        {% endif %}
 
-                                    {% if i.priority.priority_name == "Medium" %}
-                                    <span style="background-color: #e4b233;" class="i-circle">M</span>
-                                    {% endif %}
-                                </td>
-                                <td>{{i.state}}</td>
-                                <!-- <td>{{i.ticket_id}}</td> -->
-                                <td>{{i.ticket_type}}</td>
-                                <td><a class="title-link" href="{% url 'taskdetails' i.id %}">{{i.ticket_title}}</a></td>
-                                {% comment %} <td>{{i.ticket_title}}</td> {% endcomment %}
-                                
-                                {% comment %} <td>{{i.assigned_to}}</td> {% endcomment %}
-                                <td {% if not request.user.is_staff %}hidden{% endif %}>
-                                    {% for user in i.assigned_to.all %}
-                                        {{ user.username }}{% if not forloop.last %}, {% endif %}
-                                    {% endfor %}
-                                </td>                                
-                                <td>{{i.date_opened}}</td>
-                                <td>{{i.customer}}</td>
-                                <td>{{i.last_updated}}</td>
-                                <td>{{i.last_updated_by}}</td>
-                                {% comment %} <td><a  href="{% url 'taskdetails' i.id %}" class="btn btn-outline-info view-small-btn" >View</a></td> {% endcomment %}
-                            </tr>
+                                        {% if i.priority.priority_name == "Medium" %}
+                                        <span style="background-color: #e4b233;" class="i-circle">M</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{i.state}}</td>
+                                    <td>{{i.ticket_type}}</td>
+                                    <td><a class="title-link" href="{% url 'taskdetails' i.id %}">{{i.ticket_title}}</a></td>
+                                    {% comment %} <td>{{i.ticket_title}}</td> {% endcomment %}
+                                    
+                                    {% comment %} <td>{{i.assigned_to}}</td> {% endcomment %}
+                                    <td {% if not request.user.is_staff %}hidden{% endif %}>
+                                        {% for user in i.assigned_to.all %}
+                                            {{ user.username }}{% if not forloop.last %}, {% endif %}
+                                        {% endfor %}
+                                    </td>                                
+                                    <td>{{i.date_opened}}</td>
+                                    <td>{{i.customer}}</td>
+                                    <td>{{i.last_updated}}</td>
+                                    <td>{{i.last_updated_by}}</td>
+                                    {% comment %} <td><a  href="{% url 'taskdetails' i.id %}" class="btn btn-outline-info view-small-btn" >View</a></td> {% endcomment %}
+                                </tr>
+                            {% endif %}
                         {% endfor %}
                       </tbody>
                     </table>

@@ -16,12 +16,10 @@ class TicketForm(forms.ModelForm):
         fields = [
             "ticket_title",
             "customer",
-            "date_opened",
             "priority",
             "assigned_to",
             "state",
             "short_description",
-            "solution",
         ]
         widgets = {
             'date_opened': forms.DateInput(attrs={'type': 'date'}),

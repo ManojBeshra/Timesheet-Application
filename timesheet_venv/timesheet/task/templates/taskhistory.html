@@ -54,6 +54,34 @@
         width: 500px; /* Title column */
         white-space: normal; /* Allow text to wrap */
     }
+    
+    <!-- title column width -->
+    .title-column {
+        width: 650px;
+        min-width: 650px;
+        max-width: 900px;
+        word-wrap: break-word;
+      }
+    .type-column{
+        width: 150px;
+        min-width: 150px;
+        max-width: 200px;
+    }
+    .column{
+        width: 400px;
+        min-width: 400px;
+        max-width: 400px;
+    }
+    .title-link {
+        color:rgb(136, 137, 139);
+        text-decoration: none;
+        transition: color 0.3s ease-in-out;
+      }
+      
+      .title-link:hover {
+        color:white;
+        text-decoration: none;
+      } 
 
 {% endblock %}
 
@@ -100,30 +128,28 @@
                     <table id="productsTable" class="table table-hover table-product" style="width:100%">
                       <thead>
                         <tr>
-                          <!-- <th>ID&nbsp&nbsp</th> -->
                           <th>Customer&nbsp&nbsp</th>
                           <th>Assigned To&nbsp&nbsp</th>
                           <th>Title&nbsp&nbsp</th>
                           <th>Details</th>
                           <th>Closed Date</th>
-                          <th>Actions&nbsp&nbsp</th>
+                          <!-- <th>Actions&nbsp&nbsp</th>  -->
                         </tr>
                       </thead>
 
                       <tbody>
                         {% for i in tasks %}
                             <tr>
-                                <!-- <td>{{i.ticket_id}}</td> -->
                                 <td>{{i.customer}}</td>
                                 <td>
                                     {% for user in i.assigned_to.all %}
                                         {{ user.username }}{% if not forloop.last %}, {% endif %}
                                     {% endfor %}
                                 </td>  
-                                <td>{{i.ticket_title}}</td>
+                                <td><a class="title-link" href="{% url 'taskdetails' i.id %}">{{i.ticket_title}}</a></td>
                                 <td>{{i.short_description}}</td>
                                 <td>{{i.last_updated}}</td>
-                                <td><a  href="{% url 'taskdetails' i.id%}" class="btn btn-info view-small-btn" >View</a></td>
+                                <!-- <td><a  href="{% url 'taskdetails' i.id%}" class="btn btn-info view-small-btn" >View</a></td> -->
                             </tr>
                         {% endfor %}
                       </tbody>
