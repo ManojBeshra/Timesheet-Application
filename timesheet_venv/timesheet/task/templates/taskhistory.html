@@ -67,21 +67,18 @@
         min-width: 150px;
         max-width: 200px;
     }
-    .column{
+    <!-- .column{
         width: 400px;
         min-width: 400px;
         max-width: 400px;
+    } -->
+
+    .assigned-to-column{
+        width: 30px;
+        word-wrap: break-word;
     }
-    .title-link {
-        color:rgb(136, 137, 139);
-        text-decoration: none;
-        transition: color 0.3s ease-in-out;
-      }
-      
-      .title-link:hover {
-        color:white;
-        text-decoration: none;
-      } 
+
+
 
 {% endblock %}
 
@@ -130,7 +127,7 @@
                         <tr>
                             <th>ID&nbsp&nbsp</th>
                             <th>Customer&nbsp&nbsp</th>
-                            <th>Assigned To&nbsp&nbsp</th>
+                            <th class = "assigned-to-column" >Assigned To&nbsp&nbsp</th>
                             <th>Title&nbsp&nbsp</th>
                             <th>Details&nbsp&nbsp</th>
                             <th>Closed Date&nbsp&nbsp</th>
@@ -140,7 +137,10 @@
 
                       <tbody>
                         {% for i in tasks %}
-                            <tr>
+
+                            <tr onclick="window.location='{% url 'taskdetails' i.id%}'">
+
+                                
                                 <td>{{i.ticket_id}}</td>
                                 <td>{{i.customer}}</td>
                                 <td>
@@ -148,10 +148,11 @@
                                         {{ user.username }}{% if not forloop.last %}, {% endif %}
                                     {% endfor %}
                                 </td>  
-                                <td><a class="title-link" href="{% url 'taskdetails' i.id %}">{{i.ticket_title}}</a></td>
+                                <td>{{i.ticket_title}}</td>
                                 <td>{{i.short_description}}</td>
                                 <td>{{i.last_updated}}</td>
-                                <!-- <td><a  href="{% url 'taskdetails' i.id%}" class="btn btn-info view-small-btn" >View</a></td> -->
+
+                                
                             </tr>
                         {% endfor %}
                       </tbody>

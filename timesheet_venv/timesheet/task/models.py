@@ -78,13 +78,13 @@ class ticket(models.Model):
         return f"{self.ticket_title}"
     
     
-class ticket_update_history(models.Model):
-    updated_on = models.DateTimeField(null = True)
-    updated_by = models.ForeignKey(User, on_delete=models.CASCADE, null = True)
-    changes = models.CharField(max_length=500, null = True)
+# class ticket_update_history(models.Model):
+#     updated_on = models.DateTimeField(null = True)
+#     updated_by = models.ForeignKey(User, on_delete=models.CASCADE, null = True)
+#     changes = models.CharField(max_length=500, null = True)
 
-    def __str__(self):
-        return f"{self.changes}"
+#     def __str__(self):
+#         return f"{self.changes}"
     
 
 

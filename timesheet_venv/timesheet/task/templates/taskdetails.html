@@ -191,7 +191,7 @@
 
                         <!-- Footer -->
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-success small-btn" data-toggle="modal" data-target="#commentModal">Add Comment</button>
+                            <button {% if ticket.state.state_name == "Completed" %}hidden{% endif %}  type="button" class="btn btn-outline-success small-btn" data-toggle="modal" data-target="#commentModal">Add Comment</button>
                         </div>
 
                         <!-- Comment Modal -->

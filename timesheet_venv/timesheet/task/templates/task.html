@@ -88,16 +88,6 @@
         max-width: 400px;
     }
 
-      .title-link {
-        color:rgb(136, 137, 139);
-        text-decoration: none;
-        transition: color 0.3s ease-in-out;
-      }
-      
-      .title-link:hover {
-        color:white;
-        text-decoration: none;
-      } 
 
 
 {% endblock %}
@@ -285,7 +275,7 @@
                       <tbody>
                         {% for i in ticketlist %}
                             {% if i.state.state_name != "Completed" %}
-                                <tr>
+                            <tr onclick="window.location='{% url 'taskdetails' i.id%}'">
                                     <td align="center">
                                         {% if i.priority.priority_name == "High" %}
                                         <span style="background-color: #ff0000;" class="i-circle">H</span>
@@ -301,7 +291,7 @@
                                     </td>
                                     <td>{{i.state}}</td>
                                     <td>{{i.ticket_type}}</td>
-                                    <td><a class="title-link" href="{% url 'taskdetails' i.id %}">{{i.ticket_title}}</a></td>
+                                    <td>{{i.ticket_title}}</td>
                                     {% comment %} <td>{{i.ticket_title}}</td> {% endcomment %}
                                     
                                     {% comment %} <td>{{i.assigned_to}}</td> {% endcomment %}
