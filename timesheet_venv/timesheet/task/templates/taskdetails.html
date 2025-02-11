@@ -106,9 +106,9 @@
                             </div> 
 
 
-                            <!-- Short Description -->
+                            <!-- Operational Notes -->
                             <div class="form-group col-12">
-                                <label for="short_description">Short Description</label>
+                                <label for="short_description">Operational Notes</label>
                                 <textarea class="form-control" id="short_description" name="short_description" rows="3" {% if ticket.state.state_name == "Completed" %}readonly{% endif %}
                                 {% if not request.user.is_staff %}readonly{% endif %}>{{ ticket.short_description }}</textarea>
                             </div>
@@ -118,11 +118,7 @@
                                 <label for="solution">Solution</label>
                                 <textarea class="form-control" id="solution" name="solution" rows="4" >{{ ticket.solution }}</textarea>
                             </div>
-                            <div class="form-group col-12" {% if ticket.state.state_name != "Completed" %}hidden{% endif %}>
-                                <label for="solution">Operational Notes</label>
-                                <textarea class="form-control" id="solution" name="solution" rows="4">{{ ticket.solution }}</textarea>
-                            </div>
-                            
+
                     
 
 
@@ -167,17 +163,116 @@
                         </div>
                         {% endif %}
                     </form>
+
+
+                    <!-- Comment Section -->
+                    <form class="form-group col-12">
+                        <label for="ticket_title">Team Activity</label>
+                        <div class="" data-simplebar style="height: 241px;">
+                            <ul class="list-group" id="comment-list">
+                                {% for comment in ticket.comments.all %}
+                                <li class="list-group-item list-group-item-action border-0">
+                                    <div class="media media-xs mb-0">
+                                        <div class="media-xs-wrapper">
+                                            <img src="{% static 'images/usericon.png' %}" alt="User Image" height="40px" width="40px">
+                                        </div>
+                                        <div class="media-body">
+                                            <div class="d-flex justify-content-between">
+                                                <span class="title " style="font-size: 13px;">{{ comment.user.username }}</span>
+                                                <span class="badge badge-success d-flex justify-content-center align-items-center text-align-center" >{{ comment.created_at|date:"M d, Y, h:i A" }}</span>
+                                            </div>
+                                            <p>{{ comment.text }}</p>
+                                        </div>
+                                    </div>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-success small-btn" data-toggle="modal" data-target="#commentModal">Add Comment</button>
+                        </div>
+
+                        <!-- Comment Modal -->
+                        <div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="commentModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Add Comment</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <textarea class="form-control" id="commentarea" rows="3"></textarea>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-outline-danger small-btn" data-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-outline-success small-btn" id="addCommentBtn">Add</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                     
                 </div>
             </div>
         </div>
     </div>
 
-    
+
+<!-- To Add comments-->
+<script>
+    document.getElementById("addCommentBtn").addEventListener("click", function () {
+        let commentText = document.getElementById("commentarea").value.trim();
+        let ticketId = "{{ ticket.id }}";  // Get ticket ID dynamically
+
+        if (commentText !== "") {
+            fetch("{% url 'add_comment' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"  // CSRF Token for security
+                },
+                body: JSON.stringify({
+                    ticket_id: ticketId,
+                    text: commentText
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    let commentHTML = `
+                        <li class="list-group-item list-group-item-action border-0">
+                            <div class="media media-xs mb-0">
+                                <div class="media-xs-wrapper">
+                                    <img src="{% static 'images/usericon.png' %}" alt="User Image" height="40px" width="40px">
+                                </div>
+                                <div class="media-body">
+                                    <div class="d-flex justify-content-between">
+                                        <span class="title">${data.username}</span>
+                                        <span class="badge badge-success d-flex justify-content-center align-items-center text-align-center">${data.created_at}</span>
+                                    </div>
+                                    <p>${data.text}</p>
+                                </div>
+                            </div>
+                        </li>
+                    `;
+                    document.getElementById("comment-list").insertAdjacentHTML("beforeend", commentHTML);
+                    document.getElementById("commentarea").value = ""; // Clear textarea
+                    location.reload(); 
+                    $("#commentModal").modal("hide"); // Close modal
+                    
+                } else {
+                    alert("Error adding comment: " + data.error);
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    });
+</script>
 
 {% endblock  %}
 
 
-<script>
-
-</script>

@@ -1,12 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import ticket, ticket_type, priority_type, state
+from .models import ticket, ticket_type, priority_type, state, comment
 from customer.models import customer
 from .forms import TicketForm
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.utils import timezone
+import json
+from django.utils.timezone import now
 
 # Create your views here.
 
@@ -155,3 +157,32 @@ def filterTaskByUserforHistory(request, id):
 
 
     return render(request, 'taskhistory.html', {'users': users, "tasks": tasks, 'states': states , 'selected_user': selected_user})
+
+
+
+
+#for comment
+@csrf_exempt  
+def add_comment(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        ticket_id = data.get("ticket_id")
+        text = data.get("text")
+
+        if ticket_id and text:
+            ticket_instance = ticket.objects.get(id=ticket_id)
+            new_comment = comment.objects.create(
+                ticket=ticket_instance,
+                user=request.user,
+                text=text,
+                created_at=now()
+            )
+
+            return JsonResponse({
+                "success": True,
+                "username": request.user.username,
+                "text": new_comment.text,
+                "created_at": new_comment.created_at.strftime("%b %d, %Y, %I:%M %p")
+            })
+        return JsonResponse({"success": False, "error": "Invalid data"}, status=400)
+    return JsonResponse({"success": False, "error": "Invalid request"}, status=400)

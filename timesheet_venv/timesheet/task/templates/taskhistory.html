@@ -128,18 +128,20 @@
                     <table id="productsTable" class="table table-hover table-product" style="width:100%">
                       <thead>
                         <tr>
-                          <th>Customer&nbsp&nbsp</th>
-                          <th>Assigned To&nbsp&nbsp</th>
-                          <th>Title&nbsp&nbsp</th>
-                          <th>Details</th>
-                          <th>Closed Date</th>
-                          <!-- <th>Actions&nbsp&nbsp</th>  -->
+                            <th>ID&nbsp&nbsp</th>
+                            <th>Customer&nbsp&nbsp</th>
+                            <th>Assigned To&nbsp&nbsp</th>
+                            <th>Title&nbsp&nbsp</th>
+                            <th>Details&nbsp&nbsp</th>
+                            <th>Closed Date&nbsp&nbsp</th>
+                            <!-- <th>Actions&nbsp&nbsp</th>  -->
                         </tr>
                       </thead>
 
                       <tbody>
                         {% for i in tasks %}
                             <tr>
+                                <td>{{i.ticket_id}}</td>
                                 <td>{{i.customer}}</td>
                                 <td>
                                     {% for user in i.assigned_to.all %}
