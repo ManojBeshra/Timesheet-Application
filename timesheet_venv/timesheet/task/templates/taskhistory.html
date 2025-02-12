@@ -55,28 +55,13 @@
         white-space: normal; /* Allow text to wrap */
     }
     
-    <!-- title column width -->
     .title-column {
         width: 650px;
-        min-width: 650px;
-        max-width: 900px;
-        word-wrap: break-word;
-      }
-    .type-column{
-        width: 150px;
-        min-width: 150px;
-        max-width: 200px;
-    }
-    <!-- .column{
-        width: 400px;
-        min-width: 400px;
-        max-width: 400px;
-    } -->
+        min-width: 555px;
+        max-width:650px;
 
-    .assigned-to-column{
-        width: 30px;
-        word-wrap: break-word;
-    }
+
+      }
 
 
 
@@ -122,7 +107,7 @@
                 </div>
                  
                 <div class="card-body">
-                    <table id="productsTable" class="table table-hover table-product" style="width:100%">
+                    <!--<table id="productsTable" class="table table-hover table-product" style="width:100%">
                       <thead>
                         <tr>
                             <th>ID&nbsp&nbsp</th>
@@ -155,7 +140,41 @@
                             </tr>
                         {% endfor %}
                       </tbody>
-                    </table>
+                    </table>-->
+                    <table id="productsTable" class="table table-hover table-product" style="width:100%">
+                        <thead>
+                          <tr class="column">
+                            <th>ID&nbsp&nbsp</th>
+                            <th>Customer&nbsp&nbsp</th>
+                            <th style="max-width: 100px; word-wrap: break-word;" >Assigned To&nbsp&nbsp</th>
+                            <th class = "title-column">Title&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</th>
+                            <th>Details&nbsp&nbsp</th>
+                            <th>Closed Date&nbsp&nbsp</th>
+                          </tr>
+                        </thead>
+  
+                        <tbody>
+                            {% for i in tasks %}
+    
+                                <tr onclick="window.location='{% url 'taskdetails' i.id%}'">
+    
+                                    
+                                    <td>{{i.ticket_id}}</td>
+                                    <td>{{i.customer}}</td>
+                                    <td>
+                                        {% for user in i.assigned_to.all %}
+                                            {{ user.username }}{% if not forloop.last %}, {% endif %}
+                                        {% endfor %}
+                                    </td>  
+                                    <td>{{i.ticket_title}}</td>
+                                    <td>{{i.short_description}}</td>
+                                    <td>{{i.last_updated}}</td>
+    
+                                    
+                                </tr>
+                            {% endfor %}
+                          </tbody>
+                      </table>
                   </div>
 
             </div>
