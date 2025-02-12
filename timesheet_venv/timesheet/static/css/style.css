@@ -14487,7 +14487,8 @@ table.dataTable thead .sorting_asc,
 table.dataTable thead .sorting_desc,
 table.dataTable thead .sorting {
   border-bottom: 0;
-  padding-right: 20px;
+  /* padding-right: 20px; */
+  
 }
 @media (min-width: 1200px) {
   table.dataTable thead .sorting_asc,

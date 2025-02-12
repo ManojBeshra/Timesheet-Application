@@ -36,7 +36,7 @@
                 <div class="card-header">
                     <!--Ticket Details-->
 
-                    <!--{% if user.is_staff %}readonly{% endif %}, {% if user.is_staff %}disabled{% endif %}-->
+
                     <form class="form-group col-12" method="POST" action="{% url 'taskdetails' ticket.id %}">
                         {% csrf_token %}
                         <div class="row">
@@ -108,26 +108,21 @@
 
                             <!-- Operational Notes -->
                             <div class="form-group col-12">
-                                <label for="short_description">Operational Notes</label>
-                                <textarea class="form-control" id="short_description" name="short_description" rows="3" {% if ticket.state.state_name == "Completed" %}readonly{% endif %}
-                                {% if not request.user.is_staff %}readonly{% endif %}>{{ ticket.short_description }}</textarea>
+                                <label for="operational_notes">Operational Notes</label>
+                                <textarea class="form-control" id="operational_notes" name="operational_notes" rows="3" {% if ticket.state.state_name == "Completed" %}readonly{% endif %}
+                                {% if not request.user.is_staff %}readonly{% endif %}>{{ ticket.operational_notes }}</textarea>
                             </div>
                     
-                            <!-- Solution -->
-                            <div class="form-group col-12" {% if ticket.state.state_name != "Completed" %}hidden{% endif %}>
-                                <label for="solution">Solution</label>
-                                <textarea class="form-control" id="solution" name="solution" rows="4" >{{ ticket.solution }}</textarea>
-                            </div>
 
-                    
+
 
 
                             <!-- Date Closed -->
-                            <div class="form-group col-4">
+                            <div class="form-group col-6">
                                 <label for="last_updated_by">Date Closed</label>
                                 <input type="datetime" class="form-control" value="{{ ticket.closed_date}}" readonly>
                             </div>
-                        </div>
+                        
 
 
                             <!-- State -->
@@ -141,10 +136,20 @@
                                     {% endfor %}
                                 </select>
                             </div>
+
+                            <!-- Solutions-->
+
+                            <div class="form-group col-12" >
+                                <label for="solution">Solution</label>
+                                <textarea class="form-control" id="solution" name="solution" rows="4" >{{ ticket.solution }}</textarea>
+                            </div>
+
+                                                       
                         
-                    
+                        </div>
                         <!-- Footer -->
 
+                        
                         {% if ticket.state.state_name != "Completed" %}
                             <div class="modal-footer">
                                 <button {% if not request.user.is_staff %}hidden{% endif %} type="submit" class="btn btn-outline-success small-btn">Save Changes</button>
@@ -153,16 +158,21 @@
                                 </a>
                             </div>
                             
-                        {% else %}    
+                            {% else %}    
 
-                        <div class="modal-footer" >
-                            <button {% if not request.user.is_staff %}hidden{% endif %} type="submit" class="btn btn-outline-success small-btn">Activate</button>
-                            <a href="{% url 'task' %}" class="btn btn-outline-danger small-btn d-flex justify-content-center align-items-center text-center">
-                                Back
-                            </a>
-                        </div>
+                                <div class="modal-footer" >
+                                    <button {% if not request.user.is_staff %}hidden{% endif %} type="submit" class="btn btn-outline-success small-btn">Activate</button>
+                                    <a href="{% url 'task' %}" class="btn btn-outline-danger small-btn d-flex justify-content-center align-items-center text-center">
+                                        Back
+                                    </a>
+                                </div>
                         {% endif %}
-                    </form>
+                            
+                        </form>
+
+
+
+
 
 
                     <!-- Comment Section -->

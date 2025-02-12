@@ -11,6 +11,8 @@ class TicketForm(forms.ModelForm):
         widget=forms.SelectMultiple(attrs={'class': 'form-control'}),
         required=False
     )
+
+    solution = forms.CharField(required=False)
     class Meta:
         model = ticket
         fields = [
@@ -19,8 +21,11 @@ class TicketForm(forms.ModelForm):
             "priority",
             "assigned_to",
             "state",
-            "short_description",
+            "operational_notes",
+            "solution",
         ]
+
+
         widgets = {
             'date_opened': forms.DateInput(attrs={'type': 'date'}),
             'last_updated': forms.DateInput(attrs={'type': 'date'}),

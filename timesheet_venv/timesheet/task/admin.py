@@ -7,7 +7,7 @@ class priority_admin(admin.ModelAdmin):
     list_display = ['id', 'priority_name']
 
 class ticket_admin(admin.ModelAdmin):
-    list_display = ['ticket_id', 'ticket_title','customer','ticket_type','date_opened','priority', 'get_assigned_users','last_updated', 'last_updated_by', 'state', 'short_description','closed_date','solution']
+    list_display = ['ticket_id', 'ticket_title','customer','ticket_type','date_opened','priority', 'get_assigned_users','last_updated', 'last_updated_by', 'state', 'operational_notes','closed_date','solution']
 
     def get_assigned_users(self, obj):
         return format_html("<br>".join([user.username for user in obj.assigned_to.all()]))  # Get all assigned users

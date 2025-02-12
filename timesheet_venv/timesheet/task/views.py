@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import ticket, ticket_type, priority_type, state, comment
 from customer.models import customer
-from .forms import TicketForm
+from .forms import TicketForm, SolutionForm
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
@@ -51,7 +51,7 @@ def add_task(request):
             date_opened = request.POST.get('date')
             prioritys = request.POST.get('prioritylist')
             state_id  = request.POST.get('statelist')
-            short_description = request.POST.get('shortdescriptionarea')
+            operational_notes = request.POST.get('shortdescriptionarea')
             assigned_users = request.POST.getlist('assigneduserlist[]')  # Get multiple users
 
             # Fetch objects
@@ -69,7 +69,7 @@ def add_task(request):
                 date_opened=date_opened,
                 priority=priority_obj,
                 state=state_obj,
-                short_description=short_description,
+                operational_notes=operational_notes,
             )
             new_ticket.save()
 
@@ -90,24 +90,23 @@ def taskdetails(request, ticket_id):
     ticket_instance = get_object_or_404(ticket, pk=ticket_id)
 
     if request.method == 'POST':
-        form = TicketForm(request.POST, instance=ticket_instance)
+        form1 = TicketForm(request.POST, instance=ticket_instance)
 
-        if form.is_valid():
+        if form1.is_valid():
 
-            ticket_instance = form.save(commit=False)
+            ticket_instance = form1.save(commit=False)
             
             ticket_instance.last_updated = timezone.now()  
             ticket_instance.last_updated_by = request.user  
             ticket_instance.closed_date = timezone.now()
 
             ticket_instance.save()
-            form.instance.assigned_to.set(request.POST.getlist('assigned_to'))  # Handle ManyToManyField
+            form1.instance.assigned_to.set(request.POST.getlist('assigned_to'))  # Handle ManyToManyField
             return redirect('task')
 
     else:
         
-        form = TicketForm(instance=ticket_instance)
-        print("Form Errors:", form.errors)
+        form1 = TicketForm(instance=ticket_instance)
 
     users = User.objects.all()
     customers = customer.objects.all()
@@ -116,7 +115,7 @@ def taskdetails(request, ticket_id):
     task_types = ticket_type.objects.all()
 
     return render(request, 'taskdetails.html', {
-        'form': form,
+        'form1': form1,
         'users': users,
         'ticket': ticket_instance,
         'customers': customers,
