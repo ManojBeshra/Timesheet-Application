@@ -186,7 +186,8 @@
                                             <select id="assigneduserlist" class="js-example-basic-multiple form-control " name="states[]" multiple="multiple" style="width: 100%; ">
                                                 {% for i in users %}
                                                     <option value="{{ i.id }}" {% if i.id == ticket.assigned_to_id %}selected{% endif %}>
-                                                        {{ i.username }}
+                                                        {% comment %} {{ i.username }} {% endcomment %}
+                                                        {{ i.first_name }}
                                                     </option>
                                                 {% endfor %}
                                             </select>
@@ -283,7 +284,7 @@
                                     {% comment %} <td>{{i.assigned_to}}</td> {% endcomment %}
                                     <td {% if not request.user.is_staff %}hidden{% endif %}>
                                         {% for user in i.assigned_to.all %}
-                                            {{ user.username }}{% if not forloop.last %}, {% endif %}
+                                            {{ user.first_name }}{% if not forloop.last %}, {% endif %}
                                         {% endfor %}
                                     </td>                                
                                     <td>{{i.date_opened}}</td>

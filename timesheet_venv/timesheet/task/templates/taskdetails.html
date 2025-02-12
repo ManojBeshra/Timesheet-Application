@@ -99,7 +99,8 @@
                                 <select class="js-example-basic-multiple form-control" id="assigned_to" name="assigned_to" style="width: 100%; " multiple {% if ticket.state.state_name == "Completed" %}disabled{% endif %}{% if not request.user.is_staff %}disabled{% endif %} >
                                     {% for i in users %}
                                     <option value="{{ i.id }}" {% if i in ticket.assigned_to.all %}selected{% endif %}>
-                                        {{ i.username }}
+                                        {% comment %} {{ i.username }} {% endcomment %}
+                                        {{ i.first_name }}
                                     </option>
                                     {% endfor %}
                                 </select>
@@ -138,11 +139,12 @@
                             </div>
 
                             <!-- Solutions-->
-
+                            
                             <div class="form-group col-12" >
                                 <label for="solution">Solution</label>
-                                <textarea class="form-control" id="solution" name="solution" rows="4" >{{ ticket.solution }}</textarea>
+                                <textarea class="form-control" id="solution" name="solution" rows="4" {% if ticket.state.state_name == "Completed" %}readonly {% endif %}>{{ ticket.solution }}</textarea>
                             </div>
+                           
 
                                                        
                         
@@ -150,7 +152,7 @@
                         <!-- Footer -->
 
                         
-                        {% if ticket.state.state_name != "Completed" %}
+                        {% if ticket.state.state_name != "Completed" %} 
                             <div class="modal-footer">
                                 <button {% if not request.user.is_staff %}hidden{% endif %} type="submit" class="btn btn-outline-success small-btn">Save Changes</button>
                                 <a href="{% url 'task' %}" class="btn btn-outline-danger small-btn d-flex justify-content-center align-items-center text-center">
