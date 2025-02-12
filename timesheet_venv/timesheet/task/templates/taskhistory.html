@@ -95,9 +95,9 @@
                         </button>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userbtnGroupDrop">
                             <a class="dropdown-item" href="{% url 'taskhistory' %}">Show all</a>
-                            {% for i in users %}
+                            {% for i in first_name %}
                                 <a class="dropdown-item" href="{% url 'filterTaskByUserforHistory' i.id %}">
-                                    {{ i.username }}
+                                    {{ i.first_name }}
                                 </a>
                             {% endfor %}
                         </div>
