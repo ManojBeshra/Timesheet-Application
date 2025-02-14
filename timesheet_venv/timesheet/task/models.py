@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from customer.models import customer
+from project.models import project
 
 # Create your models here.
 
@@ -28,15 +29,16 @@ class ticket(models.Model):
     ticket_title = models.CharField(max_length=200, null=False)
     customer = models.ForeignKey(customer, on_delete=models.CASCADE, null=True)
     ticket_type = models.ForeignKey(ticket_type, on_delete=models.CASCADE, null=True)
-    date_opened = models.DateField(null=True)
+    date_opened = models.DateTimeField(null=True)
     priority = models.ForeignKey(priority_type, on_delete=models.CASCADE, null = True)
     assigned_to = models.ManyToManyField(User, related_name="assigned_tickets")  # Allow multiple users
     last_updated = models.DateTimeField(null=True)
     last_updated_by = models.ForeignKey(User, on_delete=models.CASCADE, null = True, related_name="last_updated_by")
     state = models.ForeignKey(state, on_delete=models.CASCADE, null=True)
     operational_notes = models.CharField(max_length=200, null=True)
-    closed_date = models.DateField(null=True)
+    closed_date = models.DateTimeField(null=True)
     solution = models.TextField(max_length=500 )
+    project = models.ForeignKey(project, on_delete=models.CASCADE, null=True)
 
     def save(self, *args, **kwargs):
         if not self.ticket_id:  # Only generate ID if it's a new ticket
