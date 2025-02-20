@@ -3,14 +3,12 @@ from django.contrib.auth.decorators import login_required
 from .models import ticket, ticket_type, priority_type, state, comment
 from customer.models import customer
 from .forms import TicketForm, SolutionForm
-from project.models import project
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.utils import timezone
 import json
 from django.utils.timezone import now
-from datetime import datetime
 
 # Create your views here.
 
@@ -23,7 +21,6 @@ def task(request):
     priority = priority_type.objects.all()
     statelist = state.objects.all()
     tickets = ticket.objects.all()
-    projects = project.objects.all()
 
 
     if not request.user.is_staff:
@@ -35,8 +32,7 @@ def task(request):
         'customers': customers, 
         'tickettype': tickettype, 
         'priority': priority, 
-        'state': statelist,
-        'projects': projects
+        'state': statelist
         })
 
 
@@ -48,6 +44,8 @@ def add_task(request):
         try:
             ticket_id = request.POST.get('ticket_id')
             ticket_title = request.POST.get('ticket_title')
+            #ticket_title = request.POST.get('ticket_title') 
+            #print(f"Ticket Title2: {ticket_title}")
             customers = request.POST.get('customerlist')
             ticket_types = request.POST.get('tickettypelist')
             date_opened = request.POST.get('date')
@@ -55,14 +53,12 @@ def add_task(request):
             state_id  = request.POST.get('statelist')
             operational_notes = request.POST.get('shortdescriptionarea')
             assigned_users = request.POST.getlist('assigneduserlist[]')  # Get multiple users
-            projects = request.POST.get('projects') 
 
             # Fetch objects
             customer_obj = customer.objects.get(id=customers)
             ticket_type_obj = ticket_type.objects.get(id=ticket_types)
             priority_obj = priority_type.objects.get(id=prioritys)
             state_obj = state.objects.get(id=state_id)
-            project_obj = project.objects.filter(id=projects).first()
 
             # Create new ticket
             new_ticket = ticket(
@@ -74,7 +70,6 @@ def add_task(request):
                 priority=priority_obj,
                 state=state_obj,
                 operational_notes=operational_notes,
-                project = project_obj
             )
             new_ticket.save()
 
@@ -117,8 +112,7 @@ def taskdetails(request, ticket_id):
     customers = customer.objects.all()
     priority_types = priority_type.objects.all()
     states = state.objects.all()
-    task_types = ticket_type.objects.all(),
-    projects = project.objects.all()
+    task_types = ticket_type.objects.all()
 
     return render(request, 'taskdetails.html', {
         'form1': form1,
@@ -127,8 +121,7 @@ def taskdetails(request, ticket_id):
         'customers': customers,
         'priority_types': priority_types,
         'states': states,
-        'task_types': task_types,
-        'projects': projects
+        'task_types': task_types
     })
 
 

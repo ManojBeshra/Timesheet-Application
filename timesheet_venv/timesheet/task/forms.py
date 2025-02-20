@@ -23,7 +23,6 @@ class TicketForm(forms.ModelForm):
             "state",
             "operational_notes",
             "solution",
-            "project"
         ]
 
 

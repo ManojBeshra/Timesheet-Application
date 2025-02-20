@@ -7,7 +7,7 @@ class worklog(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     date = models.DateTimeField(null=True)
     ticket_type = models.ForeignKey(ticket_type, on_delete=models.CASCADE, null=True, related_name="worklog_ticket_type")
-    detail = models.CharField(max_length=200, null=True)
+    workdone = models.CharField(max_length=200, null=True)
     project_support = models.ForeignKey(project, on_delete=models.CASCADE, null=True, related_name="worklog_project_support")
     ticket = models.ForeignKey(ticket, on_delete=models.CASCADE, null=True, related_name="worklog_ticket")
     hours = models.IntegerField(null=True)

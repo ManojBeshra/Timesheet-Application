@@ -151,9 +151,9 @@
                                         <!--Date Opened-->
                                         <div class="form-group col-4">
                                             <label for="date">Date Opened</label>
-                                            <input type="datetime-local" class="form-control" id="date" aria-describedby="dateHelp" readonly>
+                                            <input type="date" class="form-control" id="date" aria-describedby="dateHelp" readonly>
                                         </div>
-
+               
                                         <!--Priority-->
                                         <div class="form-group col-6">
                                             <label for="exampleFormControlSelect12">Priority</label>
@@ -162,19 +162,6 @@
                                                 {% for i in priority %}
                                                     <option value="{{ i.id }}" {% if i.id == ticket.priority_id %}selected{% endif %}>
                                                         {{ i.priority_name }}
-                                                    </option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
-
-                                        <!--Project-->
-                                        <div class="form-group col-6">
-                                            <label for="exampleFormControlSelect12">Project</label>
-                                            <select class="form-control" id="projects">
-                                                <option value="" selected>Select</option>
-                                                {% for i in projects %}
-                                                    <option value="{{ i.id }}" {% if i.id == ticket.project_id %}selected{% endif %}>
-                                                        {{ i.name }}
                                                     </option>
                                                 {% endfor %}
                                             </select>
@@ -339,7 +326,6 @@
                     statelist: $("#statelist").val(),
                     assigneduserlist: assigned_users,  // Send as an array
                     shortdescriptionarea: $("#shortdescriptionarea").val(),
-                    projects: $("#projects").val(),
                 },
                 success: function (data) {
                     $("form")[0].reset();  
@@ -356,26 +342,13 @@
     
     <!--for Date Opened of Modal-->
     <script>
-        
-        // Get the current datetime
-
-        document.addEventListener("DOMContentLoaded", function () {
-            let now = new Date();
-            let year = now.getFullYear();
-            let month = String(now.getMonth() + 1).padStart(2, '0'); // Ensure two digits
-            let day = String(now.getDate()).padStart(2, '0');
-            let hours = String(now.getHours()).padStart(2, '0');
-            let minutes = String(now.getMinutes()).padStart(2, '0');
-
-            let formattedDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
-            const dateInput = document.getElementById("date");
-
-            if (dateInput) {
-                dateInput.value = formattedDateTime;
-                dateInput.setAttribute("min", formattedDateTime);  // Disable past dates/times
-                dateInput.setAttribute("max", formattedDateTime);  // Disable future dates/times
-            }
-        });
+        // Get the current date
+        const currentDate = new Date().toISOString().split('T')[0];
+        // Set the min and max values to the current date
+        const dateInput = document.getElementById('date');
+        dateInput.value = currentDate;
+        dateInput.setAttribute('min', currentDate);  // Disable past dates
+        dateInput.setAttribute('max', currentDate);  // Disable future dates
     </script>
 
 {% endblock  %}

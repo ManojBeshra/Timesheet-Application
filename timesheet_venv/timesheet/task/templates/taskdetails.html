@@ -75,8 +75,8 @@
                             <!-- Date Opened (Read-Only) -->
                             <div class="form-group col-4">
                                 <label for="date_opened">Date Opened</label>
-                                <input type="datetime" class="form-control" id="date_opened" name="date_opened"
-                                       value="{{ ticket.date_opened }}" readonly>
+                                <input type="date" class="form-control" id="date_opened" name="date_opened"
+                                       value="{{ ticket.date_opened|date:'Y-m-d' }}" readonly>
                             </div>
                     
                             <!-- Last Updated -->
@@ -119,21 +119,9 @@
 
 
                             <!-- Date Closed -->
-                            <div class="form-group col-4">
+                            <div class="form-group col-6">
                                 <label for="last_updated_by">Date Closed</label>
                                 <input type="datetime" class="form-control" value="{{ ticket.closed_date}}" readonly>
-                            </div>
-
-                            <!--Project-->
-                            <div class="form-group col-4">
-                                <label for="project">Project</label>
-                                <select class="form-control" id="project" name = "project" {% if not request.user.is_staff %}disabled{% endif %}>
-                                    {% for i in projects %}
-                                        <option value="{{ i.id }}" {% if i.id == ticket.project_id %}selected{% endif %}>
-                                            {{ i.name }}
-                                        </option>
-                                    {% endfor %}
-                                </select>
                             </div>
                         
 
