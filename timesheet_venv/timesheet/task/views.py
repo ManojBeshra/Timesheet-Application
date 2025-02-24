@@ -60,7 +60,7 @@ def add_task(request):
             ticket_type_obj = ticket_type.objects.get(id=ticket_types)
             priority_obj = priority_type.objects.get(id=prioritys)
             state_obj = state.objects.get(id=state_id)
-            project_obj = project.objects.filter(id=projects).first()
+            project_obj = project.objects.get(id=projects)
 
             # Create new ticket
             new_ticket = ticket(
@@ -76,9 +76,21 @@ def add_task(request):
             )
             new_ticket.save()
 
+            if project_obj.project_name != "No Project":
+                subproject.objects.create(
+                sub_project_name=ticket_title,
+                project=project_obj,
+                date_opened=now().date()
+            )
+                
+
             # Assign multiple users
             assigned_user_objs = User.objects.filter(id__in=assigned_users)
             new_ticket.assigned_to.set(assigned_user_objs)  # Use `.set()` for ManyToManyField
+
+
+         
+                
 
             return JsonResponse({"success": True, "message": "Ticket added successfully!"})
         except Exception as e:
@@ -134,14 +146,53 @@ def taskdetails(request, ticket_id):
 def filterTaskByUser(request, id):
     users = User.objects.all()
     tasks = ticket.objects.all()
-    states = state.objects.all()
     selected_user = get_object_or_404(User, pk=id)
     tasks = tasks.filter(assigned_to=selected_user)
+
+    customers = customer.objects.all()
+    tickettype = ticket_type.objects.all()  
+    priority = priority_type.objects.all()
+    statelist = state.objects.all()
+    projects = project.objects.all()
     
-    return render(request, 'task.html', {'users': users, 'ticketlist': tasks, 'states': states, 'selected_user': selected_user})
+    
+    return render(request, 'task.html', {
+        'ticketlist':tasks, 
+        'users':users, 
+        'customers': customers, 
+        'tickettype': tickettype, 
+        'priority': priority, 
+        'state': statelist,
+        'projects': projects,
+        'selected_user' : selected_user
+        })
 
 
+@login_required
+def filterTaskByProject(request, id):
+    users = User.objects.all()
+    projects = project.objects.all()
+    tasks = ticket.objects.all()
+    selected_project = get_object_or_404(project, pk=id)
+    tasks = tasks.filter(project=selected_project)
 
+    customers = customer.objects.all()
+    tickettype = ticket_type.objects.all()  
+    priority = priority_type.objects.all()
+    statelist = state.objects.all()
+    projects = project.objects.all()
+    
+    
+    return render(request, 'task.html', {
+        'ticketlist':tasks, 
+        'users':users, 
+        'customers': customers, 
+        'tickettype': tickettype, 
+        'priority': priority, 
+        'state': statelist,
+        'projects': projects,
+        'selected_project' : selected_project
+        })
 @login_required
 def taskhistory(request):
     users = User.objects.all()

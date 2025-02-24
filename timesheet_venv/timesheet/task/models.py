@@ -32,10 +32,9 @@ class project(models.Model):
 
 
 class subproject(models.Model):
-    sub_project_id = models.CharField(max_length = 200, null = False)
     sub_project_name = models.CharField(max_length = 200, null = False)
     date_opened = models.DateField(null=True)
-    project_id = models.ForeignKey(project, on_delete=models.CASCADE, null=False)
+    project = models.ForeignKey(project, on_delete=models.CASCADE, null=False)
 
 
     def __str__(self):

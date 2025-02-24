@@ -73,6 +73,18 @@
 
 
       }
+      .card{
+        height: 70vh; /* Full height of the viewport */
+    }
+
+    .card-body {
+        min-height: 40vh;
+    }
+   
+    #productsTable {
+        min-height: 40vh;
+        display: block; /* Allows height control */
+    }
 
 
 
@@ -224,7 +236,7 @@
 
                     <!--user/ticket history button-->
                     <div class="d-flex justify-content-end " style="gap: 10px;">
-                        <!--Dropdown Filters-->
+                        <!--User Filters-->
                         <div class="btn-group " role="group" aria-label="Basic example" {% if not request.user.is_staff %}hidden{% endif %}>
                             <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn " id="userbtnGroupDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 {% if selected_user %}
@@ -238,6 +250,26 @@
                                 {% for i in users %}
                                     <a class="dropdown-item" href="{% url 'filterTaskByUser' i.id %}">
                                         {{ i.first_name }}
+                                    </a>
+                                {% endfor %}
+                                
+                            </div>
+                        </div>
+
+                        <!--Project Filters-->
+                        <div class="btn-group " role="group" aria-label="Basic example">
+                            <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn " id="userbtnGroupDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {% if selected_project %}
+                                    {{ selected_project.project_name }}
+                                {% else %}
+                                    Project
+                                {% endif %}
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userbtnGroupDrop">
+                                <a class="dropdown-item" href="{% url 'task' %}">Show all</a>
+                                {% for i in projects %}
+                                    <a class="dropdown-item" href="{% url 'filterTaskByProject' i.id %}">
+                                        {{ i.project_name }}
                                     </a>
                                 {% endfor %}
                                 
@@ -344,6 +376,7 @@
                 success: function (data) {
                     $("form")[0].reset();  
                     $("#exampleModalForm").modal("hide");
+
                     location.reload(); 
                 },
                 error: function (xhr, status, error) {

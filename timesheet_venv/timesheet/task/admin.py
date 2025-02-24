@@ -31,7 +31,7 @@ class project_admin(admin.ModelAdmin):
     list_display = ['project_id','project_name']
 
 class sub_project_admin(admin.ModelAdmin):
-    list_display = ['sub_project_id','sub_project_name']
+    list_display = ['sub_project_name', 'date_opened']
 
 admin.site.register(ticket_type, ticket_type_admin)
 admin.site.register(ticket,ticket_admin)

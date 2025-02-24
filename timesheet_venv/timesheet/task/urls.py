@@ -10,5 +10,6 @@ urlpatterns = [
     path('taskhistory/', views.taskhistory, name ="taskhistory"),
     path('taskhistory/filter/<int:id>/', views.filterTaskByUserforHistory, name = "filterTaskByUserforHistory"),
     path('add-comment/', views.add_comment, name="add_comment"),
+    path('task/filterproject/<int:id>/', views.filterTaskByProject, name = "filterTaskByProject"),
 
 ]
