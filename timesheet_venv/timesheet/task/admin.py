@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ticket, ticket_type, priority_type, state, comment
+from .models import ticket, ticket_type, priority_type, state, comment, project, subproject
 from django.utils.html import format_html
 
 # Register your models here.
@@ -27,10 +27,18 @@ class ticket_type_admin(admin.ModelAdmin):
 class comment_admin(admin.ModelAdmin):
     list_display = ['ticket','user','text', 'created_at']
 
+class project_admin(admin.ModelAdmin):
+    list_display = ['project_id','project_name']
+
+class sub_project_admin(admin.ModelAdmin):
+    list_display = ['sub_project_id','sub_project_name']
+
 admin.site.register(ticket_type, ticket_type_admin)
 admin.site.register(ticket,ticket_admin)
 # admin.site.register(ticket_update_history, ticket_update_history_admin)
 admin.site.register(priority_type, priority_admin) 
 admin.site.register(state, state_admin)
 admin.site.register(comment, comment_admin)
+admin.site.register(project,project_admin)
+admin.site.register(subproject, sub_project_admin)
 

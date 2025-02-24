@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import ticket, ticket_type, priority_type, state, comment
+from .models import ticket, ticket_type, priority_type, state, comment, project, subproject
 from customer.models import customer
 from .forms import TicketForm, SolutionForm
 from django.contrib.auth.models import User
@@ -21,6 +21,7 @@ def task(request):
     priority = priority_type.objects.all()
     statelist = state.objects.all()
     tickets = ticket.objects.all()
+    projects = project.objects.all()
 
 
     if not request.user.is_staff:
@@ -32,7 +33,8 @@ def task(request):
         'customers': customers, 
         'tickettype': tickettype, 
         'priority': priority, 
-        'state': statelist
+        'state': statelist,
+        'projects': projects
         })
 
 
@@ -44,21 +46,21 @@ def add_task(request):
         try:
             ticket_id = request.POST.get('ticket_id')
             ticket_title = request.POST.get('ticket_title')
-            #ticket_title = request.POST.get('ticket_title') 
-            #print(f"Ticket Title2: {ticket_title}")
             customers = request.POST.get('customerlist')
             ticket_types = request.POST.get('tickettypelist')
             date_opened = request.POST.get('date')
             prioritys = request.POST.get('prioritylist')
             state_id  = request.POST.get('statelist')
             operational_notes = request.POST.get('shortdescriptionarea')
-            assigned_users = request.POST.getlist('assigneduserlist[]')  # Get multiple users
+            assigned_users = request.POST.getlist('assigneduserlist[]') # Get multiple users
+            projects = request.POST.get('projects')  
 
             # Fetch objects
             customer_obj = customer.objects.get(id=customers)
             ticket_type_obj = ticket_type.objects.get(id=ticket_types)
             priority_obj = priority_type.objects.get(id=prioritys)
             state_obj = state.objects.get(id=state_id)
+            project_obj = project.objects.filter(id=projects).first()
 
             # Create new ticket
             new_ticket = ticket(
@@ -70,6 +72,7 @@ def add_task(request):
                 priority=priority_obj,
                 state=state_obj,
                 operational_notes=operational_notes,
+                project = project_obj
             )
             new_ticket.save()
 
