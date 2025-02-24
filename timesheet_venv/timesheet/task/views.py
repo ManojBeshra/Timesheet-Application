@@ -116,6 +116,7 @@ def taskdetails(request, ticket_id):
     priority_types = priority_type.objects.all()
     states = state.objects.all()
     task_types = ticket_type.objects.all()
+    projects = project.objects.all()
 
     return render(request, 'taskdetails.html', {
         'form1': form1,
@@ -124,7 +125,8 @@ def taskdetails(request, ticket_id):
         'customers': customers,
         'priority_types': priority_types,
         'states': states,
-        'task_types': task_types
+        'task_types': task_types,
+        'projects': projects
     })
 
 

@@ -74,13 +74,12 @@
 
                             <!--Project-->
                             <div class="form-group col-4">
-                                <label for="exampleFormControlSelect12">Project</label>
-                                <select class="form-control" id="projects">
-                                    <option value="" selected>Select</option>
-                                    {% for i in projects %}
-                                        <option value="{{ i.id }}" {% if i.id == ticket.project_id %}selected{% endif %}>
-                                            {{ i.project_name }}
-                                        </option>
+                                <label for="project">Project</label>
+                                <select class="form-control" id="project" name="project" {% if ticket.state.state_name == "Completed" %}disabled{% endif %}{% if not request.user.is_staff %}disabled{% endif %}>
+                                    {% for i in projects%}
+                                    <option value="{{ i.id }}" {% if i.id == ticket.project_id %}selected{% endif %} >
+                                        {{ i.project_name }}
+                                    </option>
                                     {% endfor %}
                                 </select>
                             </div>

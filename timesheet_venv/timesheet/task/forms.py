@@ -19,10 +19,12 @@ class TicketForm(forms.ModelForm):
             "ticket_title",
             "customer",
             "priority",
+            "project",
             "assigned_to",
             "state",
             "operational_notes",
             "solution",
+            
         ]
 
 
