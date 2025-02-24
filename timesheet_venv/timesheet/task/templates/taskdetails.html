@@ -49,7 +49,7 @@
                             </div>
                     
                             <!-- Customer -->
-                            <div class="form-group col-6">
+                            <div class="form-group col-4">
                                 <label for="customer">Customer</label>
                                 <select class="form-control" id="customer" name="customer" {% if ticket.state.state_name == "Completed" %}disabled{% endif %}{% if not request.user.is_staff %}disabled{% endif %}>
                                     {% for i in customers %}
@@ -61,13 +61,26 @@
                             </div>
                     
                             <!-- Priority -->
-                            <div class="form-group col-6">
+                            <div class="form-group col-4">
                                 <label for="priority">Priority</label>
                                 <select class="form-control" id="priority" name="priority" {% if ticket.state.state_name == "Completed" %}disabled{% endif %}{% if not request.user.is_staff %}disabled{% endif %}>
                                     {% for i in priority_types %}
                                     <option value="{{ i.id }}" {% if i.id == ticket.priority_id %}selected{% endif %} >
                                         {{ i.priority_name }}
                                     </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <!--Project-->
+                            <div class="form-group col-4">
+                                <label for="exampleFormControlSelect12">Project</label>
+                                <select class="form-control" id="projects">
+                                    <option value="" selected>Select</option>
+                                    {% for i in projects %}
+                                        <option value="{{ i.id }}" {% if i.id == ticket.project_id %}selected{% endif %}>
+                                            {{ i.project_name }}
+                                        </option>
                                     {% endfor %}
                                 </select>
                             </div>
@@ -123,6 +136,8 @@
                                 <label for="last_updated_by">Date Closed</label>
                                 <input type="datetime" class="form-control" value="{{ ticket.closed_date}}" readonly>
                             </div>
+
+                            
                         
 
 
