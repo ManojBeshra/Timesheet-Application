@@ -128,11 +128,43 @@
                                             <input type="text" class="form-control" id="ticket_id" name="ticket_id" aria-describedby="titleHelp" placeholder="Enter ID">
                                         </div> 
 
+                                        <!--Project-->
+                                        <div class="form-group col-6">
+                                            <label for="exampleFormControlSelect12">Project</label>
+                                            <select class="form-control" id="projects">
+                                                <option value="" selected>Select</option>
+                                                {% for i in projects %}
+                                                    <option value="{{ i.id }}" {% if i.id == ticket.project_id %}selected{% endif %}>
+                                                        {{ i.project_name }}
+                                                    </option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+
+                                        <!--Date Opened-->
+                                        <div class="form-group col-6">
+                                            <label for="date">Date Opened</label>
+                                            <input type="datetime-local" class="form-control" id="date" aria-describedby="dateHelp" readonly>
+                                        </div>
+
 
                                         <!--Title-->
-                                        <div class="form-group col-12">
+                                        <div class="form-group col-9">
                                             <label for="ticket_title">Title</label>
                                             <input type="text" class="form-control" id="ticket_title" name="ticket_title" aria-describedby="titleHelp" placeholder="Enter Title">
+                                        </div>
+
+                                        <!--Priority-->
+                                        <div class="form-group col-3">
+                                            <label for="exampleFormControlSelect12">Priority</label>
+                                            <select class="form-control" id="prioritylist">
+                                                <option value="" selected>Select</option>
+                                                {% for i in priority %}
+                                                    <option value="{{ i.id }}" {% if i.id == ticket.priority_id %}selected{% endif %}>
+                                                        {{ i.priority_name }}
+                                                    </option>
+                                                {% endfor %}
+                                            </select>
                                         </div>
 
                                         <!--customer-->
@@ -160,37 +192,11 @@
                                             </select>
                                         </div>
 
-                                        <!--Date Opened-->
-                                        <div class="form-group col-4">
-                                            <label for="date">Date Opened</label>
-                                            <input type="datetime-local" class="form-control" id="date" aria-describedby="dateHelp" readonly>
-                                        </div>
+                                        
                
-                                        <!--Priority-->
-                                        <div class="form-group col-4">
-                                            <label for="exampleFormControlSelect12">Priority</label>
-                                            <select class="form-control" id="prioritylist">
-                                                <option value="" selected>Select</option>
-                                                {% for i in priority %}
-                                                    <option value="{{ i.id }}" {% if i.id == ticket.priority_id %}selected{% endif %}>
-                                                        {{ i.priority_name }}
-                                                    </option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
+                                        
 
-                                        <!--Project-->
-                                        <div class="form-group col-4">
-                                            <label for="exampleFormControlSelect12">Project</label>
-                                            <select class="form-control" id="projects">
-                                                <option value="" selected>Select</option>
-                                                {% for i in projects %}
-                                                    <option value="{{ i.id }}" {% if i.id == ticket.project_id %}selected{% endif %}>
-                                                        {{ i.project_name }}
-                                                    </option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
+                                        
 
                                         <!--State-->
                                         <div class="form-group col-4">
@@ -238,7 +244,7 @@
                     <div class="d-flex justify-content-end " style="gap: 10px;">
                         <!--User Filters-->
                         <div class="btn-group " role="group" aria-label="Basic example" {% if not request.user.is_staff %}hidden{% endif %}>
-                            <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn " id="userbtnGroupDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn " name="userfilter" id="userfilter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 {% if selected_user %}
                                     {{ selected_user.first_name }}
                                 {% else %}
@@ -258,7 +264,7 @@
 
                         <!--Project Filters-->
                         <div class="btn-group " role="group" aria-label="Basic example">
-                            <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn " id="userbtnGroupDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn "  name="projectfilter"   id="projectfilter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 {% if selected_project %}
                                     {{ selected_project.project_name }}
                                 {% else %}
