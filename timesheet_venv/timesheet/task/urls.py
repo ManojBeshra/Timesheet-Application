@@ -9,10 +9,10 @@ urlpatterns = [
     path('taskhistory/filter/<int:id>/', views.filterTaskByUserforHistory, name = "filterTaskByUserforHistory"),
     path('add-comment/', views.add_comment, name="add_comment"),
 
-    path("tasks/", views.filter_tasks, name="task"),  # Default task list
-    path("tasks/filter/user/<int:user_id>/", views.filter_tasks, name="filterTaskByUser"),
-    path("tasks/filter/project/<int:project_id>/", views.filter_tasks, name="filterTaskByProject"),
-    path("tasks/filter/user/<int:user_id>/project/<int:project_id>/", views.filter_tasks, name="filterTaskByUserAndProject"),
+    path("task/", views.filter_tasks, name="task"),  # Default task list
+    path("task/filter/user/<int:user_id>/", views.filter_tasks, name="filterTaskByUser"),
+    path("task/filter/project/<int:project_id>/", views.filter_tasks, name="filterTaskByProject"),
+    path("task/filter/user/<int:user_id>/project/<int:project_id>/", views.filter_tasks, name="filterTaskByUserAndProject"),
 
 
 ]
