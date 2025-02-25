@@ -97,9 +97,12 @@
                         Back to All Tickets
                     </a>
 
-                    <!--Dropdown Filters-->
+                <!--Dropdown Filters-->
+                <div class="d-flex justify-content-end " style="gap: 10px;">
 
                     
+                    <!-- User Filters -->
+                     
                     <div class="btn-group" role="group" aria-label="Basic example" {% if not request.user.is_staff %}hidden{% endif %}>
                         <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn" id="userfilter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             {% if selected_user %}
@@ -111,8 +114,27 @@
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userbtnGroupDrop">
                             <a class="dropdown-item" href="{% url 'taskhistory' %}">Show all</a>
                             {% for i in users %}
-                                <a class="dropdown-item" href="{% url 'filterTaskByUserforHistory' i.id%}">
+                                <a class="dropdown-item" href="{% url 'filterTaskhistoryByUserAndProject' user_id=i.id project_id=selected_project.id|default:"0" %}">
                                     {{ i.first_name }}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Project Filters -->
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn" id="projectfilter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {% if selected_project %}
+                                {{ selected_project.project_name }}
+                            {% else %}
+                                Project
+                            {% endif %}
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userbtnGroupDrop">
+                            <a class="dropdown-item" href="{% url 'taskhistory' %}">Show all</a>
+                            {% for i in projects %}
+                                <a class="dropdown-item" href="{% url 'filterTaskhistoryByUserAndProject' user_id=selected_user.id|default:"0" project_id=i.id %}">
+                                    {{ i.project_name }}
                                 </a>
                             {% endfor %}
                         </div>
@@ -120,6 +142,7 @@
 
 
                 </div>
+            </div>
                  
                 <div class="card-body">
 
@@ -129,6 +152,7 @@
                             <th style="width: 50px;">ID&nbsp&nbsp</th>
                             <th>Customer&nbsp&nbsp</th>
                             <th style="width: 130px; word-wrap: break-word;" >Assigned To&nbsp&nbsp&nbsp&nbsp</th>
+                            <th>Project&nbsp&nbsp&nbsp&nbsp</th>
                             <th class = "title-column">Title&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</th>
                             <th>Details&nbsp&nbsp</th>
                             <th>Closed Date&nbsp&nbsp</th>
@@ -148,6 +172,7 @@
                                             {{ user.first_name }}{% if not forloop.last %}, {% endif %}
                                         {% endfor %}
                                     </td>  
+                                    <td>{{i.project.project_name}}</td>
                                     <td>{{i.ticket_title}}</td>
                                     <td>{{i.short_description}}</td>
                                     <td>{{i.last_updated}}</td>

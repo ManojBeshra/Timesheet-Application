@@ -12,30 +12,80 @@ from django.utils.timezone import now
 
 # Create your views here.
 
+@login_required
+def filter_tasks(request, user_id=None, project_id=None):
+    users = User.objects.all()
+    projects = project.objects.all()
+    tasks = ticket.objects.all()  
 
-# @login_required
-# def task(request):
-#     customers = customer.objects.all()
-#     users = User.objects.all()
-#     tickettype = ticket_type.objects.all()  
-#     priority = priority_type.objects.all()
-#     statelist = state.objects.all()
-#     tickets = ticket.objects.all()
-#     projects = project.objects.all()
+    selected_user = None
+    selected_project = None
+
+    # user filter
+    if user_id:
+        selected_user = get_object_or_404(User, pk=user_id)
+        tasks = tasks.filter(assigned_to=selected_user)
+
+    # project filter
+    if project_id:
+        selected_project = get_object_or_404(project, pk=project_id)
+        tasks = tasks.filter(project=selected_project)
+
+    customers = customer.objects.all()
+    tickettype = ticket_type.objects.all()
+    priority = priority_type.objects.all()
+    statelist = state.objects.all()
+
+    return render(request, 'task.html', {
+        'ticketlist': tasks, 
+        'users': users, 
+        'customers': customers, 
+        'tickettype': tickettype, 
+        'priority': priority, 
+        'state': statelist,
+        'projects': projects,
+        'selected_user': selected_user,
+        'selected_project': selected_project,
+    })
 
 
-#     if not request.user.is_staff:
-#         tickets = tickets.filter(assigned_to=request.user)
-        
-#     return render(request, 'task.html', {
-#         'ticketlist':tickets, 
-#         'users':users, 
-#         'customers': customers, 
-#         'tickettype': tickettype, 
-#         'priority': priority, 
-#         'state': statelist,
-#         'projects': projects
-#         })
+@login_required
+def filter_taskhistory(request, user_id=None, project_id=None):
+    users = User.objects.all()
+    projects = project.objects.all() 
+
+    completed_states = state.objects.filter(state_name__in=["Completed", "Canceled"])
+    tasks = ticket.objects.filter(state__in=completed_states)
+
+    selected_user = None
+    selected_project = None
+
+    # user filter
+    if user_id:
+        selected_user = get_object_or_404(User, pk=user_id)
+        tasks = tasks.filter(assigned_to=selected_user)
+
+    # project filter
+    if project_id:
+        selected_project = get_object_or_404(project, pk=project_id)
+        tasks = tasks.filter(project=selected_project)
+
+    customers = customer.objects.all()
+    tickettype = ticket_type.objects.all()
+    priority = priority_type.objects.all()
+    statelist = state.objects.all()
+
+    return render(request, 'taskhistory.html', {
+        'tasks': tasks, 
+        'users': users, 
+        'customers': customers, 
+        'tickettype': tickettype, 
+        'priority': priority, 
+        'state': statelist,
+        'projects': projects,
+        'selected_user': selected_user,
+        'selected_project': selected_project,
+    })
 
 
 
@@ -88,10 +138,6 @@ def add_task(request):
             assigned_user_objs = User.objects.filter(id__in=assigned_users)
             new_ticket.assigned_to.set(assigned_user_objs)  # Use `.set()` for ManyToManyField
 
-
-         
-                
-
             return JsonResponse({"success": True, "message": "Ticket added successfully!"})
         except Exception as e:
             print(f"Error: {e}")  # Debugging
@@ -141,41 +187,6 @@ def taskdetails(request, ticket_id):
         'projects': projects
     })
 
-@login_required
-def filter_tasks(request, user_id=None, project_id=None):
-    users = User.objects.all()
-    projects = project.objects.all()
-    tasks = ticket.objects.all()  
-
-    selected_user = None
-    selected_project = None
-
-    # user filter
-    if user_id:
-        selected_user = get_object_or_404(User, pk=user_id)
-        tasks = tasks.filter(assigned_to=selected_user)
-
-    # project filter
-    if project_id:
-        selected_project = get_object_or_404(project, pk=project_id)
-        tasks = tasks.filter(project=selected_project)
-
-    customers = customer.objects.all()
-    tickettype = ticket_type.objects.all()
-    priority = priority_type.objects.all()
-    statelist = state.objects.all()
-
-    return render(request, 'task.html', {
-        'ticketlist': tasks, 
-        'users': users, 
-        'customers': customers, 
-        'tickettype': tickettype, 
-        'priority': priority, 
-        'state': statelist,
-        'projects': projects,
-        'selected_user': selected_user,
-        'selected_project': selected_project,
-    })
 
 
 @login_required
@@ -197,48 +208,6 @@ def filterTaskByUserforHistory(request, id):
     states = state.objects.all()
 
     return render(request, 'taskhistory.html', {'users': users, "tasks": tasks, 'states': states , 'selected_user': selected_user})
-
-
-
-# @login_required
-# def filter_taskhistory(request, user_id=None, project_id=None):
-#     users = User.objects.all()
-#     projects = project.objects.all()
-
-#     completed_states = state.objects.filter(state_name__in=["Completed", "Canceled"])
-#     tasks = ticket.objects.filter(state__in=completed_states)
-
-#     selected_user = None
-#     selected_project = None
-
-#     # user filter
-#     if user_id:
-#         selected_user = get_object_or_404(User, pk=user_id)
-#         tasks = tasks.filter(assigned_to=selected_user)
-
-#     # project filter
-#     if project_id:
-#         selected_project = get_object_or_404(project, pk=project_id)
-#         tasks = tasks.filter(project=selected_project)
-
-#     customers = customer.objects.all()
-#     tickettype = ticket_type.objects.all()
-#     priority = priority_type.objects.all()
-#     statelist = state.objects.all()
-
-#     return render(request, 'taskhistory.html', {
-#         'ticketlist': tasks,
-#         'users': users,
-#         'customers': customers,
-#         'tickettype': tickettype,
-#         'priority': priority,
-#         'state': statelist,
-#         'projects': projects,
-#         'selected_user': selected_user,
-#         'selected_project': selected_project,
-#     })
-
-
 
 
 
