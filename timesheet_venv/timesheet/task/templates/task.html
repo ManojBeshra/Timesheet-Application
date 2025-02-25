@@ -242,9 +242,11 @@
 
                     <!--user/ticket history button-->
                     <div class="d-flex justify-content-end " style="gap: 10px;">
-                        <!--User Filters-->
-                        <div class="btn-group " role="group" aria-label="Basic example" {% if not request.user.is_staff %}hidden{% endif %}>
-                            <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn " name="userfilter" id="userfilter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+
+                        <!-- User Filters -->
+                        <div class="btn-group" role="group" aria-label="Basic example" {% if not request.user.is_staff %}hidden{% endif %}>
+                            <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn" id="userfilter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 {% if selected_user %}
                                     {{ selected_user.first_name }}
                                 {% else %}
@@ -254,17 +256,16 @@
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userbtnGroupDrop">
                                 <a class="dropdown-item" href="{% url 'task' %}">Show all</a>
                                 {% for i in users %}
-                                    <a class="dropdown-item" href="{% url 'filterTaskByUser' i.id %}">
+                                    <a class="dropdown-item" href="{% url 'filterTaskByUserAndProject' user_id=i.id project_id=selected_project.id|default:"0" %}">
                                         {{ i.first_name }}
                                     </a>
                                 {% endfor %}
-                                
                             </div>
                         </div>
 
-                        <!--Project Filters-->
-                        <div class="btn-group " role="group" aria-label="Basic example">
-                            <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn "  name="projectfilter"   id="projectfilter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <!-- Project Filters -->
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn" id="projectfilter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 {% if selected_project %}
                                     {{ selected_project.project_name }}
                                 {% else %}
@@ -274,13 +275,13 @@
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userbtnGroupDrop">
                                 <a class="dropdown-item" href="{% url 'task' %}">Show all</a>
                                 {% for i in projects %}
-                                    <a class="dropdown-item" href="{% url 'filterTaskByProject' i.id %}">
+                                    <a class="dropdown-item" href="{% url 'filterTaskByUserAndProject' user_id=selected_user.id|default:"0" project_id=i.id %}">
                                         {{ i.project_name }}
                                     </a>
                                 {% endfor %}
-                                
                             </div>
                         </div>
+
 
                         <!--Ticket History Buttons-->
                         <a href = "{% url 'taskhistory' %}" class="btn btn-outline-success small-btn d-flex justify-content-center align-items-center text-center" >
@@ -313,7 +314,8 @@
 
                       <tbody>
                         {% for i in ticketlist %}
-                            {% if i.state.state_name != "Completed" %}
+                            {% if i.state.state_name != "Completed" and i.state.state_name != "Canceled" %}
+
                             <tr onclick="window.location='{% url 'taskdetails' i.id%}'">
                                     <td align="center">
                                         {% if i.priority.priority_name == "High" %}

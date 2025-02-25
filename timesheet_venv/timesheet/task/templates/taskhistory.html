@@ -98,18 +98,20 @@
                     </a>
 
                     <!--Dropdown Filters-->
-                    <div class="btn-group " role="group" aria-label="Basic example" {% if not request.user.is_staff %}hidden{% endif %}>
-                        <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn"   id="userbtnGroupDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+                    
+                    <div class="btn-group" role="group" aria-label="Basic example" {% if not request.user.is_staff %}hidden{% endif %}>
+                        <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn" id="userfilter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             {% if selected_user %}
-                                {{ selected_user.username }}
+                                {{ selected_user.first_name }}
                             {% else %}
-                                 User
+                                User
                             {% endif %}
                         </button>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userbtnGroupDrop">
-                            <a class="dropdown-item" href="{% url 'taskhistory' %}">Show all</a>
-                            {% for i in first_name %}
-                                <a class="dropdown-item" href="{% url 'filterTaskByUserforHistory' i.id %}">
+                            <a class="dropdown-item" href="{% url 'task' %}">Show all</a>
+                            {% for i in users %}
+                                <a class="dropdown-item" href="{% url 'filterTaskByUserAndProject' user_id=i.id project_id=selected_project.id|default:"0" %}">
                                     {{ i.first_name }}
                                 </a>
                             {% endfor %}
