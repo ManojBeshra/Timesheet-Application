@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'worklog',
     'attendance',
     'task',
-    'project',
     'user',
     'company',
     'customer',
