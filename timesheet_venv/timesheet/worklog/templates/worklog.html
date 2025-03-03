@@ -2,6 +2,7 @@
 {% load static %}
 {% block title %}Worklog{% endblock title %}
 {% block page-title %}Worklog{% endblock page-title %}
+
 <!--style-->
 {% block style %}
     .small-btn {
@@ -70,8 +71,6 @@
         width: 650px;
         min-width: 555px;
         max-width:650px;
-
-
       }
 
       .changes-color:hover { color: #270869 !important; }
@@ -89,8 +88,11 @@
         display: block; /* Allows height control */
     }
 
-
-
+    .date-header {
+        width: 80px;
+        min-width: 85px;
+        max-width:85px;
+    }
 
 {% endblock %}
 
@@ -109,16 +111,14 @@
                      <!--Add Issue Buttons-->
                     <div class="d-flex justify-content-start " style="gap: 10px;">
 
-
                     <!-- Only for User    -->
-                    <button type="button" id = "addlog" class="btn btn-outline-success small-btn" data-toggle="modal" data-target="#AddLogForm" {% if not request.user.is_staff %}hidden{% endif %}>
+                    <button type="button" id = "addlog" class="btn btn-outline-success small-btn" data-toggle="modal" data-target="#AddLogForm" {% if request.user.is_staff %}hidden{% endif %}>
                         Add Log
                     </button>
 
-                    <button type="button" id = "requestreview" class="btn btn-outline-success small-btn" data-toggle="modal" data-target="#RequestReviewForm" {% if not request.user.is_staff %}hidden{% endif %}>
+                    <button type="button" id = "requestreview" class="btn btn-outline-success small-btn" data-toggle="modal" data-target="#RequestReviewForm" >
                         Request Review
                     </button>
-
 
                     <!-- Only for Admin -->
                     <button type="button" id = "report" class="btn btn-outline-success small-btn" data-toggle="modal" data-target="#exampleModalForm" {% if not request.user.is_staff %}hidden{% endif %}>
@@ -138,7 +138,8 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <form class="row g-3" id="taskForm" method="POST">
+                                    {% comment %} <form class="row g-3" id="taskForm" method="POST"> {% endcomment %}
+                                    <form class="row g-3" id="LogForm" method="POST" action="">
                                         {% csrf_token %}
 
 
@@ -158,41 +159,33 @@
                                               <label for="billable">Billable</label>
                                         </div>
 
-
                                         <!--Hours-->
                                         <div class="form-group col-2">
                                             <label for="hours">Hours</label>
-                                            <input type="text" class="form-control" id="hours" name="hours" aria-describedby="titleHelp" placeholder="Enter hours">
+                                            <input type="number" class="form-control" id="hours" name="hours" aria-describedby="titleHelp" placeholder="hours">
                                         </div>
 
-                                        <!--Ticket-->
+                                        <!-- Ticket -->
                                         <div class="form-group col-4">
-                                            <label for="exampleFormControlSelect12">Ticket</label>
-                                            <select class="form-control" id="prioritylist">
+                                            <label for="ticket">Ticket</label>
+                                            <select class="form-control" id="ticket" name="ticket">
                                                 <option value="" selected>Select</option>
                                                 {% for i in tickets %}
-                                                    <option >
-                                                        {{ i.ticket_id }}
-                                                    </option>
+                                                    <option value="{{ i.id }}">{{ i.ticket_id }}</option>
                                                 {% endfor %}
                                             </select>
                                         </div>
                                         
-
-
-                                    
-                                        <!--Date Opened-->
+                                        <!--Date-->
                                         <div class="form-group col-4">
-                                            <label for="date">Date Opened</label>
-                                            <input type="datetime-local" class="form-control" id="date" aria-describedby="dateHelp" readonly>
+                                            <label for="date">Date</label>
+                                            <input type="datetime-local" class="form-control" id="date" aria-describedby="dateHelp" >
                                         </div>
-
-                                        
 
                                         <!--Week-->
                                         <div class="form-group col-2">
-                                            <label for="date">Week</label>
-                                            <input type="text" class="form-control" id="date" aria-describedby="dateHelp" readonly>
+                                            <label for="week">Week</label>
+                                            <input type="text" class="form-control" id="week" aria-describedby="weekHelp" readonly>
                                         </div>
 
                                         <!--Priority-->
@@ -213,8 +206,8 @@
                                             <label for="exampleFormControlSelect12">Project/Support</label>
                                             <select class="form-control" id="projects">
                                                 <option value="" selected>Select</option>
-                                                {% for i in projects %}
-                                                    <option value="{{ i.id }}" {% if i.id == ticket.project_id %}selected{% endif %}>
+                                                {% for i in tickettype %}
+                                                    <option value="{{ i.id }}" {% if i.id == ticket.tickettype %}selected{% endif %}>
                                                         {{ i.name }}
                                                     </option>
                                                 {% endfor %}
@@ -225,42 +218,22 @@
                                         <!--Category-->
                                         <div class="form-group col-4">
                                             <label for="exampleFormControlSelect12">Category</label>
-                                            <select class="form-control" id="customerlist" >
-                                                {% for i in customers %}
-                                                    <option value="{{ i.id }}" {% if i.id == ticket.customer_id %}selected{% endif %}>
-                                                        {{ i.name }}
-                                                    </option>
-                                                {% endfor %}
-                                            </select>
+                                            <input type="text" class="form-control" id="category" name="category" aria-describedby="categoryHelp" placeholder="Enter Category">
                                         </div>
 
-
-
-
-
-                                        <!-- State -->
-                                        <!-- <div class="form-group col-6">
-                                            <label for="exampleFormControlSelect12">Status</label>
-                                            <select class="form-control" id="statelist">
-                                                <option value="" selected>Select</option>
-                                                {% for i in state %}
-                                                    <option value="{{ i.id }}" {% if i.id == ticket.state_id %}selected{% endif %}>
-                                                        {{ i.state_name }}
-                                                    </option>
-                                                {% endfor %}
-                                            </select> -->
-
-                                        <!--Operational Notes-->
+                                        <!--Notes-->
                                         <div class="form-group col-12">
                                             <label for="exampleFormControlTextarea1">Notes</label>
-                                            <textarea class="form-control" id="shortdescriptionarea" rows="2"></textarea>
+                                            <textarea class="form-control" id="notesarea" rows="2"></textarea>
                                         </div>
+
+                                        
                                     </form>
                                 </div>
                                 <!--footer-->
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-danger small-btn" data-dismiss="modal">Close</button>
-                                    <button type="button" id="addTaskButton" class="btn btn-success small-btn">Add</button>
+                                    <button type="button" id="addLogButton" class="btn btn-success small-btn">Add</button>
                                 </div>
                             </div>
                         </div>
@@ -458,40 +431,57 @@
                     </div>
 
                     <!-- Delete Confirmation Modal -->
-                    <div class="modal fade" id="DeleteLogForm" tabindex="-1" role="dialog" aria-labelledby="DeleteLogFormTitle" aria-hidden="true">
-                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                                <!-- Modal Header -->
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="DeleteLogFormTitle">Delete Log</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-
-                                <!-- Modal Body -->
-                                <div class="modal-body">
-                                    <form id="deleteLogForm" method="POST">
-                                        {% csrf_token %}
-
-                                        <p class="mb-4">Are you sure you want to delete this log?</p>
-
-                                        <!-- Action Buttons -->
-                                        <div class="d-flex justify-content-end gap-1" style="gap: 10px; padding: -5px;">
-                                            <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">No</button>
-                                            <button type="submit" class="btn btn-danger btn-sm">Yes, Delete</button>
-                                        </div>
-                                    </form>
-                                </div>
+                    <div class="modal fade" id="DeleteLogForm" tabindex="-1" role="dialog" aria-labelledby="DeleteLogFormTitle"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Delete Log</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
                             </div>
+                            <div class="modal-body">
+                                <form id="deleteLogForm" method="POST">
+                                    {% csrf_token %}
+                                    <p class="mb-4">Are you sure you want to delete this log?</p>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-success small-btn" data-dismiss="modal">No</button>
+                                <button type="submit" class="btn btn-danger small-btn">Yes, Delete</button>
+                            </div>
+                        </div>
                         </div>
                     </div>
 
+                    <!-- Note Modal -->
+                    <div class="modal fade" id="NoteForm" tabindex="-1" role="dialog" aria-labelledby="NoteFormLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Note</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="NoteForm" method="POST">
+                                    {% csrf_token %}
+                                    <p id="note-content" class="mb-4"></p> <!-- Placeholder for dynamic note -->
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger small-btn" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
 
-                    <!--user/ticket history button-->
+                    <!--User/Date/Billable filter buttons-->
                     <div class="d-flex justify-content-end " style="gap: 10px;">
                         <!--Dropdown Filters-->
-
 
                         <!-- User Dropdown Only for Admin -->
                         <div class="btn-group " role="group" aria-label="Basic example" {% if not request.user.is_staff %}hidden{% endif %}>
@@ -514,9 +504,8 @@
                             
                         </div>
 
-
                         <!-- Date Filter -->
-                        <div class="btn-group " role="group" aria-label="Basic example" {% if not request.user.is_staff %}hidden{% endif %}>
+                        <div class="btn-group " role="group" aria-label="Basic example" >
                             <button type="button" id = "date" class="btn btn-outline-danger dropdown-toggle small-btn " id="userbtnGroupDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Date
                             </button>
@@ -524,73 +513,93 @@
                                 <a class="dropdown-item">Date1</a>
                                 <a class="dropdown-item">Date2</a>
                                 <a class="dropdown-item">Date3</a>
-
                             </div>
                             
                         </div>
 
                         <!-- Billable Filter -->
-                        <div class="btn-group " role="group" aria-label="Basic example" {% if not request.user.is_staff %}hidden{% endif %}>
+                        <div class="btn-group " role="group" aria-label="Basic example" >
                             <button type="button" id = "date" class="btn btn-outline-danger dropdown-toggle small-btn " id="userbtnGroupDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Billable
                             </button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userbtnGroupDrop">
                                 <a class="dropdown-item">Billable</a>
                                 <a class="dropdown-item">Non Billable</a>
-
-
                             </div>
-                            
                         </div>
-
-
                     </div>
 
                 </div>
                                     
-                 <!--All Tickets-->
+                 <!--All Worklog-->
                 <div class="card-body">
                     <table id="productsTable" class="table table-hover table-product" style="width:100%">
                     <thead>
                       <tr class="column">
                           <th>Resource&nbsp&nbsp</th>
                           <th>Billable&nbsp&nbsp</th>
-                          <th>Date&nbsp&nbsp</th>
+                          <th class="date-header">Date&nbsp;&nbsp;</th>
                           <th>Week&nbsp&nbsp</th>
                           <th>Ticket&nbsp&nbsp</th>
-                          <!-- <th class = "type-column">Ticket Type&nbsp&nbsp</th> -->
                           <th class="title-column">Work Done</th>
                           <th>Priority&nbsp&nbsp</th>
                           <th>Hours&nbsp&nbsp</th>
-                          <th>Project/Support&nbsp&nbsp</th>
+                          <th>Project/Support&nbsp;&nbsp;&nbsp;&nbsp;</th>
                           <th>Category&nbsp&nbsp</th>
+                          <th>Note&nbsp&nbsp</th>
                           <th>Actions&nbsp&nbsp</th>
                       </tr>
                     </thead>
 
                     <tbody>
-
-                          <tr>
-                              <td >hi</td>
-                              <td align="center">
-                                <div class="custom-control custom-checkbox d-inline-block mr-3 mb-3">
-                                    <input type="checkbox" class="custom-control-input" id="customCheck1" checked="checked">
-                                    <label class="custom-control-label" for="customCheck1"></label>
-                                  </div>
-                              </td>
-                              <td>hi</td>
-                               <td>hi</td> 
-                              <td><a class="title-link">hi</a></td> 
-                              <td>hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii</td>
-                              <!-- <td>hi</td>                  -->
-                              <td>hi</td>               
-                              <td>hi</td>
-                              <td>hi</td>
-                              <td>hi</td>
-                              <td ><i  data-toggle="modal" data-target="#EditLogForm" class="fa-solid fa-pen-to-square changes-color"></i>&nbsp;&nbsp;&nbsp;<i data-toggle="modal" data-target="#DeleteLogForm"class="fa-solid fa-trash-can changes-color"></i></td>
-                          </tr>
-
+                        {% for log in worklogs %}
+                        <tr>
+                            <td>{{ log.user.first_name }}</td>
+                            <td align="center">
+                                <div class="custom-control custom-checkbox checkbox-danger d-inline-block mr-3 mb-3">
+                                    <input type="checkbox" class="custom-control-input" id="customCheckDanger{{ log.id }}" {% if log.billable %}checked{% endif %}>
+                                    <label class="custom-control-label" for="customCheckDanger{{ log.id }}"></label>
+                                </div>
+                            </td>
+                            <td>{{ log.date }}</td>
+                            <td>{{ log.week }}</td>
+                            <td>
+                                {% if log.ticket %}
+                                    {{ log.ticket.ticket_id }}
+                                {% else %}
+                                    None  
+                                {% endif %}
+                            </td>
+                            
+                            <td>{{ log.workdone }}</td>
+                            <td>
+                                {% if log.priority %}
+                                    {{ log.priority.priority_name }}
+                                {% else %}
+                                    None  
+                                {% endif %}
+                            </td>
+                            <td>{{ log.hours }}</td>
+                            <td>{{ log.project_support}}</td>
+                            <td>{{ log.category }}</td>
+                            <td>
+                                    <i data-toggle="modal" data-target="#NoteForm"
+                                       class="fa-regular fa-clipboard changes-color note-log"
+                                       data-id="{{ log.id }}"
+                                       data-note="{{ log.note }}">
+                                    </i>
+                            </td>
+                            <td>
+                                <i data-toggle="modal" data-target="#EditLogForm" class="fa-solid fa-pen-to-square changes-color edit-log" data-id="{{ log.id }}"></i>
+                                &nbsp;&nbsp;&nbsp;
+                                <i data-toggle="modal" data-target="#DeleteLogForm" class="fa-solid fa-trash-can changes-color delete-log" data-id="{{ log.id }}"></i>
+                            </td>
+                        </tr>
+                        
+                        {% endfor %}
                     </tbody>
+
+                    
                   </table>
                 </div>
 
@@ -598,49 +607,65 @@
         </div>
     </div>
    
-
-    {% comment %} <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> {% endcomment %}
-    <!--To add a Tickets-->
+   
+    <!--To Add worklog-->
     <script>
-        document.getElementById("addTaskButton").addEventListener("click", function () {
-            const assigned_users = $("#assigneduserlist").val();  // Use `.val()` for multiple selections
-            const title = $("#ticket_title").val();  // Corrected ID
+        document.getElementById('addLogButton').addEventListener('click', function() {
+            const workdone = document.getElementById("workdone").value;
+            const hours = document.getElementById("hours").value;
+            const ticket = document.getElementById("ticket").value;
+            const date = document.getElementById("date").value;
+            const week = document.getElementById("week").value;
+            const priority = document.getElementById("prioritylist").value;
+            const project_support = document.getElementById("projects").value;
+            const category = document.getElementById("category").value;
+            const note = document.getElementById("notesarea").value;
+            const billable = document.getElementById("customCheck2").checked;
         
-            $.ajax({
+            // CSRF token from the form
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        
+            // Send the data to the backend
+            fetch("/worklog/add_worklog/", {
                 method: "POST",
-                url: "{% url 'add_task' %}",
-                data: {
-                    csrfmiddlewaretoken: document.querySelector('[name=csrfmiddlewaretoken]').value,
-                    ticket_id: $("#ticket_id").val(),
-                    ticket_title: $("#ticket_title").val(),
-                    //title: title,
-                    customerlist: $("#customerlist").val(),
-                    tickettypelist: $("#tasktypelist").val(),
-                    date: $("#date").val(),
-                    prioritylist: $("#prioritylist").val(),
-                    statelist: $("#statelist").val(),
-                    assigneduserlist: assigned_users,  // Send as an array
-                    shortdescriptionarea: $("#shortdescriptionarea").val(),
-                    projects: $("#projects").val(),
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": csrfToken
                 },
-                success: function (data) {
-                    $("form")[0].reset();  
-                    $("#exampleModalForm").modal("hide");
-                    location.reload(); 
-                },
-                error: function (xhr, status, error) {
-                    console.log("Error:", xhr.responseText);  // Print error response
-                    alert("Failed to add ticket. Please try again.");
-                }
+                //credentials: "include",  // Ensures authentication is included
+                body: JSON.stringify({
+                    workdone: workdone,
+                    hours: hours,
+                    ticket: ticket,
+                    date: date,
+                    week: week,
+                    priority: priority,
+                    project_support: project_support,
+                    category: category,
+                    note: note,
+                    billable: billable
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                //alert("Log added successfully!");
+                // Close the modal if needed
+                $('#AddLogForm').modal('hide');
+                location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("Error adding log.");
             });
+            
         });
+
+        
     </script>
     
-    <!--for Date Opened of Modal-->
+    <!--To set the date -->
     <script>
-        
         // Get the current datetime
-
         document.addEventListener("DOMContentLoaded", function () {
             let now = new Date();
             let year = now.getFullYear();
@@ -654,11 +679,49 @@
 
             if (dateInput) {
                 dateInput.value = formattedDateTime;
-                dateInput.setAttribute("min", formattedDateTime);  // Disable past dates/times
-                dateInput.setAttribute("max", formattedDateTime);  // Disable future dates/times
+                //dateInput.setAttribute("min", formattedDateTime);  // Disable past dates/times
+                //dateInput.setAttribute("max", formattedDateTime);  // Disable future dates/times
             }
         });
     </script>
+
+    <!--To set the week-->
+    <script>
+        function getWeekOfMonth(date) {
+            let firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1); // 1st day of the month
+            let firstDayWeekday = firstDayOfMonth.getDay(); // Day of the week (0 = Sunday, 1 = Monday, etc.)
+            let dayOfMonth = date.getDate(); // Current day in the month
+    
+            // Calculate the week number of the month
+            return Math.ceil((dayOfMonth + firstDayWeekday) / 7);
+        }
+    
+        function setWeek() {
+            let today = new Date();
+            let weekNumber = getWeekOfMonth(today);
+            document.getElementById("week").value = "Week " + weekNumber; // Set formatted week number
+        }
+    
+        // Run function when page loads
+        window.onload = setWeek;
+    </script>
+
+    <!--To see note-->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Select all clipboard icons
+            document.querySelectorAll(".note-log").forEach(function (icon) {
+                icon.addEventListener("click", function () {
+                    // Get the note text from the clicked icon's data attribute
+                    var noteText = this.getAttribute("data-note");
+    
+                    // Set the note inside the modal
+                    document.getElementById("note-content").innerText = noteText || "No note available";
+                });
+            });
+        });
+    </script>
+    
 
 {% endblock  %}
  
