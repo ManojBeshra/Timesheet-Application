@@ -7,7 +7,7 @@ from .forms import WorklogForm
 from django.contrib.auth.models import User
 import json
 from django.utils import timezone
-
+from django.shortcuts import render, get_object_or_404 
 
 def worklog_list(request): 
     worklogs = worklog.objects.all()  
@@ -50,3 +50,32 @@ def add_worklog(request):
     
     return JsonResponse({"message": "Invalid method", "status": "error"})
 
+
+    
+@csrf_exempt
+def filter_worklog(request, user_id=None, billable_status=None):
+    users = User.objects.all()
+    
+    # Initialize worklogs
+    worklogs = worklog.objects.all()
+
+    selected_user = None
+    selected_billable_status = None
+
+    # Filter by user if user_id is provided
+    if user_id:
+        selected_user = get_object_or_404(User, pk=user_id)
+        worklogs = worklogs.filter(user=selected_user)
+
+    # Filter by billable status if billable_status is provided
+    if billable_status:
+        is_billable = True if billable_status == 'billable' else False
+        worklogs = worklogs.filter(billable=is_billable)
+
+    return render(request, 'worklog.html', {
+        'worklogs': worklogs,
+        'users': users,
+        'selected_user': selected_user,
+        'billable_status': billable_status
+    })
+    

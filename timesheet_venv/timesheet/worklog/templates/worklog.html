@@ -493,9 +493,9 @@
                                 {% endif %}
                             </button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userbtnGroupDrop">
-                                <a class="dropdown-item" href="{% url 'task' %}">Show all</a>
+                                <a class="dropdown-item" href="{% url 'worklog' %}">Show all</a>
                                 {% for i in users %}
-                                    <a class="dropdown-item" href="{% url 'filterTaskByUser' i.id %}">
+                                    <a class="dropdown-item" href="{% url 'filterWorklogByUser' i.id %}">
                                         {{ i.first_name }}
                                     </a>
                                 {% endfor %}
@@ -520,11 +520,17 @@
                         <!-- Billable Filter -->
                         <div class="btn-group " role="group" aria-label="Basic example" >
                             <button type="button" id = "date" class="btn btn-outline-danger dropdown-toggle small-btn " id="userbtnGroupDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Billable
+                                {% if billable_status == "billable" %}
+                                    Billable
+                                {% elif billable_status == "non-billable" %}
+                                    Non Billable
+                                {% else %}
+                                    Select Billable Type
+                                {% endif %}
                             </button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userbtnGroupDrop">
-                                <a class="dropdown-item">Billable</a>
-                                <a class="dropdown-item">Non Billable</a>
+                                <a class="dropdown-item" href="{% if selected_user %}{% url 'filterWorklogByUserAndBillable' selected_user.id 'billable' %}{% else %}{% url 'filterWorklogByBillable' 'billable' %} {% endif %}">Billable</a>
+                                <a class="dropdown-item" href="{% if selected_user %}{% url 'filterWorklogByUserAndBillable' selected_user.id 'non-billable' %}{% else %}{% url 'filterWorklogByBillable' 'non-billable' %} {% endif %}">Non Billable</a>
                             </div>
                         </div>
                     </div>
