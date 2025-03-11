@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Worklog Details{% endblock title %}
+{% block page-title %}Worklog Details{% endblock page-title %}
+
+{% block style %}
+    .small-btn {
+        padding: 2px 8px;
+        font-size: 12px;
+        height: 35px;
+        width: auto;
+        line-height: 1;
+    } 
+
+    .view-small-btn   {
+        padding: 2px 8px; /* Adjust padding to make it smaller */
+        font-size: 12px; /* Reduce text size */
+        height: 24px; /* Set height */
+        line-height: 20px; /* Adjust line height for vertical alignment */
+        width: auto; /* Allow width to adjust */
+        display: inline-block; /* Ensures it behaves like a button */
+        text-align: center; /* Center the text */
+    }
+{% endblock style %}
+
+{% block content %}
+<div class="content-wrapper">
+    <div class="content">
+        <div class="card card-default">
+            <div class="card-header">
+                <form class="form-group col-12" method="POST" action="{% url 'worklogdetails' worklog.id %}">
+                    {% csrf_token %}
+                    <div class="row">
+                        
+                        <!-- Work Done -->
+                        <div class="form-group col-10">
+                            <label for="workdone">Work Done</label>
+                            <input type="text" class="form-control" id="workdone" name="workdone" value="{{ worklog.workdone }}" required>
+                        </div>
+                        
+
+                        <!-- Billable -->
+                        <div class="form-group col-2">
+                                            
+                            <div class="custom-control custom-checkbox d-inline-block mt-7 mb-3">
+                                <input type="checkbox" class="custom-control-input" id="customCheck2"{% if worklog.billable %}checked{% endif %}>
+                                <label class="custom-control-label" for="customCheck2"></label>
+                              </div>
+                              <label for="billable">Billable</label>
+                        </div>
+                        <!-- Hours -->
+                        <div class="form-group col-2">
+                            <label for="hours">Hours</label>
+                            <input type="text" class="form-control" id="hours" name="hours" aria-describedby="titleHelp" placeholder="Enter hours" value = "{{worklog.hours}}">
+                        </div>
+
+                        <!-- Ticket -->
+                        <div class="form-group col-4">
+                            <label for="ticket">Ticket</label>
+                            <select class="form-control" id="ticket" name="ticket" required>
+                                {% for i in tickets %}
+                                    <option value="{{ i.id }}" {% if i.id == worklog.ticket_id %}selected{% endif %}>{{ i.ticket_id }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Date Opened -->
+                        <div class="form-group col-4">
+                            <label for="date">Date</label>
+                            <input type="date" class="form-control" id="date" aria-describedby="dateHelp" value="{{ worklog.date|date:'Y-m-d' }}" >
+                        </div>
+
+                        <!-- Week -->
+                        <div class="form-group col-2">
+                            <label for="week">Week</label>
+                            <input type="text" class="form-control" id="week" name="week" value="{{ worklog.week }}" readonly>
+                        </div>
+
+                        <!--Priority-->
+                        <div class="form-group col-4">
+                            <label for="exampleFormControlSelect12">Priority</label>
+                            <select class="form-control" id="prioritylist">
+                                <option value="" selected>Select</option>
+                                {% for i in priority %}
+                                    <option value="{{ i.id }}" {% if i.id == worklog.priority_id %}selected{% endif %}>
+                                        {{ i.priority_name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!--Project-->
+                        <div class="form-group col-4">
+                            <label for="exampleFormControlSelect12">Project/Support</label>
+                            <select class="form-control" id="projects">
+                                <option value="" selected>Select</option>
+                                {% for i in tickettype %}
+                                    <option value="{{ i.id }}" {% if i.id == worklog.project_support.id%}selected{% endif %}>
+                                        {{ i.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!--Category-->
+                        <div class="form-group col-4">
+                            <label for="exampleFormControlSelect12">Category</label>
+                            <input type="text" class="form-control" id="week" name="week" value="{{ worklog.category }}" >
+                        </div>
+
+                        <!--Operational Notes-->
+                        <div class="form-group col-12">
+                            <label for="exampleFormControlTextarea1">Notes</label>
+                            <textarea class="form-control" id="shortdescriptionarea" rows="2" >{{ worklog.note }}</textarea>
+                        </div>
+
+                        <!-- Notes -->
+                        {% comment %} <div class="form-group col-12">
+                            <label for="notes">Notes</label>
+                            <textarea class="form-control" id="notes" name="notes" rows="3">{{ worklog.notes }}</textarea>
+                        </div> {% endcomment %}
+                        
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-outline-success small-btn">Save Changes</button>
+                        <a href="{% url 'worklog' %}" class="btn btn-outline-danger small-btn d-flex justify-content-center align-items-center text-center">
+                            Back
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

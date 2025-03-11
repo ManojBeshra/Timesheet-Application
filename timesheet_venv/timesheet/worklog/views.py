@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import worklog
-from task . models import ticket, priority_type, ticket_type
+from task . models import ticket, priority_type, ticket_type, project
 from .forms import WorklogForm
 from django.contrib.auth.models import User
 import json
@@ -75,6 +75,25 @@ def worklog_list(request):
 
     return render(request, 'worklog.html', context)
 
+@csrf_exempt 
+@login_required   
+def worklog_details(request, worklog_id):
+    # Correctly assign the variable with lowercase 'worklog'
+    worklog_instance = get_object_or_404(worklog, id=worklog_id) 
+    priority = priority_type.objects.all()
+    users = User.objects.all()
+    tickets = ticket.objects.all()
+    tickettype = ticket_type.objects.all()
+    projects = project.objects.all()
+
+    return render(request, 'worklogdetails.html', {
+        'worklog': worklog_instance,
+        'priority': priority,
+        'tickets': tickets,
+        'users': users,
+        'tickettype': tickettype,
+        'projects':projects,
+        })
 
 @csrf_exempt 
 @login_required

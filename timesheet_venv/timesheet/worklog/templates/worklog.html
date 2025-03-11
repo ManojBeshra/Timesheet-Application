@@ -588,24 +588,24 @@
                     <table id="productsTable" class="table table-hover table-product" style="width:100%">
                     <thead>
                       <tr class="column">
-                          <th>Resource&nbsp&nbsp</th>
-                          <th>Billable&nbsp&nbsp</th>
+                          <th>Resource&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                          <th>Billable&nbsp;&nbsp;&nbsp;&nbsp;</th>
                           <th class="date-header">Date&nbsp;&nbsp;</th>
-                          <th>Week&nbsp&nbsp</th>
-                          <th>Ticket&nbsp&nbsp</th>
+                          <th>Week&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                          <th>Ticket&nbsp;&nbsp;&nbsp;&nbsp;</th>
                           <th class="title-column">Work Done</th>
-                          <th>Priority&nbsp&nbsp</th>
-                          <th>Hours&nbsp&nbsp</th>
-                          <th>Project/Support&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                          <th>Category&nbsp&nbsp</th>
-                          <th>Note&nbsp&nbsp</th>
-                          <th>Actions&nbsp&nbsp</th>
+                          <th>Priority&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                          <th>Hours&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                          <th>Project/Support&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                          <th>Category&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                          <th>Note&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                          <th>Actions&nbsp;&nbsp;&nbsp;&nbsp;</th>
                       </tr>
                     </thead>
 
                     <tbody>
                         {% for log in worklogs %}
-                        <tr>
+                        <tr onclick="window.location='{% url 'worklogdetails' log.id%}'">
                             <td>{{ log.user.first_name }}</td>
                             <td align="center">
                                 <div class="custom-control custom-checkbox checkbox-dark  d-inline-block mr-3 mb-3">
@@ -613,7 +613,7 @@
                                     <label class="custom-control-label" for="customCheckDanger{{ log.id }}"></label>
                                 </div>
                             </td>
-                            <td>{{ log.date }}</td>
+                            <td>{{ log.date|date:'m/d/Y'  }}</td>
                             <td>{{ log.week }}</td>
                             <td>
                                 {% if log.ticket %}
@@ -634,16 +634,15 @@
                             <td>{{ log.hours }}</td>
                             <td>{{ log.project_support}}</td>
                             <td>{{ log.category }}</td>
-                            <td>
+                            <td align="center">
                                     <i data-toggle="modal" data-target="#NoteForm"
                                        class="fa-regular fa-clipboard changes-color note-log"
                                        data-id="{{ log.id }}"
                                        data-note="{{ log.note }}">
                                     </i>
                             </td>
-                            <td>
-                                <i data-toggle="modal" data-target="#EditLogForm" class="fa-solid fa-pen-to-square changes-color edit-log" data-id="{{ log.id }}"></i>
-                                &nbsp;&nbsp;&nbsp;
+                            <td align="center">
+                                
                                 <i data-toggle="modal" data-target="#DeleteLogForm" class="fa-solid fa-trash-can changes-color delete-log" data-id="{{ log.id }}"></i>
                             </td>
                         </tr>
