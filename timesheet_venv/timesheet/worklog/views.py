@@ -13,6 +13,8 @@ from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from .forms import RequestreviewForm
 from django.conf import settings
+from datetime import datetime
+from django.db.models.functions import ExtractYear
 
 @login_required
 def worklog_list(request): 
@@ -22,13 +24,56 @@ def worklog_list(request):
     tickets = ticket.objects.all()
     tickettype = ticket_type.objects.all()
 
-    return render(request, 'worklog.html', {
+    # Get filter parameters
+    month = request.GET.get('month')
+    year = request.GET.get('year')
+    user_id = request.GET.get('user_id')  
+    billable_status = request.GET.get('billable_status')
+
+    filters = {}
+
+    # date filter
+    if year or month:  
+        try:
+            if year:
+                filters["date__year"] = int(year)
+            if month:
+                filters["date__month"] = int(month)
+        except ValueError:
+            pass  
+
+    # user filter
+    selected_user = None
+    if user_id:
+        selected_user = get_object_or_404(User, pk=user_id)
+        filters["user"] = selected_user
+
+    # billable filter
+    if billable_status in ["0", "1"]:  
+        is_billable = billable_status == "0"
+        filters["billable"] = is_billable
+
+    worklogs = worklogs.filter(**filters)
+
+    
+    existing_years = worklog.objects.annotate(year=ExtractYear('date')).values_list('year', flat=True).distinct()
+    months = [(i, datetime(2000, i, 1).strftime('%B')) for i in range(1, 13)]
+
+    context = {
+        'years': sorted(existing_years, reverse=True),
+        'months': months,
+        'year': int(year) if year else '',
+        'month': int(month) if month else '',
         'worklogs': worklogs,
         'priority': priority,
         'tickets': tickets,
         'users': users,
         'tickettype': tickettype,
-    })
+        'selected_user': selected_user,
+        'billable_status': billable_status
+    }
+
+    return render(request, 'worklog.html', context)
 
 
 @csrf_exempt 
@@ -57,36 +102,6 @@ def add_worklog(request):
     
     return JsonResponse({"message": "Invalid method", "status": "error"})
 
-
-    
-@csrf_exempt
-@login_required
-def filter_worklog(request, user_id=None, billable_status=None):
-    users = User.objects.all()
-    
-    # Initialize worklogs
-    worklogs = worklog.objects.all()
-
-    selected_user = None
-    selected_billable_status = None
-
-    # Filter by user if user_id is provided
-    if user_id:
-        selected_user = get_object_or_404(User, pk=user_id)
-        worklogs = worklogs.filter(user=selected_user)
-
-    # Filter by billable status if billable_status is provided
-    if billable_status:
-        is_billable = True if billable_status == 'billable' else False
-        worklogs = worklogs.filter(billable=is_billable)
-
-    return render(request, 'worklog.html', {
-        'worklogs': worklogs,
-        'users': users,
-        'selected_user': selected_user,
-        'billable_status': billable_status
-    })
-    
 
 
 @login_required
