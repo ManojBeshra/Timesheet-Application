@@ -17,6 +17,12 @@ class worklog(models.Model):
 
     def __str__(self):
         return f"Worklog - {self.workdone} (User: {self.user})"
+    
+
+class requestreview(models.Model):
+    send_to = models.ManyToManyField(User, related_name="worklog_send_to")  
+    requested_note = models.CharField(max_length=300, null=True, blank=True)
+    requested_date = models.DateTimeField(auto_now_add=True)  # Auto add request date
 
 
 

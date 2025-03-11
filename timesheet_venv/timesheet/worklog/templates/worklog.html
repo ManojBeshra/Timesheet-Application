@@ -240,8 +240,8 @@
                     </div>
 
                     <!-- Form Modal for Request Review -->
-                    <div class="modal fade" id="RequestReviewForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalFormTitle"
-                        aria-hidden="true">
+                    <!-- Form Modal for Request Review -->
+                    <div class="modal fade" id="RequestReviewForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalFormTitle" aria-hidden="true">
                         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -251,40 +251,36 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <form class="row g-3" id="taskForm" method="POST">
+                                    <form class="row g-3" id="requestreviewform" method="POST" action="{% url 'requestreview_mail' %}">
                                         {% csrf_token %}
 
-
-                                        <!--Assigned To-->
+                                        <!-- Assigned To -->
                                         <div class="form-group col-6">
-                                            <label for="exampleFormControlSelect12">Assigned To</label>
-                                            <select id="assigneduserlist" class="js-example-basic-multiple form-control " name="states[]" multiple="multiple" style="width: 100%; ">
+                                            <label for="requestassigneduserlist">Assigned To</label>
+                                            <select id="requestassigneduserlist" class="js-example-basic-multiple form-control" name="send_to" style="width: 100%; " multiple>
                                                 {% for i in users %}
-                                                    <option value="{{ i.id }}" {% if i.id == ticket.assigned_to_id %}selected{% endif %}>
-                                                        {% comment %} {{ i.username }} {% endcomment %}
-                                                        {{ i.first_name }}
-                                                    </option>
+                                                    <option value="{{ i.id }}">{{ i.first_name }}</option>
                                                 {% endfor %}
                                             </select>
                                         </div>
-         
-                                        <!--Date Requested-->
+
+                                        <!-- Date Requested (Read-only) -->
                                         <div class="form-group col-4">
-                                            <label for="date">Date Requested</label>
-                                            <input type="datetime-local" class="form-control" id="date" aria-describedby="dateHelp" readonly>
+                                            <label for="daterequest">Date Requested</label>
+                                            <input type="datetime-local" class="form-control" id="daterequest" readonly>
                                         </div>
 
-                                        <!--Operational Notes-->
+                                        <!-- Operational Notes -->
                                         <div class="form-group col-12">
-                                            <label for="exampleFormControlTextarea1">Notes</label>
-                                            <textarea class="form-control" id="shortdescriptionarea" rows="2"></textarea>
+                                            <label for="requestnotesarea">Notes</label>
+                                            <textarea class="form-control" id="requestnotesarea" name="requested_note" rows="2"></textarea>
                                         </div>
                                     </form>
                                 </div>
-                                <!--footer-->
+                                <!-- Footer -->
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-danger small-btn" data-dismiss="modal">Close</button>
-                                    <button type="button" id="addTaskButton" class="btn btn-success small-btn">Request Review</button>
+                                    <button type="submit" form="requestreviewform" class="btn btn-success small-btn">Request Review</button>
                                 </div>
                             </div>
                         </div>
@@ -539,6 +535,17 @@
                                     
                  <!--All Worklog-->
                 <div class="card-body">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    
                     <table id="productsTable" class="table table-hover table-product" style="width:100%">
                     <thead>
                       <tr class="column">
@@ -726,6 +733,34 @@
                 });
             });
         });
+    </script>
+
+    <!--Date Requested-->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let now = new Date();
+            let year = now.getFullYear();
+            let month = String(now.getMonth() + 1).padStart(2, '0');
+            let day = String(now.getDate()).padStart(2, '0');
+            let hours = String(now.getHours()).padStart(2, '0');
+            let minutes = String(now.getMinutes()).padStart(2, '0');
+        
+            let formattedDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+            document.getElementById("daterequest").value = formattedDateTime;
+        });
+    </script>
+
+    <!--To remove the success email notification -->
+    <script>
+        // Automatically remove alerts after 5 seconds
+        setTimeout(function() {
+            let alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                alert.classList.remove('show');  
+                alert.classList.add('fade');  
+                setTimeout(() => alert.remove(), 500); 
+            });
+        }, 5000);
     </script>
     
 
