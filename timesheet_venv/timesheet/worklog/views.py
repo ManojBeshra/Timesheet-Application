@@ -61,11 +61,11 @@ def worklog_list(request):
     worklogs = worklogs.filter(**filters)
 
     
-    existing_years = worklog.objects.annotate(year=ExtractYear('date')).values_list('year', flat=True).distinct()
+    # existing_years = worklog.objects.annotate(year=ExtractYear('date')).values_list('year', flat=True).distinct()
     months = [(i, datetime(2000, i, 1).strftime('%B')) for i in range(1, 13)]
 
     context = {
-        'years': sorted(existing_years, reverse=True),
+        # 'years': sorted(existing_years, reverse=True),
         'months': months,
         'year': int(year) if year else '',
         'month': int(month) if month else '',
@@ -83,13 +83,31 @@ def worklog_list(request):
 @csrf_exempt 
 @login_required   
 def worklog_details(request, worklog_id):
-    # Correctly assign the variable with lowercase 'worklog'
-    worklog_instance = get_object_or_404(worklog, id=worklog_id) 
+    worklog_instance = get_object_or_404(worklog, id=worklog_id)
+    if request.method == 'POST':
+        form = worklog(request.POST)
+        # form = Calculate(request.POST) 
+        print(form.date)
+        print(form.hours)
+        print(form.priority)
+
+        form2 = WorklogForm(request.POST, instance=worklog_instance)
+        if form2.is_valid():
+            worklog_instance = form2.save(commit=False)
+            # print(WorklogForm.data["priority"]) 
+            worklog_instance.save()
+            
+            return redirect('worklog')
+    else:
+        
+        form2 = WorklogForm(instance=worklog_instance)
+
     priority = priority_type.objects.all()
     users = User.objects.all()
     tickets = ticket.objects.all()
     tickettype = ticket_type.objects.all()
     projects = project.objects.all()
+    
 
     return render(request, 'worklogdetails.html', {
         'worklog': worklog_instance,

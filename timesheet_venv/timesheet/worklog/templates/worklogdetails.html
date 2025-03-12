@@ -40,9 +40,11 @@
 
                         <!-- Billable -->
                         <div class="form-group col-2">
-                                            
                             <div class="custom-control custom-checkbox d-inline-block mt-7 mb-3">
-                                <input type="checkbox" class="custom-control-input" id="customCheck2"{% if worklog.billable %}checked{% endif %}>
+                                {% comment %} <input type="checkbox" class="custom-control-input" id="customCheck2"{% if worklog.billable %}checked{% endif %} value = "{{worklog.billable}}"> {% endcomment %}
+                                {% comment %} <input type="checkbox" class="custom-control-input" id="customCheck2" name="billable"{% if worklog.billable %} checked {% endif %}/> {% endcomment %}
+                                <input type="checkbox" class="custom-control-input" id="customCheck2" name="billable"{% if worklog.billable %} checked {% endif %}/>
+
                                 <label class="custom-control-label" for="customCheck2"></label>
                               </div>
                               <label for="billable">Billable</label>
@@ -63,12 +65,23 @@
                             </select>
                         </div>
 
-                        <!-- Date Opened -->
-                        <div class="form-group col-4">
+                        <!-- Date -->
+                        {% comment %} <div class="form-group col-4">
                             <label for="date">Date</label>
-                            <input type="date" class="form-control" id="date" aria-describedby="dateHelp" value="{{ worklog.date|date:'Y-m-d' }}" >
-                        </div>
+                            <input type="date" class="form-control" id="date" name="date" value="{{ worklog.date }}" >
+                        </div> {% endcomment %}
+                        <!-- Date -->
+<div class="form-group col-4">
+    <label for="date">Date</label>
+    <input type="date" class="form-control" id="date" name="date" value="{{ worklog.date|date:'Y-m-d' }}">
+</div>
 
+
+                        <!-- Week -->
+                        {% comment %} <div class="form-group col-2">
+                            <label for="week">Week</label>
+                            <input type="text" class="form-control" id="week" name="week" value="{{ worklog.week }}" readonly>
+                        </div> {% endcomment %}
                         <!-- Week -->
                         <div class="form-group col-2">
                             <label for="week">Week</label>
@@ -78,7 +91,7 @@
                         <!--Priority-->
                         <div class="form-group col-4">
                             <label for="exampleFormControlSelect12">Priority</label>
-                            <select class="form-control" id="prioritylist">
+                            <select class="form-control" id="prioritylist" name="priority">
                                 <option value="" selected>Select</option>
                                 {% for i in priority %}
                                     <option value="{{ i.id }}" {% if i.id == worklog.priority_id %}selected{% endif %}>
@@ -91,7 +104,7 @@
                         <!--Project-->
                         <div class="form-group col-4">
                             <label for="exampleFormControlSelect12">Project/Support</label>
-                            <select class="form-control" id="projects">
+                            <select class="form-control" id="projects" name="project_support">
                                 <option value="" selected>Select</option>
                                 {% for i in tickettype %}
                                     <option value="{{ i.id }}" {% if i.id == worklog.project_support.id%}selected{% endif %}>
@@ -102,15 +115,19 @@
                         </div>
 
                         <!--Category-->
-                        <div class="form-group col-4">
+                        {% comment %} <div class="form-group col-4">
                             <label for="exampleFormControlSelect12">Category</label>
                             <input type="text" class="form-control" id="week" name="week" value="{{ worklog.category }}" >
-                        </div>
-
-                        <!--Operational Notes-->
+                        </div> {% endcomment %}
+<!--Category-->
+<div class="form-group col-4">
+    <label for="exampleFormControlSelect12">Category</label>
+    <input type="text" class="form-control" id="category" name="category" value="{{ worklog.category }}" >
+</div>
+                        <!--Notes-->
                         <div class="form-group col-12">
                             <label for="exampleFormControlTextarea1">Notes</label>
-                            <textarea class="form-control" id="shortdescriptionarea" rows="2" >{{ worklog.note }}</textarea>
+                            <textarea class="form-control" id="shortdescriptionarea" name= "note" rows="2" >{{ worklog.note }}</textarea>
                         </div>
 
                         <!-- Notes -->
