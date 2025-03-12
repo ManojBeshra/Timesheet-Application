@@ -7,6 +7,7 @@ urlpatterns = [
     path("add_worklog/", views.add_worklog, name="add_worklog"),
     path("requestreview_mail/", views.requestreview_mail, name="requestreview_mail"),
     path("export_worklogs_excel/", views.export_worklogs_excel, name="export_worklogs_excel"),
+    path('delete-worklog/', views.delete_worklog, name='delete_worklog'),
 
 
 ]

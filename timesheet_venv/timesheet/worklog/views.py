@@ -228,3 +228,13 @@ def export_worklogs_excel(request):
 
     return response
 
+@csrf_exempt 
+@login_required
+def delete_worklog(request):
+    if request.method == "POST":
+        log_id = request.POST.get("id")
+        worklogs = get_object_or_404(worklog, id=log_id)
+        worklogs.delete()
+        return JsonResponse({"success": True, "message": "Work log deleted successfully."})
+    return JsonResponse({"success": False, "message": "Invalid request."}, status=400)
+

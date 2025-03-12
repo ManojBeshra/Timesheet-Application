@@ -437,7 +437,8 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-success small-btn" data-dismiss="modal">No</button>
-                                <button type="submit" class="btn btn-danger small-btn">Yes, Delete</button>
+                                <button type="submit" class="btn btn-danger small-btn" id="confirmDelete">Yes, Delete</button>
+                                
                             </div>
                         </div>
                         </div>
@@ -635,8 +636,8 @@
                                     </i>
                             </td> {% endcomment %}
                             <td align="center">
+                                <i data-toggle="modal" data-target="#DeleteLogForm" class="fa-solid fa-trash-can changes-color delete-log" data-id="{{ log.id }}"  onclick="openDeleteModal(event, '{{ log.id }}')"></i>
                                 
-                                <i data-toggle="modal" data-target="#DeleteLogForm" class="fa-solid fa-trash-can changes-color delete-log" data-id="{{ log.id }}"></i>
                             </td>
                         </tr>
                         
@@ -703,6 +704,46 @@
 
         
     </script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+   <!--For Delete Function  -->
+    <script>
+        $(function() {
+            let workLogIdToDelete = null;
+    
+            // Store work log ID when trash icon is clicked
+            $(".delete-log").on("click", function() {
+                workLogIdToDelete = $(this).data("id");
+            });
+    
+            // Handle deletion on "Yes, Delete" button click
+            $("#confirmDelete").on("click", function() {
+                if (workLogIdToDelete) {
+                    $.post("{% url 'delete_worklog' %}", {
+                        id: workLogIdToDelete,
+                        csrfmiddlewaretoken: "{{ csrf_token }}"
+                    }, function(response) {
+                        if (response.success) {
+                            location.reload();  // Refresh page after deletion
+                        } else {
+                            alert(response.message);
+                        }
+                    }).fail(function() {
+                        alert("Error deleting the log.");
+                    });
+                }
+            });
+        });
+    
+    
+    
+    function openDeleteModal(event, logId) {
+        event.stopPropagation(); // Prevents the row click event from firing
+        $('#DeleteLogForm').modal('show'); // Ensures the modal opens properly
+        // Optional: Set the log ID in the modal if needed
+        $('#DeleteLogForm').find('[name="log_id"]').val(logId);
+    }
+     </script> 
     
     <!--To set the date -->
     <script>
