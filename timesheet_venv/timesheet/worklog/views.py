@@ -15,6 +15,11 @@ from .forms import RequestreviewForm
 from django.conf import settings
 from datetime import datetime
 from django.db.models.functions import ExtractYear
+import pandas as pd
+from django.http import HttpResponse
+from openpyxl import Workbook
+from django.utils.timezone import make_naive  # Import this
+from django.db.models.functions import ExtractYear, ExtractMonth
 
 @login_required
 def worklog_list(request): 
@@ -121,8 +126,6 @@ def add_worklog(request):
     
     return JsonResponse({"message": "Invalid method", "status": "error"})
 
-
-
 @login_required
 def requestreview_mail(request):
     if request.method == "POST":
@@ -154,5 +157,74 @@ def requestreview_mail(request):
 
     return render(request, "worklog.html", {"form": form})
 
+@login_required
+def export_worklogs_excel(request):
+    # Get filter parameters
+    month = request.GET.get('month')
+    year = request.GET.get('year')
+    user_id = request.GET.get('user_id')  
+    billable_status = request.GET.get('billable_status')
 
+    filters = {}
+
+    # Apply filters
+    if year:
+        filters["date__year"] = int(year)
+    if month:
+        filters["date__month"] = int(month)
+    if user_id:
+        filters["user_id"] = int(user_id)
+    if billable_status in ["0", "1"]:  
+        filters["billable"] = billable_status == "0"
+
+    # Fetch filtered worklogs
+    worklogs = worklog.objects.filter(**filters).values(
+        'user__username', 
+        'date', 
+        'ticket__ticket_id',  
+        'ticket__ticket_title',  
+        'priority__priority_name',  
+        'billable',
+        'workdone',  
+        'hours',
+        'project_support__name',
+        'category'
+    )
+
+    # Convert to DataFrame
+    df = pd.DataFrame(list(worklogs))
+
+    # Convert timezone-aware DateTime to naive
+    if 'date' in df.columns:
+        df['date'] = df['date'].apply(lambda dt: make_naive(dt) if pd.notnull(dt) else dt)
+        
+        # Format date to MM/DD/YYYY
+        df['date'] = df['date'].dt.strftime('%m/%d/%Y')
+
+    # Rename columns
+    df.rename(columns={
+        'user__username': 'User',
+        'date': 'Date',
+        'ticket__ticket_id': 'Ticket ID',
+        'ticket__ticket_title': 'Ticket Title',
+        'priority__priority_name': 'Priority',
+        'billable': 'Billable',
+        'workdone': 'Work Done',
+        'hours': 'Hours',
+        'project_support__name': 'Porject/Support',
+        'category': 'Category'
+    }, inplace=True)
+
+    # Map Billable field to readable values
+    df['Billable'] = df['Billable'].map({True: 'Billable', False: 'Non-Billable'})
+    
+    # Create Excel response
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=Worklogs.xlsx'
+    
+    # Write DataFrame to an Excel file
+    with pd.ExcelWriter(response, engine='openpyxl') as writer:
+        df.to_excel(writer, index=False, sheet_name="Worklogs")
+
+    return response
 

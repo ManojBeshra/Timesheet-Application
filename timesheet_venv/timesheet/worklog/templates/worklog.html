@@ -111,19 +111,28 @@
                      <!--Add Issue Buttons-->
                     <div class="d-flex justify-content-start " style="gap: 10px;">
 
-                    <!-- Only for User    -->
-                    <button type="button" id = "addlog" class="btn btn-outline-success small-btn" data-toggle="modal" data-target="#AddLogForm" {% if request.user.is_staff %}hidden{% endif %}>
-                        Add Log
-                    </button>
+                        <!-- Only for User    -->
+                        <button type="button" id = "addlog" class="btn btn-outline-success small-btn" data-toggle="modal" data-target="#AddLogForm" {% if request.user.is_staff %}hidden{% endif %}>
+                            Add Log
+                        </button>
 
-                    <button type="button" id = "requestreview" class="btn btn-outline-success small-btn" data-toggle="modal" data-target="#RequestReviewForm" >
-                        Request Review
-                    </button>
+                        <button type="button" id = "requestreview" class="btn btn-outline-success small-btn" data-toggle="modal" data-target="#RequestReviewForm" >
+                            Request Review
+                        </button>
 
-                    <!-- Only for Admin -->
-                    <button type="button" id = "report" class="btn btn-outline-success small-btn" data-toggle="modal" data-target="#exampleModalForm" {% if not request.user.is_staff %}hidden{% endif %}>
-                        Report <span class="mdi mdi-download"></span>
-                    </button>
+                        <!-- Only for Admin -->
+                        {% comment %} <button type="button" id = "report" class="btn btn-outline-success small-btn" data-toggle="modal" data-target="#exampleModalForm" {% if not request.user.is_staff %}hidden{% endif %}>
+                            Report <span class="mdi mdi-download"></span>
+                        </button> {% endcomment %}
+                        <form method="GET" action="{% url 'export_worklogs_excel' %}">
+                            <input type="hidden" name="month" value="{{ month }}">
+                            <input type="hidden" name="year" value="{{ year }}">
+                            <input type="hidden" name="user_id" value="{{ selected_user.id }}">
+                            <input type="hidden" name="billable_status" value="{{ billable_status }}">
+                            <button type="submit" id="report" class="btn btn-outline-success small-btn" {% if not request.user.is_staff %}hidden{% endif %}>
+                                Export Excel <span class="mdi mdi-download"></span>
+                            </button>
+                        </form>
                     </div>
 
                     <!-- Form Modal for Add Log -->
