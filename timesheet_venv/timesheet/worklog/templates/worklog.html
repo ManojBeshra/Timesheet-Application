@@ -67,26 +67,11 @@
         text-align: center;
     }
 
-    .title-column {
+    .workdone-column {
         width: 650px;
         min-width: 555px;
         max-width:650px;
       }
-
-      .changes-color:hover { color: #270869 !important; }
-
-    .card{
-        height: 70vh; /* Full height of the viewport */
-    }
-
-    .card-body {
-        min-height: 40vh;
-    }
-   
-    #productsTable {
-        min-height: 40vh;
-        display: block; /* Allows height control */
-    }
 
     .date-header {
         width: 80px;
@@ -101,9 +86,8 @@
     <!-- ====================================
     ——— CONTENT WRAPPER
     ===================================== -->
-    <div class="content-wrapper">
-        <div class="content">
-            <div class="card card-default">
+    
+            <div class="card card-default m-2">
 
                 <!--Button Section-->
                 <div class="card-header">
@@ -602,12 +586,12 @@
                           <th class="date-header">Date&nbsp;&nbsp;</th>
                           <th>Week&nbsp;&nbsp;&nbsp;&nbsp;</th>
                           <th>Ticket&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                          <th class="title-column">Work Done</th>
+                          <th class="workdone-column">Work Done</th>
                           <th>Priority&nbsp;&nbsp;&nbsp;&nbsp;</th>
                           <th>Hours&nbsp;&nbsp;&nbsp;&nbsp;</th>
                           <th>Project/Support&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
                           <th>Category&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                          <th>Note&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                          {% comment %} <th>Note&nbsp;&nbsp;&nbsp;&nbsp;</th> {% endcomment %}
                           <th>Actions&nbsp;&nbsp;&nbsp;&nbsp;</th>
                       </tr>
                     </thead>
@@ -643,13 +627,13 @@
                             <td>{{ log.hours }}</td>
                             <td>{{ log.project_support}}</td>
                             <td>{{ log.category }}</td>
-                            <td align="center">
+                            {% comment %} <td align="center">
                                     <i data-toggle="modal" data-target="#NoteForm"
                                        class="fa-regular fa-clipboard changes-color note-log"
                                        data-id="{{ log.id }}"
                                        data-note="{{ log.note }}">
                                     </i>
-                            </td>
+                            </td> {% endcomment %}
                             <td align="center">
                                 
                                 <i data-toggle="modal" data-target="#DeleteLogForm" class="fa-solid fa-trash-can changes-color delete-log" data-id="{{ log.id }}"></i>
@@ -664,9 +648,6 @@
                 </div>
 
             </div>
-        </div>
-    </div>
-   
    
     <!--To Add worklog-->
     <script>
@@ -767,7 +748,7 @@
     </script>
 
     <!--To see note-->
-    <script>
+    {% comment %} <script>
         document.addEventListener("DOMContentLoaded", function () {
             // Select all clipboard icons
             document.querySelectorAll(".note-log").forEach(function (icon) {
@@ -780,7 +761,7 @@
                 });
             });
         });
-    </script>
+    </script> {% endcomment %}
 
     <!--Date Requested-->
     <script>

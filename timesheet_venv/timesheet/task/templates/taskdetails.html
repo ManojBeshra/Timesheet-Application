@@ -2,25 +2,26 @@
 {% load static %}
 {% block title %}Ticket Details{% endblock title %}
 {% block page-title %}Ticket Details{% endblock page-title %}
+
 <!--style-->
 {% block style %}
-.small-btn {
-    padding: 2px 8px; /* Adjust padding to reduce button size */
-    font-size: 12px; /* Adjust font size */
-    height: 35px; /* Set a specific height */
-    width: auto; /* Adjust width as needed */
-    line-height: 1; /* Adjust line height for better alignment */
-} 
+    .small-btn {
+        padding: 2px 8px; /* Adjust padding to reduce button size */
+        font-size: 12px; /* Adjust font size */
+        height: 35px; /* Set a specific height */
+        width: auto; /* Adjust width as needed */
+        line-height: 1; /* Adjust line height for better alignment */
+    } 
 
-.view-small-btn   {
-    padding: 2px 8px; /* Adjust padding to make it smaller */
-    font-size: 12px; /* Reduce text size */
-    height: 24px; /* Set height */
-    line-height: 20px; /* Adjust line height for vertical alignment */
-    width: auto; /* Allow width to adjust */
-    display: inline-block; /* Ensures it behaves like a button */
-    text-align: center; /* Center the text */
-}
+    .view-small-btn   {
+        padding: 2px 8px; /* Adjust padding to make it smaller */
+        font-size: 12px; /* Reduce text size */
+        height: 24px; /* Set height */
+        line-height: 20px; /* Adjust line height for vertical alignment */
+        width: auto; /* Allow width to adjust */
+        display: inline-block; /* Ensures it behaves like a button */
+        text-align: center; /* Center the text */
+    }
 
 {% endblock style %}
 
@@ -30,9 +31,8 @@
     <!-- ====================================
     ——— CONTENT WRAPPER
     ===================================== -->
-    <div class="content-wrapper">
-        <div class="content">
-            <div class="card card-default">
+    
+            <div class="card card-default m-2">
                 <div class="card-header">
                     <!--Ticket Details-->
 
@@ -118,17 +118,12 @@
                                 </select>
                             </div> 
 
-
                             <!-- Operational Notes -->
                             <div class="form-group col-12">
                                 <label for="operational_notes">Operational Notes</label>
                                 <textarea class="form-control" id="operational_notes" name="operational_notes" rows="3" {% if ticket.state.state_name == "Completed" %}readonly{% endif %}
                                 {% if not request.user.is_staff %}readonly{% endif %}>{{ ticket.operational_notes }}</textarea>
                             </div>
-                    
-
-
-
 
                             <!-- Date Closed -->
                             <div class="form-group col-4" {% if ticket.state.state_name != "Completed" %}hidden{% endif %}>
@@ -184,11 +179,7 @@
                                 </div>
                         {% endif %}
                             
-                        </form>
-
-
-
-
+                    </form>
 
 
                     <!-- Comment Section -->
@@ -244,9 +235,6 @@
                     
                 </div>
             </div>
-        </div>
-    </div>
-
 
 <!-- To Add comments-->
 <script>

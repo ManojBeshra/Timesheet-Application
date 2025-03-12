@@ -24,9 +24,8 @@
 {% endblock style %}
 
 {% block content %}
-<div class="content-wrapper">
-    <div class="content">
-        <div class="card card-default">
+
+        <div class="card card-default m-2">
             <div class="card-header">
                 <form class="form-group col-12" method="POST" action="{% url 'worklogdetails' worklog.id %}">
                     {% csrf_token %}
@@ -132,6 +131,5 @@
                 </form>
             </div>
         </div>
-    </div>
-</div>
+    
 {% endblock %}

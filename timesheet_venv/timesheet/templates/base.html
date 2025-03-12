@@ -39,7 +39,15 @@
     <!--fontaswome kit-->
     <script src="https://kit.fontawesome.com/5893ed3d0d.js" crossorigin="anonymous"></script>
 
-    <style>{% block style %}{% endblock %}</style> 
+    <style>
+      .copyright {
+        /*padding: 5px 10px;  /* Reduce padding */
+        height: 40px; /* Adjust height */
+        font-size: 14px; /* Optional: Reduce text size if needed */
+        line-height: 1.2; /* Adjust line height */
+    }
+      {% block style %}{% endblock %}
+    </style> 
 
   </head>
 
@@ -565,17 +573,12 @@
         {% endblock %}
 
         <!-- Footer -->
-        <footer class="footer mt-auto">
+        <footer class="footer mt-auto" >
           <div class="copyright bg-white d-flex align-items-center justify-content-center">
             <p>
               &copy; Copyright <strong><span>Glacier Systems Inc.</span></strong>. All Rights Reserved 
             </p>
           </div>
-          <script>
-              var d = new Date();
-              var year = d.getFullYear();
-              document.getElementById("copy-year").innerHTML = year;
-          </script>
         </footer>
       </div>
     </div>

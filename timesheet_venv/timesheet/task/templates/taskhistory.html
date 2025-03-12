@@ -2,6 +2,7 @@
 {% load static %}
 {% block title %}Ticket History{% endblock title %}
 {% block page-title %}Ticket History{% endblock page-title %}
+
 <!--style-->
 {% block style %}
     .small-btn {
@@ -63,19 +64,6 @@
 
       }
 
-      .card{
-        height: 70vh; /* Full height of the viewport */
-    }
-
-    .card-body {
-        min-height: 40vh;
-    }
-   
-    #productsTable {
-        min-height: 40vh;
-        display: block; /* Allows height control */
-    }
-
 
 
 {% endblock %}
@@ -85,9 +73,8 @@
     <!-- ====================================
     ——— CONTENT WRAPPER
     ===================================== -->
-    <div class="content-wrapper">
-        <div class="content">
-            <div class="card card-default">
+    
+            <div class="card card-default m-2">
 
                 <!--Button Section-->
                 <div class="card-header">
@@ -97,52 +84,52 @@
                         Back to All Tickets
                     </a>
 
-                <!--Dropdown Filters-->
-                <div class="d-flex justify-content-end " style="gap: 10px;">
+                    <!--Dropdown Filters-->
+                    <div class="d-flex justify-content-end " style="gap: 10px;">
 
-                    
-                    <!-- User Filters -->
-                     
-                    <div class="btn-group" role="group" aria-label="Basic example" {% if not request.user.is_staff %}hidden{% endif %}>
-                        <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn" id="userfilter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {% if selected_user %}
-                                {{ selected_user.first_name }}
-                            {% else %}
-                                User
-                            {% endif %}
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userbtnGroupDrop">
-                            <a class="dropdown-item" href="{% url 'taskhistory' %}">Show all</a>
-                            {% for i in users %}
-                                <a class="dropdown-item" href="{% url 'filterTaskhistoryByUserAndProject' user_id=i.id project_id=selected_project.id|default:"0" %}">
-                                    {{ i.first_name }}
-                                </a>
-                            {% endfor %}
+                        
+                        <!-- User Filters -->
+                        
+                        <div class="btn-group" role="group" aria-label="Basic example" {% if not request.user.is_staff %}hidden{% endif %}>
+                            <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn" id="userfilter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {% if selected_user %}
+                                    {{ selected_user.first_name }}
+                                {% else %}
+                                    User
+                                {% endif %}
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userbtnGroupDrop">
+                                <a class="dropdown-item" href="{% url 'taskhistory' %}">Show all</a>
+                                {% for i in users %}
+                                    <a class="dropdown-item" href="{% url 'filterTaskhistoryByUserAndProject' user_id=i.id project_id=selected_project.id|default:"0" %}">
+                                        {{ i.first_name }}
+                                    </a>
+                                {% endfor %}
+                            </div>
                         </div>
-                    </div>
 
-                    <!-- Project Filters -->
-                    <div class="btn-group" role="group" aria-label="Basic example">
-                        <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn" id="projectfilter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {% if selected_project %}
-                                {{ selected_project.project_name }}
-                            {% else %}
-                                Project
-                            {% endif %}
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userbtnGroupDrop">
-                            <a class="dropdown-item" href="{% url 'taskhistory' %}">Show all</a>
-                            {% for i in projects %}
-                                <a class="dropdown-item" href="{% url 'filterTaskhistoryByUserAndProject' user_id=selected_user.id|default:"0" project_id=i.id %}">
-                                    {{ i.project_name }}
-                                </a>
-                            {% endfor %}
+                        <!-- Project Filters -->
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn" id="projectfilter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {% if selected_project %}
+                                    {{ selected_project.project_name }}
+                                {% else %}
+                                    Project
+                                {% endif %}
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userbtnGroupDrop">
+                                <a class="dropdown-item" href="{% url 'taskhistory' %}">Show all</a>
+                                {% for i in projects %}
+                                    <a class="dropdown-item" href="{% url 'filterTaskhistoryByUserAndProject' user_id=selected_user.id|default:"0" project_id=i.id %}">
+                                        {{ i.project_name }}
+                                    </a>
+                                {% endfor %}
+                            </div>
                         </div>
+
+
                     </div>
-
-
                 </div>
-            </div>
                  
                 <div class="card-body">
 
@@ -160,13 +147,9 @@
                           </tr>
                         </thead> 
 
-  
                         <tbody>
                             {% for i in tasks %}
-    
                                 <tr onclick="window.location='{% url 'taskdetails' i.id%}'">
-    
-                                    
                                     <td>{{i.ticket_id}}</td>
                                     <td>{{i.customer}}</td>
                                     <td>
@@ -176,19 +159,16 @@
                                     </td>  
                                     <td>{{i.project.project_name}}</td>
                                     <td>{{i.ticket_title}}</td>
-                                    <td>{{i.short_description}}</td>
+                                    <td>{{i.solution}}</td>
                                     <td>{{i.last_updated}}</td>
-    
-                                    
                                 </tr>
                             {% endfor %}
-                          </tbody>
-                      </table>
-                  </div>
+                        </tbody>
+
+                    </table>
+                </div>
 
             </div>
-        </div>
-    </div>
    
 
     {% comment %} <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> {% endcomment %}
