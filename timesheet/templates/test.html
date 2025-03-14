@@ -1,3421 +1,585 @@
-{% load static %}
-{% url "attendance" %}
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-
-  <title>Glacier Timesheet</title>
-  <meta content="" name="description">
-  <meta content="" name="keywords">
-
-  <!-- Favicons -->
-  <link href="{% static 'img/galcierlogo.png' %}" rel="icon">
-  <link href="{% static 'img/apple-touch-icon.png' %}" rel="apple-touch-icon">
-
-  <!-- Google Fonts -->
-  <link href="https://fonts.gstatic.com" rel="preconnect">
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
-
-  <!-- Vendor CSS Files -->
-  <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-  <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
-  <link href="{% static 'vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
-  <link href="{% static 'vendor/quill/quill.snow.css' %}" rel="stylesheet">
-  <link href="{% static 'vendor/quill/quill.bubble.css' %}" rel="stylesheet">
-  <link href="{% static 'vendor/remixicon/remixicon.css' %}" rel="stylesheet">
-  <link href="{% static 'vendor/simple-datatables/style.css' %}" rel="stylesheet">
-
-  <!-- Template Main CSS File -->
-  <link href="{% static 'css/style.css' %}" rel="stylesheet">
-
-</head>
-
-<style>
-  #cname{
-    font-Size: 1.2em;
-    margin-left: 1.2em;
-  }
-</style>
-
-<body>
-
-  <!-- ======= Header ======= -->
-  <header id="header" class="header fixed-top d-flex align-items-center">
-
-    <div class="d-flex align-items-center justify-content-between">
-      <a href="/" class="logo d-flex align-items-center">
-        <img src="{% static 'img/galcierlogo.png' %}" alt="">
-        <span class="d-none d-lg-block" id="cname">Glacier Systems Inc.</span>
-      </a>
-      <i class="bi bi-list toggle-sidebar-btn"></i>
-    </div><!-- End Logo -->
-
-    <div class="search-bar">
-      <form class="search-form d-flex align-items-center" method="POST" action="#">
-        <input type="text" name="query" placeholder="Search" title="Enter search keyword">
-        <button type="submit" title="Search"><i class="bi bi-search"></i></button>
-      </form>
-    </div><!-- End Search Bar -->
-
-    <nav class="header-nav ms-auto">
-      <ul class="d-flex align-items-center">
-
-        <li class="nav-item d-block d-lg-none">
-          <a class="nav-link nav-icon search-bar-toggle " href="#">
-            <i class="bi bi-search"></i>
-          </a>
-        </li><!-- End Search Icon-->
-
-        <li class="nav-item dropdown">
-
-          <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-            <i class="bi bi-bell"></i>
-            <span class="badge bg-primary badge-number">4</span>
-          </a><!-- End Notification Icon -->
-
-          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
-            <li class="dropdown-header">
-              You have 4 new notifications
-              <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li class="notification-item">
-              <i class="bi bi-exclamation-circle text-warning"></i>
-              <div>
-                <h4>Lorem Ipsum</h4>
-                <p>Quae dolorem earum veritatis oditseno</p>
-                <p>30 min. ago</p>
+<main id="main" class="main">
+  <div class="card">
+      <div class="card-body mt-4">
+          <!--pagetitle-->
+          <div class="d-flex justify-content-between">
+              <div class="pagetitle">
+                  <h1>Leave Details</h1>
+                  <nav>
+                      <ol class="breadcrumb">
+                          <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+                          <li class="breadcrumb-item active">Leave Details</li>
+                      </ol>
+                  </nav>
               </div>
-            </li>
-
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li class="notification-item">
-              <i class="bi bi-x-circle text-danger"></i>
-              <div>
-                <h4>Atque rerum nesciunt</h4>
-                <p>Quae dolorem earum veritatis oditseno</p>
-                <p>1 hr. ago</p>
-              </div>
-            </li>
-
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li class="notification-item">
-              <i class="bi bi-check-circle text-success"></i>
-              <div>
-                <h4>Sit rerum fuga</h4>
-                <p>Quae dolorem earum veritatis oditseno</p>
-                <p>2 hrs. ago</p>
-              </div>
-            </li>
-
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li class="notification-item">
-              <i class="bi bi-info-circle text-primary"></i>
-              <div>
-                <h4>Dicta reprehenderit</h4>
-                <p>Quae dolorem earum veritatis oditseno</p>
-                <p>4 hrs. ago</p>
-              </div>
-            </li>
-
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li class="dropdown-footer">
-              <a href="#">Show all notifications</a>
-            </li>
-
-          </ul><!-- End Notification Dropdown Items -->
-
-        </li><!-- End Notification Nav -->
-
-        <li class="nav-item dropdown">
-
-          <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-            <i class="bi bi-chat-left-text"></i>
-            <span class="badge bg-success badge-number">3</span>
-          </a><!-- End Messages Icon -->
-
-          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages">
-            <li class="dropdown-header">
-              You have 3 new messages
-              <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li class="message-item">
-              <a href="#">
-                <img src="{% static 'img/messages-1.jpg' %}" alt="" class="rounded-circle">
-                <div>
-                  <h4>Maria Hudson</h4>
-                  <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
-                  <p>4 hrs. ago</p>
-                </div>
-              </a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li class="message-item">
-              <a href="#">
-                <img src="{% static 'img/messages-2.jpg' %}" alt="" class="rounded-circle">
-                <div>
-                  <h4>Anna Nelson</h4>
-                  <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
-                  <p>6 hrs. ago</p>
-                </div>
-              </a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li class="message-item">
-              <a href="#">
-                <img src="{% static 'img/messages-3.jpg' %}" alt="" class="rounded-circle">
-                <div>
-                  <h4>David Muldon</h4>
-                  <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
-                  <p>8 hrs. ago</p>
-                </div>
-              </a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li class="dropdown-footer">
-              <a href="#">Show all messages</a>
-            </li>
-
-          </ul><!-- End Messages Dropdown Items -->
-
-        </li><!-- End Messages Nav -->
-
-        <li class="nav-item dropdown pe-3">
-
-          <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-            <img src="{% static 'img/profile-img.jpg' %}" alt="Profile" class="rounded-circle">
-            <span class="d-none d-md-block dropdown-toggle ps-2">K. Anderson</span>
-          </a><!-- End Profile Iamge Icon -->
-
-          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-            <li class="dropdown-header">
-              <h6>Kevin Anderson</h6>
-              <span>Web Designer</span>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li>
-              <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
-                <i class="bi bi-person"></i>
-                <span>My Profile</span>
-              </a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li>
-              <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
-                <i class="bi bi-gear"></i>
-                <span>Account Settings</span>
-              </a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li>
-              <a class="dropdown-item d-flex align-items-center" href="pages-faq.html">
-                <i class="bi bi-question-circle"></i>
-                <span>Need Help?</span>
-              </a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li>
-              <a class="dropdown-item d-flex align-items-center" href="#">
-                <i class="bi bi-box-arrow-right"></i>
-                <span>Sign Out</span>
-              </a>
-            </li>
-
-          </ul><!-- End Profile Dropdown Items -->
-        </li><!-- End Profile Nav -->
-
-      </ul>
-    </nav><!-- End Icons Navigation -->
-
-  </header><!-- End Header -->
-
-  <!-- ======= Sidebar ======= -->
-  <aside id="sidebar" class="sidebar">
-
-    <ul class="sidebar-nav" id="sidebar-nav">
-
-      <li class="nav-item">
-        <a class="nav-link " href="/">
-          <i class="bi bi-grid"></i>
-          <span>Dashboard</span>
-        </a>
-      </li><!-- End Dashboard Nav -->
-
-      <!--<li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-menu-button-wide"></i><span>Components</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-        <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-          <li>
-            <a href="components-alerts.html">
-              <i class="bi bi-circle"></i><span>Alerts</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-accordion.html">
-              <i class="bi bi-circle"></i><span>Accordion</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-badges.html">
-              <i class="bi bi-circle"></i><span>Badges</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-breadcrumbs.html">
-              <i class="bi bi-circle"></i><span>Breadcrumbs</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-buttons.html">
-              <i class="bi bi-circle"></i><span>Buttons</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-cards.html">
-              <i class="bi bi-circle"></i><span>Cards</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-carousel.html">
-              <i class="bi bi-circle"></i><span>Carousel</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-list-group.html">
-              <i class="bi bi-circle"></i><span>List group</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-modal.html">
-              <i class="bi bi-circle"></i><span>Modal</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-tabs.html">
-              <i class="bi bi-circle"></i><span>Tabs</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-pagination.html">
-              <i class="bi bi-circle"></i><span>Pagination</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-progress.html">
-              <i class="bi bi-circle"></i><span>Progress</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-spinners.html">
-              <i class="bi bi-circle"></i><span>Spinners</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-tooltips.html">
-              <i class="bi bi-circle"></i><span>Tooltips</span>
-            </a>
-          </li>
-        </ul>
-      </li>
-    -->
-      <!--<li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-journal-text"></i><span>Forms</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-        <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-          <li>
-            <a href="forms-elements.html">
-              <i class="bi bi-circle"></i><span>Form Elements</span>
-            </a>
-          </li>
-          <li>
-            <a href="forms-layouts.html">
-              <i class="bi bi-circle"></i><span>Form Layouts</span>
-            </a>
-          </li>
-          <li>
-            <a href="forms-editors.html">
-              <i class="bi bi-circle"></i><span>Form Editors</span>
-            </a>
-          </li>
-          <li>
-            <a href="forms-validation.html">
-              <i class="bi bi-circle"></i><span>Form Validation</span>
-            </a>
-          </li>
-        </ul>
-      </li>-->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-layout-text-window-reverse"></i><span>Attendance</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-        <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-          <li>
-            <a href="attendance.html">
-              <i class="bi bi-circle"></i><span>Attendance</span>
-            </a>
-          </li>
-          <li>
-            <a href="leavedetails.html">
-              <i class="bi bi-circle"></i><span>Leave Details</span>
-            </a>
-          </li>
-        </ul>
-      </li><!-- End Tables Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-bar-chart"></i><span>Worklog</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-        <ul id="charts-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-          <li>
-            <a href="charts-chartjs.html">
-              {% comment %} <i class="bi bi-circle"></i><span>Chart.js</span> {% endcomment %}
-            </a>
-          </li>
-          <li>
-            <a href="charts-apexcharts.html">
-              {% comment %} <i class="bi bi-circle"></i><span>ApexCharts</span> {% endcomment %}
-            </a>
-          </li>
-          <li>
-            <a href="charts-echarts.html">
-              {% comment %} <i class="bi bi-circle"></i><span>ECharts</span> {% endcomment %}
-            </a>
-          </li>
-        </ul>
-      </li><!-- End Charts Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-menu-button-wide"></i><span>Ticket Tracker</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-        <ul id="icons-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-          <li>
-            <a href="icons-bootstrap.html">
-              {% comment %} <i class="bi bi-circle"></i><span>Bootstrap Icons</span> {% endcomment %}
-            </a>
-          </li>
-          <li>
-            <a href="icons-remix.html">
-              {% comment %} <i class="bi bi-circle"></i><span>Remix Icons</span> {% endcomment %}
-            </a>
-          </li>
-          <li>
-            <a href="icons-boxicons.html">
-              {% comment %} <i class="bi bi-circle"></i><span>Boxicons</span> {% endcomment %}
-            </a>
-          </li>
-        </ul>
-      </li><!-- End Icons Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi bi-journal-text"></i><span>Customer</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-        <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-          <li>
-            <a href="components-alerts.html">
-              {% comment %} <i class="bi bi-circle"></i><span>Alerts</span> {% endcomment %}
-            </a>
-          </li>
-          <li>
-            <a href="components-accordion.html">
-              {% comment %} <i class="bi bi-circle"></i><span>Accordion</span> {% endcomment %}
-            </a>
-          </li>
-        </ul>
-      </li>
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="/">
-          <i class="bi bi-envelope"></i>
-          <span>Contact</span>
-        </a>
-      </li><!-- End Contact Page Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="/">
-          <i class="bi bi-box-arrow-in-right"></i>
-          <span>Logout</span>
-        </a>
-      </li><!-- End Logout Page Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="/">
-          <i class="bi bi-person"></i>
-          <span>Profile</span>
-        </a>
-      </li><!-- End Profile Page Nav -->
-
-      <!--<li class="nav-heading">Pages</li>-->
-
-      <!-- End Profile Page Nav <li class="nav-item">
-        <a class="nav-link collapsed" href="users-profile.html">
-          <i class="bi bi-person"></i>
-          <span>Profile</span>
-        </a>
-      </li>-->
-
-      <!-- End F.A.Q Page Nav <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-faq.html">
-          <i class="bi bi-question-circle"></i>
-          <span>F.A.Q</span>
-        </a>
-      </li>-->
-
-      <!-- End Contact Page Nav <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-contact.html">
-          <i class="bi bi-envelope"></i>
-          <span>Contact</span>
-        </a>
-      </li>-->
-
-      <!-- <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-register.html">
-          <i class="bi bi-card-list"></i>
-          <span>Register</span>
-        </a>
-      </li> -->
-
-      <!-- <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-login.html">
-          <i class="bi bi-box-arrow-in-right"></i>
-          <span>Login</span>
-        </a>
-      </li>-->
-
-      <!-- <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-error-404.html">
-          <i class="bi bi-dash-circle"></i>
-          <span>Error 404</span>
-        </a>
-      </li>-->
-
-      <!-- <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-blank.html">
-          <i class="bi bi-file-earmark"></i>
-          <span>Blank</span>
-        </a>
-      </li>-->
-
-    </ul>
-
-  </aside><!-- End Sidebar-->
-
-  <main id="main" class="main">
-
-    <div class="pagetitle">
-      <h1>Dashboard</h1>
-      <nav>
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-          <li class="breadcrumb-item active">Dashboard</li>
-        </ol>
-      </nav>
-    </div><!-- End Page Title -->
-
-    <section class="section dashboard">
-      <div class="row">
-
-        <!-- Left side columns -->
-        <div class="col-lg-8">
-          <div class="row">
-
-            <!-- Sales Card -->
-            <div class="col-xxl-4 col-md-6">
-              <div class="card info-card sales-card">
-
-                <div class="filter">
-                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                    <li class="dropdown-header text-start">
-                      <h6>Filter</h6>
-                    </li>
-
-                    <li><a class="dropdown-item" href="#">Today</a></li>
-                    <li><a class="dropdown-item" href="#">This Month</a></li>
-                    <li><a class="dropdown-item" href="#">This Year</a></li>
-                  </ul>
-                </div>
-
-                <div class="card-body">
-                  <h5 class="card-title">Sales <span>| Today</span></h5>
-
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-cart"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6>145</h6>
-                      <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span>
-
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </div><!-- End Sales Card -->
-
-            <!-- Revenue Card -->
-            <div class="col-xxl-4 col-md-6">
-              <div class="card info-card revenue-card">
-
-                <div class="filter">
-                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                    <li class="dropdown-header text-start">
-                      <h6>Filter</h6>
-                    </li>
-
-                    <li><a class="dropdown-item" href="#">Today</a></li>
-                    <li><a class="dropdown-item" href="#">This Month</a></li>
-                    <li><a class="dropdown-item" href="#">This Year</a></li>
-                  </ul>
-                </div>
-
-                <div class="card-body">
-                  <h5 class="card-title">Revenue <span>| This Month</span></h5>
-
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-currency-dollar"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6>$3,264</h6>
-                      <span class="text-success small pt-1 fw-bold">8%</span> <span class="text-muted small pt-2 ps-1">increase</span>
-
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </div><!-- End Revenue Card -->
-
-            <!-- Customers Card -->
-            <div class="col-xxl-4 col-xl-12">
-
-              <div class="card info-card customers-card">
-
-                <div class="filter">
-                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                    <li class="dropdown-header text-start">
-                      <h6>Filter</h6>
-                    </li>
-
-                    <li><a class="dropdown-item" href="#">Today</a></li>
-                    <li><a class="dropdown-item" href="#">This Month</a></li>
-                    <li><a class="dropdown-item" href="#">This Year</a></li>
-                  </ul>
-                </div>
-
-                <div class="card-body">
-                  <h5 class="card-title">Customers <span>| This Year</span></h5>
-
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-people"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6>1244</h6>
-                      <span class="text-danger small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">decrease</span>
-
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-
-            </div><!-- End Customers Card -->
-
-            <!-- Reports -->
-            <div class="col-12">
-              <div class="card">
-
-                <div class="filter">
-                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                    <li class="dropdown-header text-start">
-                      <h6>Filter</h6>
-                    </li>
-
-                    <li><a class="dropdown-item" href="#">Today</a></li>
-                    <li><a class="dropdown-item" href="#">This Month</a></li>
-                    <li><a class="dropdown-item" href="#">This Year</a></li>
-                  </ul>
-                </div>
-
-                <div class="card-body">
-                  <h5 class="card-title">Reports <span>/Today</span></h5>
-
-                  <!-- Line Chart -->
-                  <div id="reportsChart"></div>
-
-                  <script>
-                    document.addEventListener("DOMContentLoaded", () => {
-                      new ApexCharts(document.querySelector("#reportsChart"), {
-                        series: [{
-                          name: 'Sales',
-                          data: [31, 40, 28, 51, 42, 82, 56],
-                        }, {
-                          name: 'Revenue',
-                          data: [11, 32, 45, 32, 34, 52, 41]
-                        }, {
-                          name: 'Customers',
-                          data: [15, 11, 32, 18, 9, 24, 11]
-                        }],
-                        chart: {
-                          height: 350,
-                          type: 'area',
-                          toolbar: {
-                            show: false
-                          },
-                        },
-                        markers: {
-                          size: 4
-                        },
-                        colors: ['#4154f1', '#2eca6a', '#ff771d'],
-                        fill: {
-                          type: "gradient",
-                          gradient: {
-                            shadeIntensity: 1,
-                            opacityFrom: 0.3,
-                            opacityTo: 0.4,
-                            stops: [0, 90, 100]
-                          }
-                        },
-                        dataLabels: {
-                          enabled: false
-                        },
-                        stroke: {
-                          curve: 'smooth',
-                          width: 2
-                        },
-                        xaxis: {
-                          type: 'datetime',
-                          categories: ["2018-09-19T00:00:00.000Z", "2018-09-19T01:30:00.000Z", "2018-09-19T02:30:00.000Z", "2018-09-19T03:30:00.000Z", "2018-09-19T04:30:00.000Z", "2018-09-19T05:30:00.000Z", "2018-09-19T06:30:00.000Z"]
-                        },
-                        tooltip: {
-                          x: {
-                            format: 'dd/MM/yy HH:mm'
-                          },
-                        }
-                      }).render();
-                    });
-                  </script>
-                  <!-- End Line Chart -->
-
-                </div>
-
-              </div>
-            </div><!-- End Reports -->
-
-            <!-- Recent Sales -->
-            <div class="col-12">
-              <div class="card recent-sales overflow-auto">
-
-                <div class="filter">
-                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                    <li class="dropdown-header text-start">
-                      <h6>Filter</h6>
-                    </li>
-
-                    <li><a class="dropdown-item" href="#">Today</a></li>
-                    <li><a class="dropdown-item" href="#">This Month</a></li>
-                    <li><a class="dropdown-item" href="#">This Year</a></li>
-                  </ul>
-                </div>
-
-                <div class="card-body">
-                  <h5 class="card-title">Recent Sales <span>| Today</span></h5>
-
-                  <table class="table table-borderless datatable">
-                    <thead>
-                      <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Customer</th>
-                        <th scope="col">Product</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <th scope="row"><a href="#">#2457</a></th>
-                        <td>Brandon Jacob</td>
-                        <td><a href="#" class="text-primary">At praesentium minu</a></td>
-                        <td>$64</td>
-                        <td><span class="badge bg-success">Approved</span></td>
-                      </tr>
-                      <tr>
-                        <th scope="row"><a href="#">#2147</a></th>
-                        <td>Bridie Kessler</td>
-                        <td><a href="#" class="text-primary">Blanditiis dolor omnis similique</a></td>
-                        <td>$47</td>
-                        <td><span class="badge bg-warning">Pending</span></td>
-                      </tr>
-                      <tr>
-                        <th scope="row"><a href="#">#2049</a></th>
-                        <td>Ashleigh Langosh</td>
-                        <td><a href="#" class="text-primary">At recusandae consectetur</a></td>
-                        <td>$147</td>
-                        <td><span class="badge bg-success">Approved</span></td>
-                      </tr>
-                      <tr>
-                        <th scope="row"><a href="#">#2644</a></th>
-                        <td>Angus Grady</td>
-                        <td><a href="#" class="text-primar">Ut voluptatem id earum et</a></td>
-                        <td>$67</td>
-                        <td><span class="badge bg-danger">Rejected</span></td>
-                      </tr>
-                      <tr>
-                        <th scope="row"><a href="#">#2644</a></th>
-                        <td>Raheem Lehner</td>
-                        <td><a href="#" class="text-primary">Sunt similique distinctio</a></td>
-                        <td>$165</td>
-                        <td><span class="badge bg-success">Approved</span></td>
-                      </tr>
-                    </tbody>
-                  </table>
-
-                </div>
-
-              </div>
-            </div><!-- End Recent Sales -->
-
-            <!-- Top Selling -->
-            <div class="col-12">
-              <div class="card top-selling overflow-auto">
-
-                <div class="filter">
-                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                    <li class="dropdown-header text-start">
-                      <h6>Filter</h6>
-                    </li>
-
-                    <li><a class="dropdown-item" href="#">Today</a></li>
-                    <li><a class="dropdown-item" href="#">This Month</a></li>
-                    <li><a class="dropdown-item" href="#">This Year</a></li>
-                  </ul>
-                </div>
-
-                <div class="card-body pb-0">
-                  <h5 class="card-title">Top Selling <span>| Today</span></h5>
-
-                  <table class="table table-borderless">
-                    <thead>
-                      <tr>
-                        <th scope="col">Preview</th>
-                        <th scope="col">Product</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Sold</th>
-                        <th scope="col">Revenue</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <th scope="row"><a href="#"><img src="{% static 'img/product-1.jpg' %}" alt=""></a></th>
-                        <td><a href="#" class="text-primary fw-bold">Ut inventore ipsa voluptas nulla</a></td>
-                        <td>$64</td>
-                        <td class="fw-bold">124</td>
-                        <td>$5,828</td>
-                      </tr>
-                      <tr>
-                        <th scope="row"><a href="#"><img src="{% static 'img/product-2.jpg' %}" alt=""></a></th>
-                        <td><a href="#" class="text-primary fw-bold">Exercitationem similique doloremque</a></td>
-                        <td>$46</td>
-                        <td class="fw-bold">98</td>
-                        <td>$4,508</td>
-                      </tr>
-                      <tr>
-                        <th scope="row"><a href="#"><img src="{% static 'img/product-3.jpg' %}" alt=""></a></th>
-                        <td><a href="#" class="text-primary fw-bold">Doloribus nisi exercitationem</a></td>
-                        <td>$59</td>
-                        <td class="fw-bold">74</td>
-                        <td>$4,366</td>
-                      </tr>
-                      <tr>
-                        <th scope="row"><a href="#"><img src="{% static 'img/product-4.jpg' %}" alt=""></a></th>
-                        <td><a href="#" class="text-primary fw-bold">Officiis quaerat sint rerum error</a></td>
-                        <td>$32</td>
-                        <td class="fw-bold">63</td>
-                        <td>$2,016</td>
-                      </tr>
-                      <tr>
-                        <th scope="row"><a href="#"><img src="{% static 'img/product-5.jpg' %}" alt=""></a></th>
-                        <td><a href="#" class="text-primary fw-bold">Sit unde debitis delectus repellendus</a></td>
-                        <td>$79</td>
-                        <td class="fw-bold">41</td>
-                        <td>$3,239</td>
-                      </tr>
-                    </tbody>
-                  </table>
-
-                </div>
-
-              </div>
-            </div><!-- End Top Selling -->
-
           </div>
-        </div><!-- End Left side columns -->
 
-        <!-- Right side columns -->
-        <div class="col-lg-4">
+          <section class="section leavedetails">
+                  <!--Button Section-->
+                  <div class="btn-toolbar justify-content-between " role="toolbar" aria-label="Toolbar with button groups">
+                      <div class="btn-group" role="group" aria-label="First group">
+                      <!--User Dropdown-->
+                          <div class="btn-group" role="group">
+                              <button type="button" class="btn btn-outline-secondary dropdown-toggle " data-bs-toggle="dropdown" aria-expanded="false">
+                              Users
+                              </button>
+                              <ul class="dropdown-menu">
+                              <li><a class="dropdown-item" href="#">User1</a></li>
+                              <li><a class="dropdown-item" href="#">User2</a></li>
+                              <li><a class="dropdown-item" href="#">Admin</a></li>
+                              </ul>
+                          </div>
 
-          <!-- Recent Activity -->
-          <div class="card">
-            <div class="filter">
-              <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                <li class="dropdown-header text-start">
-                  <h6>Filter</h6>
-                </li>
+                          <!--Charts -->
+                          <div class="btn-group" role="group">
+                              <button type="button" class="btn btn-outline-secondary dropdown-toggle " data-bs-toggle="dropdown" aria-expanded="false">
+                                  Charts
+                              </button>
+                              <ul class="dropdown-menu">
+                                  <li><a class="dropdown-item" href="#">Barchart</a></li>
+                                  <li><a class="dropdown-item" href="#">Flowchart</a></li>
+                              </ul>
+                          </div>
 
-                <li><a class="dropdown-item" href="#">Today</a></li>
-                <li><a class="dropdown-item" href="#">This Month</a></li>
-                <li><a class="dropdown-item" href="#">This Year</a></li>
-              </ul>
-            </div>
-
-            <div class="card-body">
-              <h5 class="card-title">Recent Activity <span>| Today</span></h5>
-
-              <div class="activity">
-
-                <div class="activity-item d-flex">
-                  <div class="activite-label">32 min</div>
-                  <i class='bi bi-circle-fill activity-badge text-success align-self-start'></i>
-                  <div class="activity-content">
-                    Quia quae rerum <a href="#" class="fw-bold text-dark">explicabo officiis</a> beatae
-                  </div>
-                </div><!-- End activity item-->
-
-                <div class="activity-item d-flex">
-                  <div class="activite-label">56 min</div>
-                  <i class='bi bi-circle-fill activity-badge text-danger align-self-start'></i>
-                  <div class="activity-content">
-                    Voluptatem blanditiis blanditiis eveniet
-                  </div>
-                </div><!-- End activity item-->
-
-                <div class="activity-item d-flex">
-                  <div class="activite-label">2 hrs</div>
-                  <i class='bi bi-circle-fill activity-badge text-primary align-self-start'></i>
-                  <div class="activity-content">
-                    Voluptates corrupti molestias voluptatem
-                  </div>
-                </div><!-- End activity item-->
-
-                <div class="activity-item d-flex">
-                  <div class="activite-label">1 day</div>
-                  <i class='bi bi-circle-fill activity-badge text-info align-self-start'></i>
-                  <div class="activity-content">
-                    Tempore autem saepe <a href="#" class="fw-bold text-dark">occaecati voluptatem</a> tempore
-                  </div>
-                </div><!-- End activity item-->
-
-                <div class="activity-item d-flex">
-                  <div class="activite-label">2 days</div>
-                  <i class='bi bi-circle-fill activity-badge text-warning align-self-start'></i>
-                  <div class="activity-content">
-                    Est sit eum reiciendis exercitationem
-                  </div>
-                </div><!-- End activity item-->
-
-                <div class="activity-item d-flex">
-                  <div class="activite-label">4 weeks</div>
-                  <i class='bi bi-circle-fill activity-badge text-muted align-self-start'></i>
-                  <div class="activity-content">
-                    Dicta dolorem harum nulla eius. Ut quidem quidem sit quas
-                  </div>
-                </div><!-- End activity item-->
-
-              </div>
-
-            </div>
-          </div><!-- End Recent Activity -->
-
-          <!-- Budget Report -->
-          <div class="card">
-            <div class="filter">
-              <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                <li class="dropdown-header text-start">
-                  <h6>Filter</h6>
-                </li>
-
-                <li><a class="dropdown-item" href="#">Today</a></li>
-                <li><a class="dropdown-item" href="#">This Month</a></li>
-                <li><a class="dropdown-item" href="#">This Year</a></li>
-              </ul>
-            </div>
-
-            <div class="card-body pb-0">
-              <h5 class="card-title">Budget Report <span>| This Month</span></h5>
-
-              <div id="budgetChart" style="min-height: 400px;" class="echart"></div>
-
-              <script>
-                document.addEventListener("DOMContentLoaded", () => {
-                  var budgetChart = echarts.init(document.querySelector("#budgetChart")).setOption({
-                    legend: {
-                      data: ['Allocated Budget', 'Actual Spending']
-                    },
-                    radar: {
-                      // shape: 'circle',
-                      indicator: [{
-                          name: 'Sales',
-                          max: 6500
-                        },
-                        {
-                          name: 'Administration',
-                          max: 16000
-                        },
-                        {
-                          name: 'Information Technology',
-                          max: 30000
-                        },
-                        {
-                          name: 'Customer Support',
-                          max: 38000
-                        },
-                        {
-                          name: 'Development',
-                          max: 52000
-                        },
-                        {
-                          name: 'Marketing',
-                          max: 25000
-                        }
-                      ]
-                    },
-                    series: [{
-                      name: 'Budget vs spending',
-                      type: 'radar',
-                      data: [{
-                          value: [4200, 3000, 20000, 35000, 50000, 18000],
-                          name: 'Allocated Budget'
-                        },
-                        {
-                          value: [5000, 14000, 28000, 26000, 42000, 21000],
-                          name: 'Actual Spending'
-                        }
-                      ]
-                    }]
-                  });
-                });
-              </script>
-
-            </div>
-          </div><!-- End Budget Report -->
-
-          <!-- Website Traffic -->
-          <div class="card">
-            <div class="filter">
-              <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                <li class="dropdown-header text-start">
-                  <h6>Filter</h6>
-                </li>
-
-                <li><a class="dropdown-item" href="#">Today</a></li>
-                <li><a class="dropdown-item" href="#">This Month</a></li>
-                <li><a class="dropdown-item" href="#">This Year</a></li>
-              </ul>
-            </div>
-
-            <div class="card-body pb-0">
-              <h5 class="card-title">Website Traffic <span>| Today</span></h5>
-
-              <div id="trafficChart" style="min-height: 400px;" class="echart"></div>
-
-              <script>
-                document.addEventListener("DOMContentLoaded", () => {
-                  echarts.init(document.querySelector("#trafficChart")).setOption({
-                    tooltip: {
-                      trigger: 'item'
-                    },
-                    legend: {
-                      top: '5%',
-                      left: 'center'
-                    },
-                    series: [{
-                      name: 'Access From',
-                      type: 'pie',
-                      radius: ['40%', '70%'],
-                      avoidLabelOverlap: false,
-                      label: {
-                        show: false,
-                        position: 'center'
-                      },
-                      emphasis: {
-                        label: {
-                          show: true,
-                          fontSize: '18',
-                          fontWeight: 'bold'
-                        }
-                      },
-                      labelLine: {
-                        show: false
-                      },
-                      data: [{
-                          value: 1048,
-                          name: 'Search Engine'
-                        },
-                        {
-                          value: 735,
-                          name: 'Direct'
-                        },
-                        {
-                          value: 580,
-                          name: 'Email'
-                        },
-                        {
-                          value: 484,
-                          name: 'Union Ads'
-                        },
-                        {
-                          value: 300,
-                          name: 'Video Ads'
-                        }
-                      ]
-                    }]
-                  });
-                });
-              </script>
-
-            </div>
-          </div><!-- End Website Traffic -->
-
-          <!-- News & Updates Traffic -->
-          <div class="card">
-            <div class="filter">
-              <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                <li class="dropdown-header text-start">
-                  <h6>Filter</h6>
-                </li>
-
-                <li><a class="dropdown-item" href="#">Today</a></li>
-                <li><a class="dropdown-item" href="#">This Month</a></li>
-                <li><a class="dropdown-item" href="#">This Year</a></li>
-              </ul>
-            </div>
-
-            <div class="card-body pb-0">
-              <h5 class="card-title">News &amp; Updates <span>| Today</span></h5>
-
-              <div class="news">
-                <div class="post-item clearfix">
-                  <img src="{% static 'img/news-1.jpg' %}" alt="">
-                  <h4><a href="#">Nihil blanditiis at in nihil autem</a></h4>
-                  <p>Sit recusandae non aspernatur laboriosam. Quia enim eligendi sed ut harum...</p>
-                </div>
-
-                <div class="post-item clearfix">
-                  <img src="{% static 'img/news-2.jpg' %}" alt="">
-                  <h4><a href="#">Quidem autem et impedit</a></h4>
-                  <p>Illo nemo neque maiores vitae officiis cum eum turos elan dries werona nande...</p>
-                </div>
-
-                <div class="post-item clearfix">
-                  <img src="{% static 'img/news-3.jpg' %}" alt="">
-                  <h4><a href="#">Id quia et et ut maxime similique occaecati ut</a></h4>
-                  <p>Fugiat voluptas vero eaque accusantium eos. Consequuntur sed ipsam et totam...</p>
-                </div>
-
-                <div class="post-item clearfix">
-                  <img src="{% static 'img/news-4.jpg' %}" alt="">
-                  <h4><a href="#">Laborum corporis quo dara net para</a></h4>
-                  <p>Qui enim quia optio. Eligendi aut asperiores enim repellendusvel rerum cuder...</p>
-                </div>
-
-                <div class="post-item clearfix">
-                  <img src="{% static 'img/news-5.jpg' %}" alt="">
-                  <h4><a href="#">Et dolores corrupti quae illo quod dolor</a></h4>
-                  <p>Odit ut eveniet modi reiciendis. Atque cupiditate libero beatae dignissimos eius...</p>
-                </div>
-
-              </div><!-- End sidebar recent posts-->
-
-            </div>
-          </div><!-- End News & Updates -->
-
-        </div><!-- End Right side columns -->
-
-      </div>
-    </section>
-
-  </main><!-- End #main -->
-
-  <!-- ======= Footer ======= -->
-  <footer id="footer" class="footer">
-    <div class="copyright">
-      &copy; Copyright <strong><span>Glacier Systems Inc.</span></strong>. All Rights Reserved
-    </div>
-    <!--<div class="credits">-->
-      <!-- All the links in the footer should remain intact. -->
-      <!-- You can delete the links only if you purchased the pro version. -->
-      <!-- Licensing information: https://bootstrapmade.com/license/ -->
-      <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
-      <!--Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>-->
-    <!--</div>-->
-  </footer><!-- End Footer -->
-
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
-  <!-- Vendor JS Files -->
-  <script src="{% static 'vendor/apexcharts/apexcharts.min.js' %}"></script>
-  <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-  <script src="{% static 'vendor/chart.js/chart.umd.js' %}"></script>
-  <script src="{% static 'vendor/echarts/echarts.min.js' %}"></script>
-  <script src="{% static 'vendor/quill/quill.js' %}"></script>
-  <script src="{% static 'vendor/simple-datatables/simple-datatables.js' %}"></script>
-  <script src="{% static 'vendor/tinymce/tinymce.min.js' %}"></script>
-  <script src="{% static 'vendor/php-email-form/validate.js' %}"></script>
-
-  <!-- Template Main JS File -->
-  <script src="{% static 'js/main.js' %}"></script>
-
-</body>
-
-</html>
-
-
-
-
-
-{% extends "base.html" %}
-{% load static %}
-{% block title %}Attendance{% endblock title %}
-
-
-{% block content %}
-  <main id="main" class="main">
-
-    <div class="pagetitle">
-      <h1>Attendance</h1>
-      <nav>
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
-          <li class="breadcrumb-item active">Attendance</li>
-        </ol>
-      </nav>
-    </div><!-- End Page Title -->
-
-    <section class="section attendance">
-      <div class="row">
-
-        {% comment %} <div class="main p-3"> {% endcomment %}
-            {% comment %} <div class="text-center"> {% endcomment %}
-              {% comment %} <div class="container mt-5"> {% endcomment %}
-                <!--Buttons-->
-                <div class="d-flex justify-content-between">
-                    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                        <button id="entry-button" type="button" class="btn btn-success" data-url="{% url 'entry' %}">Entry</button>
-                        <button id="exit-button" type="button" class="btn btn-danger" data-url="{% url 'exit' %}">Exit</button>
+                          <!--Status-->
+                          <div class="btn-group" role="group">
+                              <button type="button" class="btn btn-outline-secondary dropdown-toggle " data-bs-toggle="dropdown" aria-expanded="false">
+                                  All Status
+                              </button>
+                              <ul class="dropdown-menu">
+                                  <li><a class="dropdown-item" href="#">Approved</a></li>
+                                  <li><a class="dropdown-item" href="#">Declined</a></li>
+                                  <li><a class="dropdown-item" href="#">Pending</a></li>
+                              </ul>
+                          </div>
                       </div>
-                    <!--<div>-->
-                        <!-- Logout Button -->
-                        <!--<form action="{% url 'logout' %}" method="post" class="form-inline">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-secondary btn-custom">Logout</button>
-                        </form>-->
-                        <div class="btn-group">
-                          <a href="#" class="btn btn-primary active" aria-current="page">Export To Excel</a>
-                          <a href="#" class="btn btn-primary">Export To PDF</a>
-                        </div>
-                    <!--</div>-->
-                </div>
-                <!--for a message-->
-                <div id="message"></div>
-                <!--Attendance table-->
-                <table id="attendance-table"  class="table table-striped caption-top mt-5 table-hover table-bordered">
-                    <thead>
-                      <tr>
-                        <th scope="col">Sn</th>
-                        <th scope="col">User</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Entry</th>
-                        <th scope="col">Exit</th>
-                        <th scope="col">Hour</th>
-                      </tr>
-                    </thead> 
-                
-                    <tbody id="table-body">
-                    {% for record in attendance_records %}
-                    <tr>
-                        <th scope="row">{{ forloop.counter }}</th>
-                        <td>{{ record.user }}</td>
-                        <td>{{ record.date }}</td>
-                        <td>{{ record.entry }}</td>
-                        <td>{{ record.exit }}</td>
-                        <td>{{ record.hour }}</td>
-                    </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-                <!--The Pagination added into the buttom of bothside-->
-                <div class="pagination-container">
-                    <div id="record-info"></div>
-                    <nav>
-                        <ul class="pagination" id="pagination">
-                            <!-- Pagination items will be dynamically inserted here -->
-                        </ul>
-                    </nav>
-                </div>
-            </div>
-        
-            {% comment %} </div> {% endcomment %}
-        {% comment %} </div> {% endcomment %}
-      {% comment %} </div> {% endcomment %}
-    </section>
 
-  </main><!-- End #main -->
+                      <!--Requeste Button-->
+                      <!-- Button trigger modal -->
+                      <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                          Requeste Leave
+                      </button>
+                      
+                      <!-- Modal -->
+                      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                  <h1 class="modal-title fs-5" id="exampleModalLabel">Requested Details</h1>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                      <form>
+                                          <div class="mb-3">
+                                              <label for="requesteddate" class="col-form-label">Requested Date:</label>
+                                              <input type="text" class="form-control" id="requesteddate">
+                                          </div>
+                                              <div class="form-floating">
+                                                  <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                                                    <option selected>select</option>
+                                                    <option value="1">Option1</option>
+                                                    <option value="2">Option2</option>
+                                                    <option value="3">Option3</option>
+                                                  </select>
+                                                  <label for="floatingSelect">Leave Type</label>
+                                                </div>
+                                          <div class="row">
+                                              <div class="col-md-6 mb-3">
+                                                  <label for="leavefromdate" class="col-form-label">Leave From:</label>
+                                                  <input type="date" class="form-control" id="leavefromdate">
+                                              </div>
+                                              <div class="col-md-6 mb-3">
+                                                  <label for="leavetodate" class="col-form-label">Leave To:</label>
+                                                  <input type="date" class="form-control" id="leavetodate">
+                                              </div>
+                                          </div>
+                                          <div class="mb-3">
+                                              <label for="description" class="col-form-label">Description:</label>
+                                              <textarea class="form-control" rows="4" id="description" name="text"></textarea>
+                                          </div>
+                                      </form>
+                                  </div>
+                                  <div class="modal-footer">
+                                      <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                                      <button type="button" class="btn btn-success btn-sm">Send Request</button>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
 
-
-  <!--This is for pagination-->
-  <script>
-    $(document).ready(function() {
-        const rowsPerPage = 5; // Adjust as needed
-        const tableBody = $("#table-body");
-        const paginationElement = $("#pagination");
-        const recordInfo = $("#record-info");
-        const rows = tableBody.find("tr");
-        const rowCount = rows.length;
-        const pageCount = Math.ceil(rowCount / rowsPerPage);
-        let currentPage = 1;
-    
-        function displayTable(page) {
-            tableBody.empty();
-            let start = (page - 1) * rowsPerPage;
-            let end = start + rowsPerPage;
-            rows.slice(start, end).appendTo(tableBody);
-            updateRecordInfo(page, rowCount, rowsPerPage);
-        }
-    
-        function updateRecordInfo(page, totalRecords, rowsPerPage) {
-            let start = (page - 1) * rowsPerPage + 1;
-            let end = page * rowsPerPage;
-            if (end > totalRecords) end = totalRecords;
-            recordInfo.text(Showing ${start} to ${end} of ${totalRecords} records);
-        }
-    
-        function createPagination() {
-            paginationElement.empty();
-            paginationElement.append(<li class="page-item"><a class="page-link" href="#" id="prev-page">Previous</a></li>);
-            for (let i = 1; i <= pageCount; i++) {
-                let pageItem = <li class="page-item ${i === 1 ? 'active' : ''}"><a class="page-link" href="#">${i}</a></li>;
-                paginationElement.append(pageItem);
-            }
-            paginationElement.append(<li class="page-item"><a class="page-link" href="#" id="next-page">Next</a></li>);
-            
-            paginationElement.on("click", "a", function(e) {
-                e.preventDefault();
-                let clickedPage = $(this).text();
-                if (clickedPage === "Previous") {
-                    if (currentPage > 1) currentPage--;
-                } else if (clickedPage === "Next") {
-                    if (currentPage < pageCount) currentPage++;
-                } else {
-                    currentPage = parseInt(clickedPage);
-                }
-                updatePagination(currentPage);
-                displayTable(currentPage);
-            });
-        }
-    
-        function updatePagination(page) {
-            paginationElement.find(".page-item").removeClass("active");
-            paginationElement.find(.page-item:contains(${page})).addClass("active");
-        }
-    
-        displayTable(1);
-        createPagination();
-    });
-    
-    
-  </script>
-    
-  <!--This inserted a record when onclick entry and exit button-->
-  <script>
-          function updateTable(data) {
-              $('#table-body').empty();
-              data.forEach(function(record, index) {
-                  let newRow = '<tr>' +
-                      '<th scope="row">' + (index + 1) + '</th>' +
-                      '<td>' + record.user + '</td>' +
-                      '<td>' + record.date + '</td>' +
-                      '<td>' + (record.entry ? record.entry : 'N/A') + '</td>' +
-                      '<td>' + (record.exit ? record.exit : 'N/A') + '</td>' +
-                      '<td>' + record.hour + '</td>' +
-                      '</tr>';
-                  $('#table-body').append(newRow);
-              });
-              table.draw();
-          }
-  
-          $('#entry-button').click(function() {
-              $.ajax({
-                  type: 'POST',
-                  url: '{% url "entry" %}',
-                  data: {
-                      csrfmiddlewaretoken: '{{ csrf_token }}',
-                  },
-                  success: function(response) {
-                      $('#message').html('<div class="alert alert-success">' + response.message + '</div>');
-                      updateTable(response.data);
-                  },
-                  error: function(response) {
-                      $('#message').html('<div class="alert alert-danger">' + response.responseJSON.message + '</div>');
-                  }
-              });
-          });
-  
-          $('#exit-button').click(function() {
-              $.ajax({
-                  type: 'POST',
-                  url: '{% url "exit" %}',
-                  data: {
-                      csrfmiddlewaretoken: '{{ csrf_token }}',
-                  },
-                  success: function(response) {
-                      $('#message').html('<div class="alert alert-success">' + response.message + '</div>');
-                      updateTable(response.data);
-                  },
-                  error: function(response) {
-                      $('#message').html('<div class="alert alert-danger">' + response.responseJSON.message + '</div>');
-                  }
-              });
-          });
-  </script>
-
-  {% endblock  %}
-
-
-
-<!--section div-->
-<div class="row">
-  <!--buttons-->
-  <div class="d-flex justify-content-between">
-      <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-          <button id="entry-button" type="button" class="btn btn-success" data-url="{% url 'entry' %}">Entry</button>
-          <button id="exit-button" type="button" class="btn btn-danger" data-url="{% url 'exit' %}">Exit</button>
-      </div>
-      <div class="btn-group">
-          <a href="#" class="btn btn-primary active" aria-current="page">Export To Excel</a>
-          <a href="#" class="btn btn-primary">Export To PDF</a>
+                  <!--table-->
+                  <table id="example" class="table table-striped table-bordered">
+                      <thead class="table-dark">
+                          <tr>
+                              <th>Name</th>
+                              <th>Position</th>
+                              <th>Office</th>
+                              <th>Age</th>
+                              <th>Start date</th>
+                              <th>Salary</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <tr>
+                              <td>Tiger Nixon</td>
+                              <td>System Architect</td>
+                              <td>Edinburgh</td>
+                              <td>61</td>
+                              <td>2011/04/25</td>
+                              <td>$320,800</td>
+                          </tr>
+                          <tr>
+                              <td>Garrett Winters</td>
+                              <td>Accountant</td>
+                              <td>Tokyo</td>
+                              <td>63</td>
+                              <td>2011/07/25</td>
+                              <td>$170,750</td>
+                          </tr>
+                          <tr>
+                              <td>Ashton Cox</td>
+                              <td>Junior Technical Author</td>
+                              <td>San Francisco</td>
+                              <td>66</td>
+                              <td>2009/01/12</td>
+                              <td>$86,000</td>
+                          </tr>
+                          <tr>
+                              <td>Cedric Kelly</td>
+                              <td>Senior Javascript Developer</td>
+                              <td>Edinburgh</td>
+                              <td>22</td>
+                              <td>2012/03/29</td>
+                              <td>$433,060</td>
+                          </tr>
+                          <tr>
+                              <td>Airi Satou</td>
+                              <td>Accountant</td>
+                              <td>Tokyo</td>
+                              <td>33</td>
+                              <td>2008/11/28</td>
+                              <td>$162,700</td>
+                          </tr>
+                          <tr>
+                              <td>Brielle Williamson</td>
+                              <td>Integration Specialist</td>
+                              <td>New York</td>
+                              <td>61</td>
+                              <td>2012/12/02</td>
+                              <td>$372,000</td>
+                          </tr>
+                          <tr>
+                              <td>Herrod Chandler</td>
+                              <td>Sales Assistant</td>
+                              <td>San Francisco</td>
+                              <td>59</td>
+                              <td>2012/08/06</td>
+                              <td>$137,500</td>
+                          </tr>
+                          <tr>
+                              <td>Rhona Davidson</td>
+                              <td>Integration Specialist</td>
+                              <td>Tokyo</td>
+                              <td>55</td>
+                              <td>2010/10/14</td>
+                              <td>$327,900</td>
+                          </tr>
+                          <tr>
+                              <td>Colleen Hurst</td>
+                              <td>Javascript Developer</td>
+                              <td>San Francisco</td>
+                              <td>39</td>
+                              <td>2009/09/15</td>
+                              <td>$205,500</td>
+                          </tr>
+                          <tr>
+                              <td>Sonya Frost</td>
+                              <td>Software Engineer</td>
+                              <td>Edinburgh</td>
+                              <td>23</td>
+                              <td>2008/12/13</td>
+                              <td>$103,600</td>
+                          </tr>
+                          <tr>
+                              <td>Jena Gaines</td>
+                              <td>Office Manager</td>
+                              <td>London</td>
+                              <td>30</td>
+                              <td>2008/12/19</td>
+                              <td>$90,560</td>
+                          </tr>
+                          <tr>
+                              <td>Quinn Flynn</td>
+                              <td>Support Lead</td>
+                              <td>Edinburgh</td>
+                              <td>22</td>
+                              <td>2013/03/03</td>
+                              <td>$342,000</td>
+                          </tr>
+                          <tr>
+                              <td>Charde Marshall</td>
+                              <td>Regional Director</td>
+                              <td>San Francisco</td>
+                              <td>36</td>
+                              <td>2008/10/16</td>
+                              <td>$470,600</td>
+                          </tr>
+                          <tr>
+                              <td>Haley Kennedy</td>
+                              <td>Senior Marketing Designer</td>
+                              <td>London</td>
+                              <td>43</td>
+                              <td>2012/12/18</td>
+                              <td>$313,500</td>
+                          </tr>
+                          <tr>
+                              <td>Tatyana Fitzpatrick</td>
+                              <td>Regional Director</td>
+                              <td>London</td>
+                              <td>19</td>
+                              <td>2010/03/17</td>
+                              <td>$385,750</td>
+                          </tr>
+                          <tr>
+                              <td>Michael Silva</td>
+                              <td>Marketing Designer</td>
+                              <td>London</td>
+                              <td>66</td>
+                              <td>2012/11/27</td>
+                              <td>$198,500</td>
+                          </tr>
+                          <tr>
+                              <td>Paul Byrd</td>
+                              <td>Chief Financial Officer (CFO)</td>
+                              <td>New York</td>
+                              <td>64</td>
+                              <td>2010/06/09</td>
+                              <td>$725,000</td>
+                          </tr>
+                          <tr>
+                              <td>Gloria Little</td>
+                              <td>Systems Administrator</td>
+                              <td>New York</td>
+                              <td>59</td>
+                              <td>2009/04/10</td>
+                              <td>$237,500</td>
+                          </tr>
+                          <tr>
+                              <td>Bradley Greer</td>
+                              <td>Software Engineer</td>
+                              <td>London</td>
+                              <td>41</td>
+                              <td>2012/10/13</td>
+                              <td>$132,000</td>
+                          </tr>
+                          <tr>
+                              <td>Dai Rios</td>
+                              <td>Personnel Lead</td>
+                              <td>Edinburgh</td>
+                              <td>35</td>
+                              <td>2012/09/26</td>
+                              <td>$217,500</td>
+                          </tr>
+                          <tr>
+                              <td>Jenette Caldwell</td>
+                              <td>Development Lead</td>
+                              <td>New York</td>
+                              <td>30</td>
+                              <td>2011/09/03</td>
+                              <td>$345,000</td>
+                          </tr>
+                          <tr>
+                              <td>Yuri Berry</td>
+                              <td>Chief Marketing Officer (CMO)</td>
+                              <td>New York</td>
+                              <td>40</td>
+                              <td>2009/06/25</td>
+                              <td>$675,000</td>
+                          </tr>
+                          <tr>
+                              <td>Caesar Vance</td>
+                              <td>Pre-Sales Support</td>
+                              <td>New York</td>
+                              <td>21</td>
+                              <td>2011/12/12</td>
+                              <td>$106,450</td>
+                          </tr>
+                          <tr>
+                              <td>Doris Wilder</td>
+                              <td>Sales Assistant</td>
+                              <td>Sydney</td>
+                              <td>23</td>
+                              <td>2010/09/20</td>
+                              <td>$85,600</td>
+                          </tr>
+                          <tr>
+                              <td>Angelica Ramos</td>
+                              <td>Chief Executive Officer (CEO)</td>
+                              <td>London</td>
+                              <td>47</td>
+                              <td>2009/10/09</td>
+                              <td>$1,200,000</td>
+                          </tr>
+                          <tr>
+                              <td>Gavin Joyce</td>
+                              <td>Developer</td>
+                              <td>Edinburgh</td>
+                              <td>42</td>
+                              <td>2010/12/22</td>
+                              <td>$92,575</td>
+                          </tr>
+                          <tr>
+                              <td>Jennifer Chang</td>
+                              <td>Regional Director</td>
+                              <td>Singapore</td>
+                              <td>28</td>
+                              <td>2010/11/14</td>
+                              <td>$357,650</td>
+                          </tr>
+                          <tr>
+                              <td>Brenden Wagner</td>
+                              <td>Software Engineer</td>
+                              <td>San Francisco</td>
+                              <td>28</td>
+                              <td>2011/06/07</td>
+                              <td>$206,850</td>
+                          </tr>
+                          <tr>
+                              <td>Fiona Green</td>
+                              <td>Chief Operating Officer (COO)</td>
+                              <td>San Francisco</td>
+                              <td>48</td>
+                              <td>2010/03/11</td>
+                              <td>$850,000</td>
+                          </tr>
+                          <tr>
+                              <td>Shou Itou</td>
+                              <td>Regional Marketing</td>
+                              <td>Tokyo</td>
+                              <td>20</td>
+                              <td>2011/08/14</td>
+                              <td>$163,000</td>
+                          </tr>
+                          <tr>
+                              <td>Michelle House</td>
+                              <td>Integration Specialist</td>
+                              <td>Sydney</td>
+                              <td>37</td>
+                              <td>2011/06/02</td>
+                              <td>$95,400</td>
+                          </tr>
+                          <tr>
+                              <td>Suki Burks</td>
+                              <td>Developer</td>
+                              <td>London</td>
+                              <td>53</td>
+                              <td>2009/10/22</td>
+                              <td>$114,500</td>
+                          </tr>
+                          <tr>
+                              <td>Prescott Bartlett</td>
+                              <td>Technical Author</td>
+                              <td>London</td>
+                              <td>27</td>
+                              <td>2011/05/07</td>
+                              <td>$145,000</td>
+                          </tr>
+                          <tr>
+                              <td>Gavin Cortez</td>
+                              <td>Team Leader</td>
+                              <td>San Francisco</td>
+                              <td>22</td>
+                              <td>2008/10/26</td>
+                              <td>$235,500</td>
+                          </tr>
+                          <tr>
+                              <td>Martena Mccray</td>
+                              <td>Post-Sales support</td>
+                              <td>Edinburgh</td>
+                              <td>46</td>
+                              <td>2011/03/09</td>
+                              <td>$324,050</td>
+                          </tr>
+                          <tr>
+                              <td>Unity Butler</td>
+                              <td>Marketing Designer</td>
+                              <td>San Francisco</td>
+                              <td>47</td>
+                              <td>2009/12/09</td>
+                              <td>$85,675</td>
+                          </tr>
+                          <tr>
+                              <td>Howard Hatfield</td>
+                              <td>Office Manager</td>
+                              <td>San Francisco</td>
+                              <td>51</td>
+                              <td>2008/12/16</td>
+                              <td>$164,500</td>
+                          </tr>
+                          <tr>
+                              <td>Hope Fuentes</td>
+                              <td>Secretary</td>
+                              <td>San Francisco</td>
+                              <td>41</td>
+                              <td>2010/02/12</td>
+                              <td>$109,850</td>
+                          </tr>
+                          <tr>
+                              <td>Vivian Harrell</td>
+                              <td>Financial Controller</td>
+                              <td>San Francisco</td>
+                              <td>62</td>
+                              <td>2009/02/14</td>
+                              <td>$452,500</td>
+                          </tr>
+                          <tr>
+                              <td>Timothy Mooney</td>
+                              <td>Office Manager</td>
+                              <td>London</td>
+                              <td>37</td>
+                              <td>2008/12/11</td>
+                              <td>$136,200</td>
+                          </tr>
+                          <tr>
+                              <td>Jackson Bradshaw</td>
+                              <td>Director</td>
+                              <td>New York</td>
+                              <td>65</td>
+                              <td>2008/09/26</td>
+                              <td>$645,750</td>
+                          </tr>
+                          <tr>
+                              <td>Olivia Liang</td>
+                              <td>Support Engineer</td>
+                              <td>Singapore</td>
+                              <td>64</td>
+                              <td>2011/02/03</td>
+                              <td>$234,500</td>
+                          </tr>
+                          <tr>
+                              <td>Bruno Nash</td>
+                              <td>Software Engineer</td>
+                              <td>London</td>
+                              <td>38</td>
+                              <td>2011/05/03</td>
+                              <td>$163,500</td>
+                          </tr>
+                          <tr>
+                              <td>Sakura Yamamoto</td>
+                              <td>Support Engineer</td>
+                              <td>Tokyo</td>
+                              <td>37</td>
+                              <td>2009/08/19</td>
+                              <td>$139,575</td>
+                          </tr>
+                          <tr>
+                              <td>Thor Walton</td>
+                              <td>Developer</td>
+                              <td>New York</td>
+                              <td>61</td>
+                              <td>2013/08/11</td>
+                              <td>$98,540</td>
+                          </tr>
+                          <tr>
+                              <td>Finn Camacho</td>
+                              <td>Support Engineer</td>
+                              <td>San Francisco</td>
+                              <td>47</td>
+                              <td>2009/07/07</td>
+                              <td>$87,500</td>
+                          </tr>
+                          <tr>
+                              <td>Serge Baldwin</td>
+                              <td>Data Coordinator</td>
+                              <td>Singapore</td>
+                              <td>64</td>
+                              <td>2012/04/09</td>
+                              <td>$138,575</td>
+                          </tr>
+                          <tr>
+                              <td>Zenaida Frank</td>
+                              <td>Software Engineer</td>
+                              <td>New York</td>
+                              <td>63</td>
+                              <td>2010/01/04</td>
+                              <td>$125,250</td>
+                          </tr>
+                          <tr>
+                              <td>Zorita Serrano</td>
+                              <td>Software Engineer</td>
+                              <td>San Francisco</td>
+                              <td>56</td>
+                              <td>2012/06/01</td>
+                              <td>$115,000</td>
+                          </tr>
+                          <tr>
+                              <td>Jennifer Acosta</td>
+                              <td>Junior Javascript Developer</td>
+                              <td>Edinburgh</td>
+                              <td>43</td>
+                              <td>2013/02/01</td>
+                              <td>$75,650</td>
+                          </tr>
+                          <tr>
+                              <td>Cara Stevens</td>
+                              <td>Sales Assistant</td>
+                              <td>New York</td>
+                              <td>46</td>
+                              <td>2011/12/06</td>
+                              <td>$145,600</td>
+                          </tr>
+                          <tr>
+                              <td>Hermione Butler</td>
+                              <td>Regional Director</td>
+                              <td>London</td>
+                              <td>47</td>
+                              <td>2011/03/21</td>
+                              <td>$356,250</td>
+                          </tr>
+                          <tr>
+                              <td>Lael Greer</td>
+                              <td>Systems Administrator</td>
+                              <td>London</td>
+                              <td>21</td>
+                              <td>2009/02/27</td>
+                              <td>$103,500</td>
+                          </tr>
+                          <tr>
+                              <td>Jonas Alexander</td>
+                              <td>Developer</td>
+                              <td>San Francisco</td>
+                              <td>30</td>
+                              <td>2010/07/14</td>
+                              <td>$86,500</td>
+                          </tr>
+                          <tr>
+                              <td>Shad Decker</td>
+                              <td>Regional Director</td>
+                              <td>Edinburgh</td>
+                              <td>51</td>
+                              <td>2008/11/13</td>
+                              <td>$183,000</td>
+                          </tr>
+                          <tr>
+                              <td>Michael Bruce</td>
+                              <td>Javascript Developer</td>
+                              <td>Singapore</td>
+                              <td>29</td>
+                              <td>2011/06/27</td>
+                              <td>$183,000</td>
+                          </tr>
+                          <tr>
+                              <td>Donna Snider</td>
+                              <td>Customer Support</td>
+                              <td>New York</td>
+                              <td>27</td>
+                              <td>2011/01/25</td>
+                              <td>$112,000</td>
+                          </tr>
+                      </tbody>
+                  </table>
+          </section>
       </div>
   </div>
-  <div id="message"></div>
-  <table id="attendance-table" class="table table-striped caption-top mt-5 table-hover ">
-      <thead>
-          <tr>
-              <th scope="col">Sn</th>
-              <th scope="col">User</th>
-              <th scope="col">Date</th>
-              <th scope="col">Entry</th>
-              <th scope="col">Exit</th>
-              <th scope="col">Hour</th>
-          </tr>
-      </thead>
-      <tbody id="table-body">
-          {% for record in attendance_records %}
-          <tr>
-              <th scope="row">{{ forloop.counter }}</th>
-              <td>{{ record.user }}</td>
-              <td>{{ record.date }}</td>
-              <td>{{ record.entry }}</td>
-              <td>{{ record.exit }}</td>
-              <td>{{ record.hour }}</td>
-          </tr>
-          {% endfor %}
-      </tbody>
-  </table>
-  <div class="pagination-container">
-      <div id="record-info"></div>
-      <nav>
-          <ul class="pagination" id="pagination">
-              <!-- Pagination items will be dynamically inserted here -->
-          </ul>
-      </nav>
-  </div>
-</div>
-<!--scripts below the main div-->
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<!--for update entry and exit-->
-<script>
-    function updateTable(data) {
-        $('#table-body').empty();
-        data.forEach(function(record, index) {
-            let newRow = '<tr>' +
-                '<th scope="row">' + (index + 1) + '</th>' +
-                '<td>' + record.user + '</td>' +
-                '<td>' + record.date + '</td>' +
-                '<td>' + (record.entry ? record.entry : 'N/A') + '</td>' +
-                '<td>' + (record.exit ? record.exit : 'N/A') + '</td>' +
-                '<td>' + record.hour + '</td>' +
-                '</tr>';
-            $('#table-body').append(newRow);
-        });
-    }
-
-    $('#entry-button').click(function() {
-        $.ajax({
-            type: 'POST',
-            url: '{% url "entry" %}',
-            data: {
-                csrfmiddlewaretoken: '{{ csrf_token }}',
-            },
-            success: function(response) {
-                $('#message').html('<div class="alert alert-success">' + response.message + '</div>');
-                updateTable(response.data);
-            },
-            error: function(response) {
-                $('#message').html('<div class="alert alert-danger">' + response.responseJSON.message + '</div>');
-            }
-        });
-    });
-
-    $('#exit-button').click(function() {
-      $.ajax({
-          type: 'POST',
-          url: '{% url "exit" %}',
-          data: {
-              csrfmiddlewaretoken: '{{ csrf_token }}',
-          },
-          success: function(response) {
-              $('#message').html('<div class="alert alert-success">' + response.message + '</div>');
-              updateTable(response.data);
-          },
-          error: function(response) {
-              $('#message').html('<div class="alert alert-danger">' + response.responseJSON.message + '</div>');
-          }
-      });
-  });
-  
-</script>
-<!--for pagination-->
-<script>
-    $(document).ready(function() {
-        const rowsPerPage = 5;
-        const tableBody = $("#table-body");
-        const paginationElement = $("#pagination");
-        const recordInfo = $("#record-info");
-        const rows = tableBody.find("tr");
-        const rowCount = rows.length;
-        const pageCount = Math.ceil(rowCount / rowsPerPage);
-        let currentPage = 1;
-
-        function displayTable(page) {
-            tableBody.empty();
-            let start = (page - 1) * rowsPerPage;
-            let end = start + rowsPerPage;
-            rows.slice(start, end).appendTo(tableBody);
-            updateRecordInfo(page, rowCount, rowsPerPage);
-        }
-
-        function updateRecordInfo(page, totalRecords, rowsPerPage) {
-            let start = (page - 1) * rowsPerPage + 1;
-            let end = page * rowsPerPage;
-            if (end > totalRecords) end = totalRecords;
-            recordInfo.text(`Showing ${start} to ${end} of ${totalRecords} records`);
-        }
-
-        function createPagination() {
-            paginationElement.empty();
-            paginationElement.append(`<li class="page-item"><a class="page-link" href="#" id="prev-page">Previous</a></li>`);
-            for (let i = 1; i <= pageCount; i++) {
-                let pageItem = `<li class="page-item ${i === 1 ? 'active' : ''}"><a class="page-link" href="#">${i}</a></li>`;
-                paginationElement.append(pageItem);
-            }
-            paginationElement.append(`<li class="page-item"><a class="page-link" href="#" id="next-page">Next</a></li>`);
-
-            paginationElement.on("click", "a", function(e) {
-                e.preventDefault();
-                let clickedPage = $(this).text();
-                if (clickedPage === "Previous") {
-                    if (currentPage > 1) currentPage--;
-                } else if (clickedPage === "Next") {
-                    if (currentPage < pageCount) currentPage++;
-                } else {
-                    currentPage = parseInt(clickedPage);
-                }
-                updatePagination(currentPage);
-                displayTable(currentPage);
-            });
-        }
-
-        function updatePagination(page) {
-            paginationElement.find(".page-item").removeClass("active");
-            paginationElement.find(`.page-item:contains(${page})`).addClass("active");
-        }
-
-        displayTable(1);
-        createPagination();
-    });
-</script>
-
-
-<!--attendance views.py-->
-from django.http import HttpResponse
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from . models import Attendance, AttendanceDetail 
-#for record entry with entry and exit time
-from django.utils import timezone
-import datetime
-from django.http import JsonResponse
-# Create your views here.
-
-
-@login_required
-def attendance_view(request):
-    attendance_records = AttendanceDetail.objects.filter(attendance__user=request.user).order_by('-attendance__date', '-entry')
-    data = [
-        {
-            'user': record.attendance.user.username,
-            'date': record.attendance.date.strftime('%B %d, %Y'),
-            'entry': record.entry.strftime('%I:%M %p') if record.entry else 'N/A',
-            'exit': record.exit.strftime('%I:%M %p') if record.exit else 'N/A',
-            'hour': f"{record.hour // 60} hr {record.hour % 60} min"
-        }
-        for record in attendance_records
-    ]
-    return render(request, 'attendance.html', {'attendance_records': data})
-
-# to add attendance entry
-@login_required
-def entry_view(request):
-    if request.method == 'POST':
-        user = request.user
-        date = datetime.date.today()
-        entry_time = datetime.datetime.now().time()
-
-        # Check for existing entry with no exit time
-        existing_entry = AttendanceDetail.objects.filter(attendance__user=user, exit__isnull=True).exists()
-        if existing_entry:
-            return JsonResponse({'message': 'An entry already exists with no exit time recorded.'}, status=400)
-
-        # Create or get Attendance record for today
-        attendance, created = Attendance.objects.get_or_create(user=user, date=date)
-
-        # Create a new AttendanceDetail record with entry time
-        AttendanceDetail.objects.create(attendance=attendance, entry=entry_time)
-
-        # Retrieve updated attendance records
-        attendance_records = AttendanceDetail.objects.filter(attendance__user=user).order_by('-attendance__date', '-entry')
-        data = [
-            {
-                'user': record.attendance.user.username,
-                'date': record.attendance.date.strftime('%B %d, %Y'),
-                'entry': record.entry.strftime('%I:%M %p') if record.entry else '',
-                'exit': record.exit.strftime('%I:%M %p') if record.exit else '',
-                'hour': f"{record.hour // 60} hr {record.hour % 60} min"
-            }
-            for record in attendance_records
-        ]
-
-        return JsonResponse({'message': 'Entry time recorded successfully.', 'data': data})
-
-
-@login_required
-def exit_view(request):
-    if request.method == 'POST':
-        try:
-            # Assuming you have logic to find the latest attendance record and update it
-            attendance_record = AttendanceDetail.objects.filter(attendance__user=request.user).latest('attendance__date')
-            attendance_record.exit = timezone.now()
-            attendance_record.save()
-            
-            # Prepare the data to return in the response
-            attendance_records = AttendanceDetail.objects.filter(attendance__user=request.user).order_by('-attendance__date', '-entry')
-            data = [
-                {
-                    'user': record.attendance.user.username,
-                    'date': record.attendance.date.strftime('%B %d, %Y'),
-                    'entry': record.entry.strftime('%I:%M %p') if record.entry else 'N/A',
-                    'exit': record.exit.strftime('%I:%M %p') if record.exit else 'N/A',
-                    'hour': f"{record.hour // 60} hr {record.hour % 60} min"
-                }
-                for record in attendance_records
-            ]
-            
-            return JsonResponse({'message': 'Exit recorded successfully', 'data': data}, status=200)
-        except AttendanceDetail.DoesNotExist:
-            return JsonResponse({'message': 'No entry record found for today'}, status=400)
-        except Exception as e:
-            return JsonResponse({'message': str(e)}, status=500)
-    else:
-        return JsonResponse({'message': 'Invalid request method'}, status=405)
-
-
-        <!--attendance -->
-        {% extends "base.html" %}
-{% load static %}
-{% block title %}Attendance{% endblock title %}
-{% block style %}
-    /* Pagination styles */
-    .pagination-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .pagination {
-        margin: 0;
-    }
-{% endblock %}
-{% block content %}
-<main id="main" class="main">
-    <div class="pagetitle">
-        <h1>Attendance</h1>
-        <nav>
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
-                <li class="breadcrumb-item active">Attendance</li>
-            </ol>
-        </nav>
-    </div><!-- End Page Title -->
-
-    <section class="section attendance">
-        <div class="row">
-            <!--buttons-->
-            <div class="d-flex justify-content-between">
-                <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                    <button id="entry-button" type="button" class="btn btn-success" data-url="{% url 'entry' %}">Entry</button>
-                    <button id="exit-button" type="button" class="btn btn-danger" data-url="{% url 'exit' %}">Exit</button>
-                </div>
-                <div class="btn-group">
-                    <a href="#" class="btn btn-primary active" aria-current="page">Export To Excel</a>
-                    <a href="#" class="btn btn-primary">Export To PDF</a>
-                </div>
-            </div>
-            <div id="message"></div>
-            <table id="attendance-table" class="table table-striped caption-top mt-5 table-hover ">
-                <thead>
-                    <tr>
-                        <th scope="col">Sn</th>
-                        <th scope="col">User</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Entry</th>
-                        <th scope="col">Exit</th>
-                        <th scope="col">Hour</th>
-                    </tr>
-                </thead>
-                <tbody id="table-body">
-                    {% for record in attendance_records %}
-                    <tr>
-                        <th scope="row">{{ forloop.counter }}</th>
-                        <td>{{ record.user }}</td>
-                        <td>{{ record.date }}</td>
-                        <td>{{ record.entry }}</td>
-                        <td>{{ record.exit }}</td>
-                        <td>{{ record.hour }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            <div class="pagination-container">
-                <div id="record-info"></div>
-                <nav>
-                    <ul class="pagination" id="pagination">
-                        <!-- Pagination items will be dynamically inserted here -->
-                    </ul>
-                </nav>
-            </div>
-          </div>
-    </section>
 </main><!-- End #main -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
-        crossorigin="anonymous"></script>
-    {% comment %} <script src="static/js/script.js"></script> {% endcomment %}
-
-    <!--for table-->
-    <!-- Bootstrap and jQuery JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-    <!--for sidebar-->
-    <script>
-      const hamBurger = document.querySelector(".toggle-btn");
-
-      hamBurger.addEventListener("click", function () {
-        document.querySelector("#sidebar").classList.toggle("expand");
-      });
-
-    </script>
-
-    <!--This is for pagination-->
-    <script>
-      $(document).ready(function() {
-          const rowsPerPage = 5; // Adjust as needed
-          const tableBody = $("#table-body");
-          const paginationElement = $("#pagination");
-          const recordInfo = $("#record-info");
-          const rows = tableBody.find("tr");
-          const rowCount = rows.length;
-          const pageCount = Math.ceil(rowCount / rowsPerPage);
-          let currentPage = 1;
-      
-          function displayTable(page) {
-              tableBody.empty();
-              let start = (page - 1) * rowsPerPage;
-              let end = start + rowsPerPage;
-              rows.slice(start, end).appendTo(tableBody);
-              updateRecordInfo(page, rowCount, rowsPerPage);
-          }
-      
-          function updateRecordInfo(page, totalRecords, rowsPerPage) {
-              let start = (page - 1) * rowsPerPage + 1;
-              let end = page * rowsPerPage;
-              if (end > totalRecords) end = totalRecords;
-              recordInfo.text(`Showing ${start} to ${end} of ${totalRecords} records`);
-          }
-      
-          function createPagination() {
-              paginationElement.empty();
-              paginationElement.append(`<li class="page-item"><a class="page-link" href="#" id="prev-page">Previous</a></li>`);
-              for (let i = 1; i <= pageCount; i++) {
-                  let pageItem = `<li class="page-item ${i === 1 ? 'active' : ''}"><a class="page-link" href="#">${i}</a></li>`;
-                  paginationElement.append(pageItem);
-              }
-              paginationElement.append(`<li class="page-item"><a class="page-link" href="#" id="next-page">Next</a></li>`);
-              
-              paginationElement.on("click", "a", function(e) {
-                  e.preventDefault();
-                  let clickedPage = $(this).text();
-                  if (clickedPage === "Previous") {
-                      if (currentPage > 1) currentPage--;
-                  } else if (clickedPage === "Next") {
-                      if (currentPage < pageCount) currentPage++;
-                  } else {
-                      currentPage = parseInt(clickedPage);
-                  }
-                  updatePagination(currentPage);
-                  displayTable(currentPage);
-              });
-          }
-      
-          function updatePagination(page) {
-              paginationElement.find(".page-item").removeClass("active");
-              paginationElement.find(`.page-item:contains(${page})`).addClass("active");
-          }
-      
-          displayTable(1);
-          createPagination();
-      });
-      
-      
-    </script>
-      
-    <!--This inserted a record when onclick entry and exit button-->
-    <script>
-            function updateTable(data) {
-                $('#table-body').empty();
-                data.forEach(function(record, index) {
-                    let newRow = '<tr>' +
-                        '<th scope="row">' + (index + 1) + '</th>' +
-                        '<td>' + record.user + '</td>' +
-                        '<td>' + record.date + '</td>' +
-                        '<td>' + (record.entry ? record.entry : 'N/A') + '</td>' +
-                        '<td>' + (record.exit ? record.exit : 'N/A') + '</td>' +
-                        '<td>' + record.hour + '</td>' +
-                        '</tr>';
-                    $('#table-body').append(newRow);
-                });
-                table.draw();
-            }
-    
-            $('#entry-button').click(function() {
-                $.ajax({
-                    type: 'POST',
-                    url: '{% url "entry" %}',
-                    data: {
-                        csrfmiddlewaretoken: '{{ csrf_token }}',
-                    },
-                    success: function(response) {
-                        $('#message').html('<div class="alert alert-success">' + response.message + '</div>');
-                        updateTable(response.data);
-                    },
-                    error: function(response) {
-                        $('#message').html('<div class="alert alert-danger">' + response.responseJSON.message + '</div>');
-                    }
-                });
-            });
-    
-            $('#exit-button').click(function() {
-                $.ajax({
-                    type: 'POST',
-                    url: '{% url "exit" %}',
-                    data: {
-                        csrfmiddlewaretoken: '{{ csrf_token }}',
-                    },
-                    success: function(response) {
-                        $('#message').html('<div class="alert alert-success">' + response.message + '</div>');
-                        updateTable(response.data);
-                    },
-                    error: function(response) {
-                        $('#message').html('<div class="alert alert-danger">' + response.responseJSON.message + '</div>');
-                    }
-                });
-            });
-    </script>
-{% endblock %}
-
-        <!--end attendance-->
-        <!--script-->
-        //update record dynamically
-    function displayTable(page, rowsPerPage, rows) {
-        let tableBody = $("#table-body");
-        tableBody.empty();
-        let start = (page - 1) * rowsPerPage;
-        let end = start + rowsPerPage;
-        rows.slice(start, end).appendTo(tableBody);
-        updateRecordInfo(page, rows.length, rowsPerPage);
-    }
-
-    function updateRecordInfo(page, totalRecords, rowsPerPage) {
-        let start = (page - 1) * rowsPerPage + 1;
-        let end = page * rowsPerPage;
-        if (end > totalRecords) end = totalRecords;
-        $("#record-info").text(`Showing ${start} to ${end} of ${totalRecords} records`);
-    }
-
-    //for pagination
-    function createPagination(rowsPerPage, rows) {
-        let paginationElement = $("#pagination");
-        paginationElement.empty();
-        let pageCount = Math.ceil(rows.length / rowsPerPage);
-        paginationElement.append(`<li class="page-item"><a class="page-link" href="#" id="prev-page">Previous</a></li>`);
-        for (let i = 1; i <= pageCount; i++) {
-            let pageItem = `<li class="page-item ${i === 1 ? 'active' : ''}"><a class="page-link" href="#">${i}</a></li>`;
-            paginationElement.append(pageItem);
-        }
-        paginationElement.append(`<li class="page-item"><a class="page-link" href="#" id="next-page">Next</a></li>`);
-
-        paginationElement.off("click").on("click", "a", function (e) {
-            e.preventDefault();
-            let clickedPage = $(this).text();
-            let currentPage = $(".pagination .page-item.active a").text();
-
-            if (clickedPage === "Previous") {
-                if (currentPage > 1) currentPage--;
-            } else if (clickedPage === "Next") {
-                if (currentPage < pageCount) currentPage++;
-            } else {
-                currentPage = parseInt(clickedPage);
-            }
-
-            updatePagination(currentPage);
-            displayTable(currentPage, rowsPerPage, rows);
-        });
-    }
-
-    function updatePagination(page) {
-        $("#pagination .page-item").removeClass("active");
-        $("#pagination .page-item:contains(" + page + ")").addClass("active");
-    }
-
-    $(document).ready(function () {
-        const rowsPerPage = 5;
-        const rows = $("#table-body").find("tr");
-
-        createPagination(rowsPerPage, rows);
-        displayTable(1, rowsPerPage, rows);
-
-        function updateTable(data) {
-            let tableBody = $("#table-body");
-            tableBody.empty();
-            data.forEach(function (record, index) {
-                let newRow = '<tr>' +
-                    '<th scope="row">' + (index + 1) + '</th>' +
-                    '<td>' + record.user + '</td>' +
-                    '<td>' + record.date + '</td>' +
-                    '<td>' + (record.entry ? record.entry : 'N/A') + '</td>' +
-                    '<td>' + (record.exit ? record.exit : 'N/A') + '</td>' +
-                    '<td>' + record.hour + '</td>' +
-                    '</tr>';
-                tableBody.append(newRow);
-            });
-
-            let updatedRows = tableBody.find("tr");
-            createPagination(rowsPerPage, updatedRows);
-            displayTable(1, rowsPerPage, updatedRows);
-        }
-
-        //popup message onclick entry button
-        $('#entry-button').click(function () {
-            $.ajax({
-                type: 'POST',
-                url: '{% url "entry" %}',
-                data: {
-                    csrfmiddlewaretoken: '{{ csrf_token }}',
-                },
-                success: function (response) {
-                    $('#message').html('<div class="alert alert-success">' + response.message + '</div>');
-                    updateTable(response.data);
-                },
-                error: function (response) {
-                    $('#message').html('<div class="alert alert-danger">' + response.responseJSON.message + '</div>');
-                }
-            });
-        });
-        //popup message onclick exit button
-        $('#exit-button').click(function () {
-            $.ajax({
-                type: 'POST',
-                url: '{% url "exit" %}',
-                data: {
-                    csrfmiddlewaretoken: '{{ csrf_token }}',
-                },
-                success: function (response) {
-                    $('#message').html('<div class="alert alert-success">' + response.message + '</div>');
-                    updateTable(response.data);
-                },
-                error: function (response) {
-                    $('#message').html('<div class="alert alert-danger">' + response.responseJSON.message + '</div>');
-                }
-            });
-        });
-    });
-
-    
-
-<!--main attendance-->
-{% extends "base.html" %}
-{% load static %}
-{% block title %}Attendance{% endblock title %}
-{% block style %}
-    /* Pagination styles */
-    .pagination-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .pagination {
-        margin: 0;
-    }
-    /* Circular button styles */
-    .btn-circular {
-        border-radius: 15%;
-        width: 40px;
-        height: 40px;
-        padding: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-{% endblock %}
-{% block content %}
-<main id="main" class="main">
-
-    <div class="card">
-        <div class="card-body mt-4">
-            <!--pagetitle-->
-            <div class="d-flex justify-content-between">
-                <div class="pagetitle">
-                    <h1>Attendance</h1>
-                    <nav>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
-                            <li class="breadcrumb-item active">Attendance</li>
-                        </ol>
-                    </nav>
-                </div>
-                <div class=""> 
-                    <div class="btn-group btn-group-md" role="group" aria-label="Basic example">
-                        <a href="#" class="btn btn-outline-secondary" id="export-excel" aria-current="page">Export To Excel</a>
-                        <a href="#" class="btn btn-outline-secondary" id="export-pdf">Export To PDF</a>
-                    </div>
-                </div>
-            </div>
-            <section class="section attendance">
-                <div class="row">
-                    <div class="d-flex justify-content-between">
-                        <!--entry and exit buttons-->
-                        <div class="btn-group " role="group" aria-label="Basic mixed styles example">
-                            <button id="entry-button" type="button" class="btn btn-success" data-url="{% url 'entry' %}">Entry</button>
-                            <button id="exit-button" type="button" class="btn btn-danger" data-url="{% url 'exit' %}">Exit</button>
-                        </div>
-
-                        <!--search field-->
-                        <div class="input-group" style="max-width: 400px;">
-                            <input type="text" class="form-control" placeholder="Search" id="search-input">
-                            <button class="btn btn-secondary btn-circular" type="button" id="search-button">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
-
-                        <!--dropdown buttons-->
-                        <div class="btn-group " role="group" aria-label="Default button group">
-                            <!--User-->
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="user-dropdown">
-                                    Users
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item user-option" href="#" data-username="All">All</a></li>
-                                    {% for user in users %}
-                                    <li><a class="dropdown-item user-option" href="#" data-username="{{ user.username }}">{{ user.username }}</a></li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                            <!-- Table Container -->
-                                <div id="attendance-table-container">
-                                    {% include 'attendance_table.html' %}
-                                </div>
-                            <!--Date-->   
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Date
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#">2025</a></li>
-                                    <li><a class="dropdown-item" href="#">2026</a></li>
-                                    <li><a class="dropdown-item" href="#">2027</a></li>
-                                </ul>
-                            </div>
-                            <!--Month-->
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Month
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#">Jan</a></li>
-                                    <li><a class="dropdown-item" href="#">Feb</a></li>
-                                    <li><a class="dropdown-item" href="#">Mar</a></li>
-                                    <li><a class="dropdown-item" href="#">App</a></li>
-                                    <li><a class="dropdown-item" href="#">May</a></li>
-                                    <li><a class="dropdown-item" href="#">Jun</a></li>
-                                    <li><a class="dropdown-item" href="#">Jul</a></li>
-                                    <li><a class="dropdown-item" href="#">Aug</a></li>
-                                    <li><a class="dropdown-item" href="#">Sep</a></li>
-                                    <li><a class="dropdown-item" href="#">Oct</a></li>
-                                    <li><a class="dropdown-item" href="#">Nov</a></li>
-                                    <li><a class="dropdown-item" href="#">Dec</a></li>
-                                </ul>
-                            </div>
-                        </div> 
-                    </div>
-
-                    <!--popup message-->
-                    {% comment %} <div id="message"></div> {% endcomment %}
-
-                    <!--table-->
-                    <table id="attendance-table" class="table table-striped caption-top mt-5 table-hover ">
-                        <thead>
-                            <tr>
-                                <th scope="col">Sn</th>
-                                <th scope="col">User</th>
-                                <th scope="col">Date</th>
-                                <th scope="col">Entry</th>
-                                <th scope="col">Exit</th>
-                                <th scope="col">Hour</th>
-                            </tr>
-                        </thead>
-                        <tbody id="table-body">
-                            {% for record in attendance_records %}
-                            <tr>
-                                <th scope="row">{{ forloop.counter }}</th>
-                                <td>{{ record.user }}</td>
-                                <td>{{ record.date }}</td>
-                                <td>{{ record.entry }}</td>
-                                <td>{{ record.exit }}</td>
-                                <td>{{ record.hour }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                    
-                    <!--pagination-->
-                    <div class="pagination-container sticky-pagination">    
-                        <div id="record-info"></div>
-                        <nav>
-                            <ul class="pagination" id="pagination">
-                                <!-- Pagination items will be dynamically inserted here -->
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-            </section>
-        </div>
-    </div>
-</main><!-- End #main -->
-
-<!--all scripts-->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
-        crossorigin="anonymous">
-</script>
-
-<!-- for table -->
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-<!-- for sidebar -->
-<!--<script>
-  const hamBurger = document.querySelector(".toggle-btn");
-
-  hamBurger.addEventListener("click", function () {
-    document.querySelector("#sidebar").classList.toggle("expand");
-  });
-</script>-->
-
-<!--for default user selection -->
-<!--<script>
-    $(document).on('click', '.user-option', function (e) {
-        e.preventDefault();
-        let username = $(this).data('username');
-        $('#user-dropdown').text(username);
-    });
-</script>-->
-
-<script>
-    $(document).ready(function () {
-        $('.user-option').on('click', function (e) {
-            e.preventDefault();
-    
-            // Get the selected username
-            const selectedUser = $(this).data('username');
-    
-            // Send an AJAX request to fetch the attendance records for the selected user
-            $.ajax({
-                url: window.location.href,
-                type: 'GET',
-                data: {
-                    selected_user: selectedUser,
-                },
-                success: function (response) {
-                    // Replace the table with the new data
-                    $('#attendance-table-container').html(response.table_html);
-                },
-                error: function (xhr, status, error) {
-                    console.error("Error fetching data:", error);
-                }
-            });
-        });
-    });
-    
-</script>
-
-<!-- This is for pagination and for updating the table dynamically -->
-<script>
-    function displayTable(page, rowsPerPage, rows) {
-        let tableBody = $("#table-body");
-        tableBody.empty();
-        let start = (page - 1) * rowsPerPage;
-        let end = start + rowsPerPage;
-        rows.slice(start, end).appendTo(tableBody);
-        updateRecordInfo(page, rows.length, rowsPerPage);
-    }
-
-    function updateRecordInfo(page, totalRecords, rowsPerPage) {
-        let start = (page - 1) * rowsPerPage + 1;
-        let end = page * rowsPerPage;
-        if (end > totalRecords) end = totalRecords;
-        $("#record-info").text(`Showing ${start} to ${end} of ${totalRecords} records`);
-    }
-
-    function createPagination(rowsPerPage, rows) {
-        let paginationElement = $("#pagination");
-        paginationElement.empty();
-        let pageCount = Math.ceil(rows.length / rowsPerPage);
-        paginationElement.append(`<li class="page-item"><a class="page-link" href="#" id="prev-page">Previous</a></li>`);
-        for (let i = 1; i <= pageCount; i++) {
-            let pageItem = `<li class="page-item ${i === 1 ? 'active' : ''}"><a class="page-link" href="#">${i}</a></li>`;
-            paginationElement.append(pageItem);
-        }
-        paginationElement.append(`<li class="page-item"><a class="page-link" href="#" id="next-page">Next</a></li>`);
-
-        paginationElement.off("click").on("click", "a", function (e) {
-            e.preventDefault();
-            let clickedPage = $(this).text();
-            let currentPage = $(".pagination .page-item.active a").text();
-
-            if (clickedPage === "Previous") {
-                if (currentPage > 1) currentPage--;
-            } else if (clickedPage === "Next") {
-                if (currentPage < pageCount) currentPage++;
-            } else {
-                currentPage = parseInt(clickedPage);
-            }
-
-            updatePagination(currentPage);
-            displayTable(currentPage, rowsPerPage, rows);
-        });
-    }
-
-    function updatePagination(page) {
-        $("#pagination .page-item").removeClass("active");
-        $("#pagination .page-item:contains(" + page + ")").addClass("active");
-    }
-
-    $(document).ready(function () {
-        const rowsPerPage = 5;
-        const rows = $("#table-body").find("tr");
-
-        createPagination(rowsPerPage, rows);
-        displayTable(1, rowsPerPage, rows);
-
-        function updateTable(data) {
-            let tableBody = $("#table-body");
-            tableBody.empty();
-            data.forEach(function (record, index) {
-                let newRow = '<tr>' +
-                    '<th scope="row">' + (index + 1) + '</th>' +
-                    '<td>' + record.user + '</td>' +
-                    '<td>' + record.date + '</td>' +
-                    '<td>' + (record.entry ? record.entry : 'N/A') + '</td>' +
-                    '<td>' + (record.exit ? record.exit : 'N/A') + '</td>' +
-                    '<td>' + record.hour + '</td>' +
-                    '</tr>';
-                tableBody.append(newRow);
-            });
-
-            let updatedRows = tableBody.find("tr");
-            createPagination(rowsPerPage, updatedRows);
-            displayTable(1, rowsPerPage, updatedRows);
-        }
-
-        $('#entry-button').click(function () {
-            $.ajax({
-                type: 'POST',
-                url: '{% url "entry" %}',
-                data: {
-                    csrfmiddlewaretoken: '{{ csrf_token }}',
-                },
-                success: function (response) {
-                    $('#message').html('<div class="alert alert-success">' + response.message + '</div>');
-                    updateTable(response.data);
-                },
-                error: function (response) {
-                    $('#message').html('<div class="alert alert-danger">' + response.responseJSON.message + '</div>');
-                }
-            });
-        });
-
-        $('#exit-button').click(function () {
-            $.ajax({
-                type: 'POST',
-                url: '{% url "exit" %}',
-                data: {
-                    csrfmiddlewaretoken: '{{ csrf_token }}',
-                },
-                success: function (response) {
-                    $('#message').html('<div class="alert alert-success">' + response.message + '</div>');
-                    updateTable(response.data);
-                },
-                error: function (response) {
-                    $('#message').html('<div class="alert alert-danger">' + response.responseJSON.message + '</div>');
-                }
-            });
-        });
-
-        $("#search-button").click(function () {
-            let searchText = $("#search-input").val().toLowerCase();
-            let filteredRows = rows.filter(function () {
-                return $(this).text().toLowerCase().includes(searchText);
-            });
-            createPagination(rowsPerPage, filteredRows);
-            displayTable(1, rowsPerPage, filteredRows);
-        });
-
-        $("#search-input").on("input", function () {
-            let searchText = $(this).val().toLowerCase();
-            let filteredRows = rows.filter(function () {
-                return $(this).text().toLowerCase().includes(searchText);
-            });
-            createPagination(rowsPerPage, filteredRows);
-            displayTable(1, rowsPerPage, filteredRows);
-        });
-
-        rows.each(function () {
-            let entryTime = $(this).find("td:eq(3)").text();
-            let exitTime = $(this).find("td:eq(4)").text();
-            if (entryTime && exitTime) {
-                let duration = calculateDuration(entryTime, exitTime);
-                $(this).find("td:eq(5)").text(duration);
-            }
-        });
-    });
-</script>
-
-<!--for excel and pdf buttom-->
-<script>
-    $(document).ready(function () {
-        $('#export-excel').click(function (e) {
-            e.preventDefault();
-            window.location.href = "{% url 'export_to_excel' %}";
-        });
-
-        $('#export-pdf').click(function (e) {
-            e.preventDefault();
-            window.location.href = "{% url 'export_to_pdf' %}";
-        });
-    });
-</script>
-
-<!--propper js for dropdown-->
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
-
-{% endblock %}
-
-
-
-
-
-
-
-
-old main
-
-{% extends "base.html" %}
-{% load static %}
-{% block title %}Attendance{% endblock title %}
-
-{% block style %}
-    /* Pagination styles */
-    .pagination-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .pagination {
-        margin: 0;
-    }
-    /* Circular button styles */
-    .btn-circular {
-        border-radius: 15%;
-        width: 40px;
-        height: 40px;
-        padding: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    /*header sorting*/
-    /* General styles for sort arrows */
-    .sort-arrow {
-        display: inline-block;
-        width: 0;
-        height: 0;
-        margin-left: 10px;
-        transition: transform 0.2s ease;
-        border-left: 5px solid transparent;
-        border-right: 5px solid transparent;
-    }
-
-    /* Arrow for ascending sort */
-    .sort-asc {
-        border-bottom: 5px solid white;
-    }
-
-    /* Arrow for descending sort */
-    .sort-desc {
-        border-top: 5px solid white;
-    }
-
-{% endblock %}
-
-{% block content %}
-<main id="main" class="main">
-
-    <div class="card">
-        <div class="card-body mt-4">
-            <!--pagetitle-->
-            <div class="d-flex justify-content-between">
-                <div class="pagetitle">
-                    <h1>Attendance</h1>
-                    <nav>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
-                            <li class="breadcrumb-item active">Attendance</li>
-                        </ol>
-                    </nav>
-                </div>
-                <!--curently not used-->
-                <div class=""> 
-                {% if request.user.is_staff %}
-                    <div class="btn-group btn-group-md" role="group" aria-label="Basic example">
-                        <a href="#" class="btn btn-outline-secondary" id="export-excel" aria-current="page">Export To Excel</a>
-                        <a href="#" class="btn btn-outline-secondary" id="export-pdf">Export To PDF</a>
-                    </div>
-                {% endif %}
-                </div>
-            </div>
-            <section class="section attendance">
-                <div class="row">
-                    <div class="d-flex justify-content-between">
-                        <!--dropdown buttons-->
-                        <div class="btn-group " role="group" aria-label="Default button group">
-                            <!--User-->
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="user-dropdown">
-                                    {{ selected_user|default:user.username }}
-                                </button>
-                                <ul class="dropdown-menu">
-                                    {% if request.user.is_staff %}
-                                        <li><a class="dropdown-item user-option" href="#" data-username="All">Users</a></li>
-                                        {% for user in users %}
-                                            <li><a class="dropdown-item user-option" href="#" data-username="{{ user.username }}">{{ user.username }}</a></li>
-                                        {% endfor %}
-                                    {% else %}
-                                        <li><a class="dropdown-item user-option" href="#" data-username="{{ user.username }}">{{ user.username }}</a></li>
-                                    {% endif %}
-                                </ul>
-                            </div>
-                            
-                            <!--Year-->   
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="year-dropdown">
-                                    {{ selected_year|default:"Year" }}
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item year-option {% if selected_year == 'Year' %}{% endif %}" href="#" data-year="Year">Year</a></li>
-                                    {% for year in years %}
-                                    <li><a class="dropdown-item year-option {% if selected_year == year %}{% endif %}" href="#" data-year="{{ year }}">{{ year }}</a></li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                            
-                            <!--Month-->
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="month-dropdown">
-                                    {{ selected_month|default:"Month" }}
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item month-option" href="#" data-month="Month" class="{% if selected_month == 'Month' %}active{% endif %}">Month</a></li>
-                                    {% for month in months %}
-                                    <li><a class="dropdown-item month-option" href="#" data-month="{{ month }}" class="{% if selected_month == month %}active{% endif %}">{{ month }}</a></li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                        </div>
-
-                        <!--search field-->
-                        <div class="input-group" style="max-width: 400px;">
-                            <input type="text" class="form-control" placeholder="Search" id="search-input">
-                            <button class="btn btn-secondary btn-circular" type="button" id="search-button">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
-
-                        
-                        <!--entry and exit buttons-->
-                        {% if not request.user.is_staff %}
-                        <div class="btn-group " role="group" aria-label="Basic mixed styles example">
-                            <button id="entry-button" type="button" class="btn btn-success" data-url="{% url 'entry' %}">Entry</button>
-                            <button id="exit-button" type="button" class="btn btn-danger" data-url="{% url 'exit' %}">Exit</button>
-                        </div>
-                        {% endif %}
-                    </div>
-
-                    <!--popup message-->
-                    {% comment %} <div id="message"></div> {% endcomment %}
-
-                    <!--table-->
-                    <table id="attendance-table" class="table table-striped caption-top mt-5 table-hover ">
-                        <thead>
-                            <tr class="table-primary">
-                                <th scope="col" onclick="sortTable(0)">Sn <span class="sort-arrow"></span></th>
-                                <th scope="col" onclick="sortTable(1)">User <span class="sort-arrow"></span></th>
-                                <th scope="col" onclick="sortTable(2)">Date <span class="sort-arrow"></span></th>
-                                <th scope="col" onclick="sortTable(3)">Entry <span class="sort-arrow"></span></th>
-                                <th scope="col" onclick="sortTable(4)">Exit <span class="sort-arrow"></span></th>
-                                <th scope="col" onclick="sortTable(5)">Hour <span class="sort-arrow"></span></th>
-                            </tr>
-                        </thead>
-                        <tbody id="table-body">
-                            {% for record in attendance_records %}
-                            <tr>
-                                <th scope="row">{{ forloop.counter }}</th>
-                                <td>{{ record.user }}</td>
-                                <td>{{ record.date }}</td>
-                                <td>{{ record.entry }}</td>
-                                <td>{{ record.exit }}</td>
-                                <td>{{ record.hour }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                    
-                    <!--pagination-->
-                    <div class="pagination-container sticky-pagination">    
-                        <div id="record-info"></div>
-                        <nav>
-                            <ul class="pagination" id="pagination">
-                                <!-- Pagination items will be dynamically inserted here -->
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-            </section>
-        </div>
-    </div>
-</main><!-- End #main -->
-
-<!--all scripts-->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
-        crossorigin="anonymous">
-</script>
-
-<!-- for table -->
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-<!--for default user selection -->
-<script>
-    $(document).ready(function () {
-        function updateFilters() {
-            let selectedUser = $('#user-dropdown').text().trim();
-            let selectedYear = $('#year-dropdown').text().trim();
-            let selectedMonth = $('#month-dropdown').text().trim();
-    
-            let queryParams = {};
-            if (selectedUser !== "Users" && selectedUser !== "All") queryParams.selected_user = selectedUser;
-            if (selectedYear !== "Date") queryParams.selected_year = selectedYear;
-            if (selectedMonth !== "Month") queryParams.selected_month = selectedMonth;
-    
-            window.location.href = window.location.pathname + '?' + $.param(queryParams);
-        }
-    
-        $('.user-option').click(function (e) {
-            e.preventDefault();
-            $('#user-dropdown').text($(this).text().trim());
-            updateFilters();
-        });
-    
-        $('.year-option').click(function (e) {
-            e.preventDefault();
-            $('#year-dropdown').text($(this).text().trim());
-            updateFilters();
-        });
-    
-        $('.month-option').click(function (e) {
-            e.preventDefault();
-            $('#month-dropdown').text($(this).text().trim());
-            updateFilters();
-        });
-    });
-    
-</script>
-
-<!--Handle year selection-->
-<script>
- document.addEventListener('DOMContentLoaded', function() {
-    // Handle year selection
-    document.querySelectorAll('.year-option').forEach(function(item) {
-        item.addEventListener('click', function() {
-            const year = this.getAttribute('data-year');
-            const currentUrl = new URL(window.location.href);
-            if (year === "All-Years") {
-                currentUrl.searchParams.delete('selected_year');
-            } else {
-                currentUrl.searchParams.set('selected_year', year);
-            }
-            window.location.href = currentUrl.toString();
-        });
-    });
- });    
-</script>
-
-<!-- This is for pagination and for updating the table dynamically -->
-<script>
-    function displayTable(page, rowsPerPage, rows) {
-        let tableBody = $("#table-body");
-        tableBody.empty();
-        let start = (page - 1) * rowsPerPage;
-        let end = start + rowsPerPage;
-        rows.slice(start, end).appendTo(tableBody);
-        updateRecordInfo(page, rows.length, rowsPerPage);
-    }
-
-    function updateRecordInfo(page, totalRecords, rowsPerPage) {
-        let start = (page - 1) * rowsPerPage + 1;
-        let end = page * rowsPerPage;
-        if (end > totalRecords) end = totalRecords;
-        $("#record-info").text(`Showing ${start} to ${end} of ${totalRecords} records`);
-    }
-
-    function createPagination(rowsPerPage, rows) {
-        let paginationElement = $("#pagination");
-        paginationElement.empty();
-        let pageCount = Math.ceil(rows.length / rowsPerPage);
-        paginationElement.append(`<li class="page-item"><a class="page-link" href="#" id="prev-page">Previous</a></li>`);
-        for (let i = 1; i <= pageCount; i++) {
-            let pageItem = `<li class="page-item ${i === 1 ? 'active' : ''}"><a class="page-link" href="#">${i}</a></li>`;
-            paginationElement.append(pageItem);
-        }
-        paginationElement.append(`<li class="page-item"><a class="page-link" href="#" id="next-page">Next</a></li>`);
-
-        paginationElement.off("click").on("click", "a", function (e) {
-            e.preventDefault();
-            let clickedPage = $(this).text();
-            let currentPage = $(".pagination .page-item.active a").text();
-
-            if (clickedPage === "Previous") {
-                if (currentPage > 1) currentPage--;
-            } else if (clickedPage === "Next") {
-                if (currentPage < pageCount) currentPage++;
-            } else {
-                currentPage = parseInt(clickedPage);
-            }
-
-            updatePagination(currentPage);
-            displayTable(currentPage, rowsPerPage, rows);
-        });
-    }
-
-    function updatePagination(page) {
-        $("#pagination .page-item").removeClass("active");
-        $("#pagination .page-item:contains(" + page + ")").addClass("active");
-    }
-
-    $(document).ready(function () {
-        const rowsPerPage = 5;
-        const rows = $("#table-body").find("tr");
-
-        createPagination(rowsPerPage, rows);
-        displayTable(1, rowsPerPage, rows);
-
-        function updateTable(data) {
-            let tableBody = $("#table-body");
-            tableBody.empty();
-            data.forEach(function (record, index) {
-                let newRow = '<tr>' +
-                    '<th scope="row">' + (index + 1) + '</th>' +
-                    '<td>' + record.user + '</td>' +
-                    '<td>' + record.date + '</td>' +
-                    '<td>' + (record.entry ? record.entry : 'N/A') + '</td>' +
-                    '<td>' + (record.exit ? record.exit : 'N/A') + '</td>' +
-                    '<td>' + record.hour + '</td>' +
-                    '</tr>';
-                tableBody.append(newRow);
-            });
-
-            let updatedRows = tableBody.find("tr");
-            createPagination(rowsPerPage, updatedRows);
-            displayTable(1, rowsPerPage, updatedRows);
-        }
-
-        $('#entry-button').click(function () {
-            $.ajax({
-                type: 'POST',
-                url: '{% url "entry" %}',
-                data: {
-                    csrfmiddlewaretoken: '{{ csrf_token }}',
-                },
-                success: function (response) {
-                    $('#message').html('<div class="alert alert-success">' + response.message + '</div>');
-                    updateTable(response.data);
-                },
-                error: function (response) {
-                    $('#message').html('<div class="alert alert-danger">' + response.responseJSON.message + '</div>');
-                }
-            });
-        });
-
-        $('#exit-button').click(function () {
-            $.ajax({
-                type: 'POST',
-                url: '{% url "exit" %}',
-                data: {
-                    csrfmiddlewaretoken: '{{ csrf_token }}',
-                },
-                success: function (response) {
-                    $('#message').html('<div class="alert alert-success">' + response.message + '</div>');
-                    updateTable(response.data);
-                },
-                error: function (response) {
-                    $('#message').html('<div class="alert alert-danger">' + response.responseJSON.message + '</div>');
-                }
-            });
-        });
-
-        $("#search-button").click(function () {
-            let searchText = $("#search-input").val().toLowerCase();
-            let filteredRows = rows.filter(function () {
-                return $(this).text().toLowerCase().includes(searchText);
-            });
-            createPagination(rowsPerPage, filteredRows);
-            displayTable(1, rowsPerPage, filteredRows);
-        });
-
-        $("#search-input").on("input", function () {
-            let searchText = $(this).val().toLowerCase();
-            let filteredRows = rows.filter(function () {
-                return $(this).text().toLowerCase().includes(searchText);
-            });
-            createPagination(rowsPerPage, filteredRows);
-            displayTable(1, rowsPerPage, filteredRows);
-        });
-
-        rows.each(function () {
-            let entryTime = $(this).find("td:eq(3)").text();
-            let exitTime = $(this).find("td:eq(4)").text();
-            if (entryTime && exitTime) {
-                let duration = calculateDuration(entryTime, exitTime);
-                $(this).find("td:eq(5)").text(duration);
-            }
-        });
-    });
-</script>
-
-<!--for excel and pdf buttom-->
-<script>
-    $(document).ready(function () {
-        $('#export-excel').click(function (e) {
-            e.preventDefault();
-            window.location.href = "{% url 'export_to_excel' %}";
-        });
-
-        $('#export-pdf').click(function (e) {
-            e.preventDefault();
-            window.location.href = "{% url 'export_to_pdf' %}";
-        });
-    });
-</script>
-
-<!--header sorting-->
-<script>
-    function sortTable(columnIndex) {
-        const table = document.getElementById("attendance-table");
-        const tbody = table.querySelector("tbody");
-        const rows = Array.from(tbody.querySelectorAll("tr"));
-    
-        const ascending = table.querySelectorAll("th")[columnIndex].classList.toggle("asc");
-    
-        rows.sort((rowA, rowB) => {
-            const cellA = rowA.cells[columnIndex].innerText.toLowerCase();
-            const cellB = rowB.cells[columnIndex].innerText.toLowerCase();
-    
-            if (cellA < cellB) {
-                return ascending ? -1 : 1;
-            }
-            if (cellA > cellB) {
-                return ascending ? 1 : -1;
-            }
-            return 0;
-        });
-    
-        rows.forEach(row => tbody.appendChild(row));
-    
-        // Clear other arrows
-        table.querySelectorAll("th .sort-arrow").forEach(arrow => arrow.classList.remove("sort-asc", "sort-desc"));
-        
-        // Update arrow direction
-        const arrow = table.querySelectorAll("th")[columnIndex].querySelector(".sort-arrow");
-        arrow.classList.add(ascending ? "sort-asc" : "sort-desc");
-    }
-
-</script> 
-
-<!--propper js for dropdown-->
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
-
-{% endblock %}
-
-
-
-
-<!--main-->
-{% extends "base.html" %}
-{% load static %}
-{% block title %}Attendance{% endblock title %}
-
-{% block style %}
-    /* Pagination styles */
-    .pagination-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .pagination {
-        margin: 0;
-    }
-    /* Circular button styles */
-    .btn-circular {
-        border-radius: 15%;
-        width: 40px;
-        height: 40px;
-        padding: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    /*header sorting*/
-    /* General styles for sort arrows */
-    .sort-arrow {
-        display: inline-block;
-        width: 0;
-        height: 0;
-        margin-left: 10px;
-        transition: transform 0.2s ease;
-        border-left: 5px solid transparent;
-        border-right: 5px solid transparent;
-    }
-
-    /* Arrow for ascending sort */
-    .sort-asc {
-        border-bottom: 5px solid white;
-    }
-
-    /* Arrow for descending sort */
-    .sort-desc {
-        border-top: 5px solid white;
-    }
-
-{% endblock %}
-
-{% block content %}
-<main id="main" class="main">
-
-    <div class="card">
-        <div class="card-body mt-4">
-            <!--pagetitle-->
-            <div class="d-flex justify-content-between">
-                <div class="pagetitle">
-                    <h1>Attendance</h1>
-                    <nav>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
-                            <li class="breadcrumb-item active">Attendance</li>
-                        </ol>
-                    </nav>
-                </div>
-                <!--curently not used-->
-                <div class=""> 
-                {% if request.user.is_staff %}
-                    <div class="btn-group btn-group-md" role="group" aria-label="Basic example">
-                        <a href="#" class="btn btn-outline-secondary" id="export-excel" aria-current="page">Export To Excel</a>
-                        <a href="#" class="btn btn-outline-secondary" id="export-pdf">Export To PDF</a>
-                    </div>
-                {% endif %}
-                </div>
-            </div>
-            <section class="section attendance">
-                <div class="row">
-                    <div class="d-flex justify-content-between">
-                        <!--dropdown buttons-->
-                        {% comment %} <div class="btn-group " role="group" aria-label="Default button group">
-                            <!--User-->
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="user-dropdown">
-                                    {{ selected_user|default:user.username }}
-                                </button>
-                                <ul class="dropdown-menu">
-                                    {% if request.user.is_staff %}
-                                        <li><a class="dropdown-item user-option" href="#" data-username="All">Users</a></li>
-                                        {% for user in users %}
-                                            <li><a class="dropdown-item user-option" href="#" data-username="{{ user.username }}">{{ user.username }}</a></li>
-                                        {% endfor %}
-                                    {% else %}
-                                        <li><a class="dropdown-item user-option" href="#" data-username="{{ user.username }}">{{ user.username }}</a></li>
-                                    {% endif %}
-                                </ul>
-                            </div>
-                            
-                            <!--Year-->   
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="year-dropdown">
-                                    {{ selected_year|default:"Year" }}
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item year-option {% if selected_year == 'Year' %}{% endif %}" href="#" data-year="Year">Year</a></li>
-                                    {% for year in years %}
-                                    <li><a class="dropdown-item year-option {% if selected_year == year %}{% endif %}" href="#" data-year="{{ year }}">{{ year }}</a></li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                            
-                            <!--Month-->
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="month-dropdown">
-                                    {{ selected_month|default:"Month" }}
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item month-option" href="#" data-month="Month" class="{% if selected_month == 'Month' %}active{% endif %}">Month</a></li>
-                                    {% for month in months %}
-                                    <li><a class="dropdown-item month-option" href="#" data-month="{{ month }}" class="{% if selected_month == month %}active{% endif %}">{{ month }}</a></li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                        </div>
-
-                        <!-- Hidden Inputs -->
-                        <input type="hidden" id="selected_user" name="selected_user" value="{{ selected_user|default:'All' }}">
-                        <input type="hidden" id="selected_year" name="selected_year" value="{{ selected_year|default:'Year' }}">
-                        <input type="hidden" id="selected_month" name="selected_month" value="{{ selected_month|default:'Month' }}"> {% endcomment %}
-
-                        <div class="btn-group " role="group" aria-label="Default button group">
-                        <!-- User Dropdown -->
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="user-dropdown">
-                                {{ selected_user|default:user.username }}
-                            </button>
-                            <ul class="dropdown-menu">
-                                {% if request.user.is_staff %}
-                                    <li><a class="dropdown-item user-option" href="#" data-username="All">Users</a></li>
-                                    {% for user in users %}
-                                        <li><a class="dropdown-item user-option" href="#" data-username="{{ user.username }}">{{ user.username }}</a></li>
-                                    {% endfor %}
-                                {% else %}
-                                    <li><a class="dropdown-item user-option" href="#" data-username="{{ user.username }}">{{ user.username }}</a></li>
-                                {% endif %}
-                            </ul>
-                        </div>
-
-                        <!-- Year Dropdown -->
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="year-dropdown">
-                                {{ selected_year|default:"Year" }}
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item year-option {% if selected_year == 'Year' %}{% endif %}" href="#" data-year="Year">Year</a></li>
-                                {% for year in years %}
-                                <li><a class="dropdown-item year-option {% if selected_year == year %}{% endif %}" href="#" data-year="{{ year }}">{{ year }}</a></li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-
-                        <!-- Month Dropdown -->
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="month-dropdown">
-                                {{ selected_month|default:"Month" }}
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item month-option" href="#" data-month="Month" class="{% if selected_month == 'Month' %}active{% endif %}">Month</a></li>
-                                {% for month in months %}
-                                <li><a class="dropdown-item month-option" href="#" data-month="{{ month }}" class="{% if selected_month == month %}active{% endif %}">{{ month }}</a></li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    </div>
-
-                        <!-- Hidden Inputs -->
-                        <input type="hidden" id="selected_user" name="selected_user" value="{{ selected_user|default:'All' }}">
-                        <input type="hidden" id="selected_year" name="selected_year" value="{{ selected_year|default:'Year' }}">
-                        <input type="hidden" id="selected_month" name="selected_month" value="{{ selected_month|default:'Month' }}">
-
-
-                        <!--search field-->
-                        <div class="input-group" style="max-width: 400px;">
-                            <input type="text" class="form-control" placeholder="Search" id="search-input">
-                            <button class="btn btn-secondary btn-circular" type="button" id="search-button">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
-
-                        
-                        <!--entry and exit buttons-->
-                        {% if not request.user.is_staff %}
-                        <div class="btn-group " role="group" aria-label="Basic mixed styles example">
-                            <button id="entry-button" type="button" class="btn btn-success" data-url="{% url 'entry' %}">Entry</button>
-                            <button id="exit-button" type="button" class="btn btn-danger" data-url="{% url 'exit' %}">Exit</button>
-                        </div>
-                        {% endif %}
-                    </div>
-
-                    <!--popup message-->
-                    {% comment %} <div id="message"></div> {% endcomment %}
-
-                    <!--table-->
-                    <table id="attendance-table" class="table table-striped caption-top mt-5 table-hover ">
-                        <thead>
-                            <tr class="table-primary">
-                                <th scope="col" onclick="sortTable(0)">Sn <span class="sort-arrow"></span></th>
-                                <th scope="col" onclick="sortTable(1)">User <span class="sort-arrow"></span></th>
-                                <th scope="col" onclick="sortTable(2)">Date <span class="sort-arrow"></span></th>
-                                <th scope="col" onclick="sortTable(3)">Entry <span class="sort-arrow"></span></th>
-                                <th scope="col" onclick="sortTable(4)">Exit <span class="sort-arrow"></span></th>
-                                <th scope="col" onclick="sortTable(5)">Hour <span class="sort-arrow"></span></th>
-                            </tr>
-                        </thead>
-                        <tbody id="table-body">
-                            {% for record in attendance_records %}
-                            <tr>
-                                <th scope="row">{{ forloop.counter }}</th>
-                                <td>{{ record.user }}</td>
-                                <td>{{ record.date }}</td>
-                                <td>{{ record.entry }}</td>
-                                <td>{{ record.exit }}</td>
-                                <td>{{ record.hour }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                    
-                    <!--pagination-->
-                    <div class="pagination-container sticky-pagination">    
-                        <div id="record-info"></div>
-                        <nav>
-                            <ul class="pagination" id="pagination">
-                                <!-- Pagination items will be dynamically inserted here -->
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-            </section>
-        </div>
-    </div>
-</main><!-- End #main -->
-
-<!--all scripts-->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
-        crossorigin="anonymous">
-</script>
-
-<!-- for table -->
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-<!--for default user selection -->
-<script>
-    $(document).ready(function () {
-        function updateFilters() {
-            let selectedUser = $('#user-dropdown').text().trim();
-            let selectedYear = $('#year-dropdown').text().trim();
-            let selectedMonth = $('#month-dropdown').text().trim();
-    
-            let queryParams = {};
-            if (selectedUser !== "Users" && selectedUser !== "All") queryParams.selected_user = selectedUser;
-            if (selectedYear !== "Date") queryParams.selected_year = selectedYear;
-            if (selectedMonth !== "Month") queryParams.selected_month = selectedMonth;
-    
-            window.location.href = window.location.pathname + '?' + $.param(queryParams);
-        }
-    
-        $('.user-option').click(function (e) {
-            e.preventDefault();
-            $('#user-dropdown').text($(this).text().trim());
-            updateFilters();
-        });
-    
-        $('.year-option').click(function (e) {
-            e.preventDefault();
-            $('#year-dropdown').text($(this).text().trim());
-            updateFilters();
-        });
-    
-        $('.month-option').click(function (e) {
-            e.preventDefault();
-            $('#month-dropdown').text($(this).text().trim());
-            updateFilters();
-        });
-    });
-    
-</script>
-
-<!--Handle year selection-->
-<script>
- document.addEventListener('DOMContentLoaded', function() {
-    // Handle year selection
-    document.querySelectorAll('.year-option').forEach(function(item) {
-        item.addEventListener('click', function() {
-            const year = this.getAttribute('data-year');
-            const currentUrl = new URL(window.location.href);
-            if (year === "All-Years") {
-                currentUrl.searchParams.delete('selected_year');
-            } else {
-                currentUrl.searchParams.set('selected_year', year);
-            }
-            window.location.href = currentUrl.toString();
-        });
-    });
- });    
-</script>
-
-<!-- This is for pagination and for updating the table dynamically -->
-<script>
-    function displayTable(page, rowsPerPage, rows) {
-        let tableBody = $("#table-body");
-        tableBody.empty();
-        let start = (page - 1) * rowsPerPage;
-        let end = start + rowsPerPage;
-        rows.slice(start, end).appendTo(tableBody);
-        updateRecordInfo(page, rows.length, rowsPerPage);
-    }
-
-    function updateRecordInfo(page, totalRecords, rowsPerPage) {
-        let start = (page - 1) * rowsPerPage + 1;
-        let end = page * rowsPerPage;
-        if (end > totalRecords) end = totalRecords;
-        $("#record-info").text(`Showing ${start} to ${end} of ${totalRecords} records`);
-    }
-
-    function createPagination(rowsPerPage, rows) {
-        let paginationElement = $("#pagination");
-        paginationElement.empty();
-        let pageCount = Math.ceil(rows.length / rowsPerPage);
-        paginationElement.append(`<li class="page-item"><a class="page-link" href="#" id="prev-page">Previous</a></li>`);
-        for (let i = 1; i <= pageCount; i++) {
-            let pageItem = `<li class="page-item ${i === 1 ? 'active' : ''}"><a class="page-link" href="#">${i}</a></li>`;
-            paginationElement.append(pageItem);
-        }
-        paginationElement.append(`<li class="page-item"><a class="page-link" href="#" id="next-page">Next</a></li>`);
-
-        paginationElement.off("click").on("click", "a", function (e) {
-            e.preventDefault();
-            let clickedPage = $(this).text();
-            let currentPage = $(".pagination .page-item.active a").text();
-
-            if (clickedPage === "Previous") {
-                if (currentPage > 1) currentPage--;
-            } else if (clickedPage === "Next") {
-                if (currentPage < pageCount) currentPage++;
-            } else {
-                currentPage = parseInt(clickedPage);
-            }
-
-            updatePagination(currentPage);
-            displayTable(currentPage, rowsPerPage, rows);
-        });
-    }
-
-    function updatePagination(page) {
-        $("#pagination .page-item").removeClass("active");
-        $("#pagination .page-item:contains(" + page + ")").addClass("active");
-    }
-
-    $(document).ready(function () {
-        const rowsPerPage = 5;
-        const rows = $("#table-body").find("tr");
-
-        createPagination(rowsPerPage, rows);
-        displayTable(1, rowsPerPage, rows);
-
-        function updateTable(data) {
-            let tableBody = $("#table-body");
-            tableBody.empty();
-            data.forEach(function (record, index) {
-                let newRow = '<tr>' +
-                    '<th scope="row">' + (index + 1) + '</th>' +
-                    '<td>' + record.user + '</td>' +
-                    '<td>' + record.date + '</td>' +
-                    '<td>' + (record.entry ? record.entry : 'N/A') + '</td>' +
-                    '<td>' + (record.exit ? record.exit : 'N/A') + '</td>' +
-                    '<td>' + record.hour + '</td>' +
-                    '</tr>';
-                tableBody.append(newRow);
-            });
-
-            let updatedRows = tableBody.find("tr");
-            createPagination(rowsPerPage, updatedRows);
-            displayTable(1, rowsPerPage, updatedRows);
-        }
-
-        $('#entry-button').click(function () {
-            $.ajax({
-                type: 'POST',
-                url: '{% url "entry" %}',
-                data: {
-                    csrfmiddlewaretoken: '{{ csrf_token }}',
-                },
-                success: function (response) {
-                    $('#message').html('<div class="alert alert-success">' + response.message + '</div>');
-                    updateTable(response.data);
-                },
-                error: function (response) {
-                    $('#message').html('<div class="alert alert-danger">' + response.responseJSON.message + '</div>');
-                }
-            });
-        });
-
-        $('#exit-button').click(function () {
-            $.ajax({
-                type: 'POST',
-                url: '{% url "exit" %}',
-                data: {
-                    csrfmiddlewaretoken: '{{ csrf_token }}',
-                },
-                success: function (response) {
-                    $('#message').html('<div class="alert alert-success">' + response.message + '</div>');
-                    updateTable(response.data);
-                },
-                error: function (response) {
-                    $('#message').html('<div class="alert alert-danger">' + response.responseJSON.message + '</div>');
-                }
-            });
-        });
-
-        $("#search-button").click(function () {
-            let searchText = $("#search-input").val().toLowerCase();
-            let filteredRows = rows.filter(function () {
-                return $(this).text().toLowerCase().includes(searchText);
-            });
-            createPagination(rowsPerPage, filteredRows);
-            displayTable(1, rowsPerPage, filteredRows);
-        });
-
-        $("#search-input").on("input", function () {
-            let searchText = $(this).val().toLowerCase();
-            let filteredRows = rows.filter(function () {
-                return $(this).text().toLowerCase().includes(searchText);
-            });
-            createPagination(rowsPerPage, filteredRows);
-            displayTable(1, rowsPerPage, filteredRows);
-        });
-
-        rows.each(function () {
-            let entryTime = $(this).find("td:eq(3)").text();
-            let exitTime = $(this).find("td:eq(4)").text();
-            if (entryTime && exitTime) {
-                let duration = calculateDuration(entryTime, exitTime);
-                $(this).find("td:eq(5)").text(duration);
-            }
-        });
-    });
-</script>
-
-<!--for excel and pdf buttom-->
-{% comment %} <script>
-    $(document).ready(function () {
-        $('#export-excel').click(function (e) {
-            e.preventDefault();
-            window.location.href = "{% url 'export_to_excel' %}";
-        });
-
-        $('#export-pdf').click(function (e) {
-            e.preventDefault();
-            window.location.href = "{% url 'export_to_pdf' %}";
-        });
-    });
-</script> {% endcomment %}
-<script>
-    $(document).ready(function () {
-        // Handling User Dropdown
-        $('.user-option').click(function () {
-            let selectedUser = $(this).data('username');
-            $('#user-dropdown').text(selectedUser);
-            $('#selected_user').val(selectedUser); // Update hidden input
-        });
-    
-        // Handling Year Dropdown
-        $('.year-option').click(function () {
-            let selectedYear = $(this).data('year');
-            $('#year-dropdown').text(selectedYear);
-            $('#selected_year').val(selectedYear); // Update hidden input
-        });
-    
-        // Handling Month Dropdown
-        $('.month-option').click(function () {
-            let selectedMonth = $(this).data('month');
-            $('#month-dropdown').text(selectedMonth);
-            $('#selected_month').val(selectedMonth); // Update hidden input
-        });
-    
-        // Handling Export to Excel
-        $('#export-excel').click(function (e) {
-            e.preventDefault();
-            const user = $('#selected_user').val() || 'All';
-            const year = $('#selected_year').val() || 'Year';
-            const month = $('#selected_month').val() || 'Month';
-            window.location.href = `{% url 'export_to_excel' %}?user=${user}&year=${year}&month=${month}`;
-        });
-    
-        // Handling Export to PDF
-        $('#export-pdf').click(function (e) {
-            e.preventDefault();
-            const user = $('#selected_user').val() || 'All';
-            const year = $('#selected_year').val() || 'Year';
-            const month = $('#selected_month').val() || 'Month';
-            window.location.href = `{% url 'export_to_pdf' %}?user=${user}&year=${year}&month=${month}`;
-        });
-    });
-    
-</script>    
-
-<!--header sorting-->
-<script>
-    function sortTable(columnIndex) {
-        const table = document.getElementById("attendance-table");
-        const tbody = table.querySelector("tbody");
-        const rows = Array.from(tbody.querySelectorAll("tr"));
-    
-        const ascending = table.querySelectorAll("th")[columnIndex].classList.toggle("asc");
-    
-        rows.sort((rowA, rowB) => {
-            const cellA = rowA.cells[columnIndex].innerText.toLowerCase();
-            const cellB = rowB.cells[columnIndex].innerText.toLowerCase();
-    
-            if (cellA < cellB) {
-                return ascending ? -1 : 1;
-            }
-            if (cellA > cellB) {
-                return ascending ? 1 : -1;
-            }
-            return 0;
-        });
-    
-        rows.forEach(row => tbody.appendChild(row));
-    
-        // Clear other arrows
-        table.querySelectorAll("th .sort-arrow").forEach(arrow => arrow.classList.remove("sort-asc", "sort-desc"));
-        
-        // Update arrow direction
-        const arrow = table.querySelectorAll("th")[columnIndex].querySelector(".sort-arrow");
-        arrow.classList.add(ascending ? "sort-asc" : "sort-desc");
-    }
-
-</script> 
-
-<!--propper js for dropdown-->
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
-
-{% endblock %}

@@ -3,6 +3,14 @@
 {% block title %}Attendance{% endblock title %}
 
 {% block style %}
+.sortable:hover {
+    cursor: pointer;
+}
+.sort-arrow {
+    margin-left: 5px;
+    font-size: 0.8rem;
+}
+
 
 {% endblock %}
 
@@ -17,88 +25,144 @@
                     <nav>
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
-                            <li class="breadcrumb-item active">Leave Details</li>
+                            <li class="breadcrumb-item active">PTO Details</li>
                         </ol>
                     </nav>
                 </div>
             </div>
 
             <section class="section leavedetails">
-            <!--Button Section-->
-                <div class="btn-toolbar justify-content-between " role="toolbar" aria-label="Toolbar with button groups">
-                    <div class="btn-group" role="group" aria-label="First group">
-                      <!--User Dropdown-->
-                        <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-outline-secondary dropdown-toggle " data-bs-toggle="dropdown" aria-expanded="false">
-                            Users
-                            </button>
-                            <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">User1</a></li>
-                            <li><a class="dropdown-item" href="#">User2</a></li>
-                            <li><a class="dropdown-item" href="#">Admin</a></li>
-                            </ul>
+                    <!--Button Section-->
+                    <div class="btn-toolbar justify-content-between " role="toolbar" aria-label="Toolbar with button groups">
+                        <!--Requeste Button-->
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            Requeste PTO
+                        </button>
+                        
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Request Leave</h1>
+                                    <button type="button" class="btn-close p-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form>
+                                            <div class="mb-3">
+                                                <label for="requesteddate" class="col-form-label">Requested Date:</label>
+                                                <input type="text" class="form-control" id="requesteddate">
+                                            </div>
+                                                <div class="form-floating">
+                                                    <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                                                      <option selected>Select Leave Type</option>
+                                                      <option value="1">Personal</option>
+                                                      <option value="2">Vacation</option>
+                                                      <option value="3">Sick Leave</option>
+                                                      <option value="3">Work From Home</option>
+                                                    </select>
+                                                    <label for="floatingSelect">Leave Type</label>
+                                                  </div>
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label for="leavefromdate" class="col-form-label">Leave From:</label>
+                                                    <input type="date" class="form-control" id="leavefromdate">
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label for="leavetodate" class="col-form-label">Leave To:</label>
+                                                    <input type="date" class="form-control" id="leavetodate">
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="description" class="col-form-label">Description:</label>
+                                                <textarea class="form-control" rows="4" id="description" name="text"></textarea>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        {% comment %} <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button> {% endcomment %}
+                                        <button type="button" class="btn btn-success btn-sm">Send Request</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+
+                        <div class="btn-group" role="group" aria-label="First group">
+                            <!--User Dropdown-->
+                            {% if request.user.is_staff %}
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="user-dropdown">
+                                    Users
+                                </button>
+                                <ul class="dropdown-menu">
+                                    {% if request.user.is_staff %}
+                                        <li><a class="dropdown-item user-option" href="#" data-username="All">Users</a></li>
+                                        {% for user in users %}
+                                            <li><a class="dropdown-item user-option" href="#" data-username="{{ user.username }}">{{ user.username }}</a></li>
+                                        {% endfor %}
+                                    {% else %}
+                                        <li><a class="dropdown-item user-option" href="#" data-username="{{ user.username }}">{{ user.username }}</a></li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                            {% endif %}
+                            <!--Date Filter Button-->
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-outline-secondary dropdown-toggle " data-bs-toggle="dropdown" aria-expanded="false">
+                                    Date
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#">Today</a></li>
+                                    <li><a class="dropdown-item" href="#">This Week</a></li>
+                                    <li><a class="dropdown-item" href="#">This Month</a></li>
+                                    <li><a class="dropdown-item" href="#">This Year</a></li>
+                                    <li><a class="dropdown-item" href="#">
+                                        <input type="date" id="date-picker" class="form-control border border-secondary">
+                                    </a></li>
+                                </ul>
+                            </div>
+                            
+
+                            <!--Category -->
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-outline-secondary dropdown-toggle " data-bs-toggle="dropdown" aria-expanded="false">
+                                    Category
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#">Personal</a></li>
+                                    <li><a class="dropdown-item" href="#">Vacation</a></li>
+                                    <li><a class="dropdown-item" href="#">Sick Leave</a></li>
+                                    <li><a class="dropdown-item" href="#">Work From Home</a></li>
+                                </ul>
+                            </div>
+
+                            <!--Status-->
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-outline-secondary dropdown-toggle " data-bs-toggle="dropdown" aria-expanded="false">
+                                    Status
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#">Approved</a></li>
+                                    <li><a class="dropdown-item" href="#">Declined</a></li>
+                                    <li><a class="dropdown-item" href="#">Pending</a></li>
+                                </ul>
+                            </div>
                         </div>
 
-                        <!--Charts -->
-                        <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-outline-secondary dropdown-toggle " data-bs-toggle="dropdown" aria-expanded="false">
-                                Charts
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Barchart</a></li>
-                                <li><a class="dropdown-item" href="#">Flowchart</a></li>
-                            </ul>
-                        </div>
-
-                        <!--Status-->
-                        <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-outline-secondary dropdown-toggle " data-bs-toggle="dropdown" aria-expanded="false">
-                                All Status
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Approved</a></li>
-                                <li><a class="dropdown-item" href="#">Declined</a></li>
-                                <li><a class="dropdown-item" href="#">Pending</a></li>
-                            </ul>
-                        </div>
+                                            
                     </div>
-
-                    <!--Requeste Button-->
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                        Requeste Leave
-                    </button>
-                    
-                    <!-- Modal -->
-                    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Requested Details</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                            ...
-                            </div>
-                            <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-success btn-sm">Save</button>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-
-                </div>
 
                     <!--table-->
                     <table id="leavedetails-table" class="table table-striped display nowrap mt-4" style="width:100%">
                         <thead>
                             <tr class="table-primary">
                                 <th>Requested Date</th>
-                                <th>Type</th>
+                                <th>Category</th>
                                 <th>From</th>
                                 <th>To</th>
                                 <th>Approval</th>
-                                {% if not request.user.is_staff%}
+                                {% if request.user.is_staff%}
                                     <th>User</th>
                                 {%else%}
                                     <th>Approved By</th>
@@ -113,7 +177,7 @@
                                 <td>Feb 9, 2024</td>
                                 <td>Feb 9, 2024</td>
                                 <td>Approved</td>
-                                {% if not request.user.is_staff %}
+                                {% if request.user.is_staff %}
                                     <td>User</td>
                                 {% else %}
                                     <td>admin</td>
@@ -124,12 +188,35 @@
                             </tr>
                         </tbody>
                     </table>
-                </div>
             </section>
-
         </div>
     </div>
 </main><!-- End #main -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--added for leavedetails table-->
+{% comment %} <script src="{% static 'assets/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'assets/js/jquery-3.6.0.min.js' %}"></script>
+<script src="{% static 'assets/js/datatables.min.js' %}"></script>
+<script src="{% static 'assets/js/pdfmake.min.js' %}"></script>
+<script src="{% static 'assets/js/vfs_fonts.js' %}"></script>
+<script src="{% static 'assets/js/custom.js' %}"></script> {% endcomment %}
+
+
+
+
 
 <!--all scripts-->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"

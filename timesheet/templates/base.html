@@ -10,6 +10,12 @@
   <meta content="" name="description">
   <meta content="" name="keywords">
 
+
+<!--added new table for leavedetails-->
+{% comment %} <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css/datatables.min.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css/style.css' %}"> {% endcomment %}
+
   <!-- Favicons -->
   <link href="{% static 'img/galcierlogo.png' %}" rel="icon">
   <link href="{% static 'img/apple-touch-icon.png' %}" rel="apple-touch-icon">
@@ -167,7 +173,7 @@
 
             <li class="message-item">
               <a href="#">
-                <img src="{% static 'img/user-profile-icon.jpg' %}" alt="" class="rounded-circle">
+                <img src="{% static 'img/user-profile.jpg' %}" alt="" class="rounded-circle">
                 <div>
                   <h4>Maria Hudson</h4>
                   <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
@@ -181,7 +187,7 @@
 
             <li class="message-item">
               <a href="#">
-                <img src="{% static 'img/user-profile-icon.jpg' %}" alt="" class="rounded-circle">
+                <img src="{% static 'img/user-profile.jpg' %}" alt="" class="rounded-circle">
                 <div>
                   <h4>Anna Nelson</h4>
                   <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
@@ -195,7 +201,7 @@
 
             <li class="message-item">
               <a href="#">
-                <img src="{% static 'img/user-profile-icon.jpg' %}" alt="" class="rounded-circle">
+                <img src="{% static 'img/user-profile.jpg' %}" alt="" class="rounded-circle">
                 <div>
                   <h4>David Muldon</h4>
                   <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
@@ -218,7 +224,8 @@
         <li class="nav-item dropdown pe-3">
 
           <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-            <img src="{% static 'img/user-profile-icon.jpg' %}" alt="Profile" class="rounded-circle" style="width: 50px; height: 50px;">
+            <img src="{% static 'img/user-profile.jpg' %}" alt="Profile" class="rounded-circle" >
+            {% comment %} <img src="{% static 'img/user-profile-icon.jpg' %}" alt="Profile" class="rounded-circle" style="width: 50px; height: 50px;"> {% endcomment %}
             {% comment %} <i class="fa-solid fa-user fa-circle " style="font-size: 25px;"></i> {% endcomment %}
             <!--<span class="d-none d-md-block dropdown-toggle ps-2">K. Anderson</span>-->
           </a><!-- End Profile Iamge Icon -->
