@@ -41,14 +41,14 @@
                         <!-- Billable -->
                         <div class="form-group col-2">
                             <div class="custom-control custom-checkbox d-inline-block mt-7 mb-3">
-                                {% comment %} <input type="checkbox" class="custom-control-input" id="customCheck2"{% if worklog.billable %}checked{% endif %} value = "{{worklog.billable}}"> {% endcomment %}
-                                {% comment %} <input type="checkbox" class="custom-control-input" id="customCheck2" name="billable"{% if worklog.billable %} checked {% endif %}/> {% endcomment %}
                                 <input type="checkbox" class="custom-control-input" id="customCheck2" name="billable"{% if worklog.billable %} checked {% endif %}/>
 
                                 <label class="custom-control-label" for="customCheck2"></label>
                               </div>
                               <label for="billable">Billable</label>
-                        </div>
+                        </div> 
+
+                        
                         <!-- Hours -->
                         <div class="form-group col-2">
                             <label for="hours">Hours</label>

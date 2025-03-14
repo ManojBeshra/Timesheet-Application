@@ -82,24 +82,58 @@ def worklog_list(request):
 
 @csrf_exempt 
 @login_required   
+# def worklog_details(request, worklog_id):
+#     worklog_instance = get_object_or_404(worklog, id=worklog_id)
+#     if request.method == 'POST':
+#         form = worklog(request.POST)
+#         # form = Calculate(request.POST) 
+#         print(form.date)
+#         print(form.hours)
+#         print(form.priority)
+
+#         form2 = WorklogForm(request.POST, instance=worklog_instance)
+#         if form2.is_valid():
+#             worklog_instance = form2.save(commit=False)
+#             # print(WorklogForm.data["priority"]) 
+#             worklog_instance.save()
+            
+#             return redirect('worklog')
+#     else:
+        
+#         form2 = WorklogForm(instance=worklog_instance)
+
+#     priority = priority_type.objects.all()
+#     users = User.objects.all()
+#     tickets = ticket.objects.all()
+#     tickettype = ticket_type.objects.all()
+#     projects = project.objects.all()
+    
+
+#     return render(request, 'worklogdetails.html', {
+#         'worklog': worklog_instance,
+#         'priority': priority,
+#         'tickets': tickets,
+#         'users': users,
+#         'tickettype': tickettype,
+#         'projects':projects,
+#         })
 def worklog_details(request, worklog_id):
     worklog_instance = get_object_or_404(worklog, id=worklog_id)
     if request.method == 'POST':
         form = worklog(request.POST)
-        # form = Calculate(request.POST) 
-        print(form.date)
-        print(form.hours)
-        print(form.priority)
 
+        # Handle the billable field manually if not part of the form
+        billable = request.POST.get('billable') == 'on'  # Check if the checkbox was checked
         form2 = WorklogForm(request.POST, instance=worklog_instance)
+        
         if form2.is_valid():
             worklog_instance = form2.save(commit=False)
-            # print(WorklogForm.data["priority"]) 
+            worklog_instance.user = request.user
+            worklog_instance.billable = billable  # Set the billable field from the form
             worklog_instance.save()
             
             return redirect('worklog')
     else:
-        
         form2 = WorklogForm(instance=worklog_instance)
 
     priority = priority_type.objects.all()
@@ -107,7 +141,6 @@ def worklog_details(request, worklog_id):
     tickets = ticket.objects.all()
     tickettype = ticket_type.objects.all()
     projects = project.objects.all()
-    
 
     return render(request, 'worklogdetails.html', {
         'worklog': worklog_instance,
@@ -115,9 +148,9 @@ def worklog_details(request, worklog_id):
         'tickets': tickets,
         'users': users,
         'tickettype': tickettype,
-        'projects':projects,
-        })
-
+        'projects': projects,
+    })
+    
 @csrf_exempt 
 @login_required
 def add_worklog(request):
