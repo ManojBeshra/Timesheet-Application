@@ -159,8 +159,20 @@
                         {% endif %}
                     </div>
 
-                    <!--popup message-->
+                    <!--popup checking entry/exit message-->
                     {% comment %} <div id="message"></div> {% endcomment %}
+{% comment %} {% if messages %}
+    <div id="message-container">
+        {% for message in messages %}
+            <div class="alert {{ message.tags }}">
+                {{ message }}
+                <button type="button" class="btn-close" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %} {% endcomment %}
+
+
 
                     <!--table-->
                     <div class="container">
@@ -451,6 +463,14 @@
                 },
             });
         });
+//testing
+/*$(document).ready(function () {
+    // Close the message on clicking the close button
+    $('#message-container .btn-close').on('click', function () {
+        $(this).parent('.alert').fadeOut();
+    });
+});*/
+
     
         $("#exit-button").click(function () {
             $.ajax({

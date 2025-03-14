@@ -27,6 +27,7 @@ from datetime import date, time, datetime as dt
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 
+#Attendance Details
 @login_required
 def attendance_view(request):
     if request.user.is_staff:
@@ -104,6 +105,36 @@ def attendance_view(request):
     selected_record_id = request.GET.get('record_id')  # Assuming a `record_id` is passed via GET request
     selected_record = AttendanceDetail.objects.filter(id=selected_record_id).first()
 
+#   # Check for existing entry without an exit
+#     if request.method == 'POST':
+#         action = request.POST.get('action')
+#         user = request.user
+        
+#         # Check for existing entry without an exit
+#         existing_entry = AttendanceDetail.objects.filter(attendance__user=user, exit__isnull=True).first()
+        
+#         if action == 'entry':
+#             if existing_entry:
+#                 # If there's an existing entry without exit, return error
+#                 return JsonResponse({'message': 'An entry already exists with no exit time recorded.'}, status=400)
+#             else:
+#                 # Logic to record a new entry
+#                 AttendanceDetail.objects.create(attendance__user=user, entry=timezone.now())
+#                 messages.success(request, "Entry recorded successfully!")
+#         elif action == 'exit':
+#             if existing_entry:
+#                 # Logic to record exit for the existing entry
+#                 existing_entry.exit = timezone.now()
+#                 existing_entry.save()
+#                 messages.success(request, "Exit recorded successfully!")
+#             else:
+#                 # If no existing entry to exit, return error
+#                 return JsonResponse({'message': 'No entry found to record an exit for.'}, status=400)
+#         else:
+#             messages.warning(request, "Invalid action!")
+        
+#         # Redirect back to the attendance page
+#         return redirect('attendance')
 
     # selected_record_id = request.GET.get('record_id')  # Assuming a `record_id` is passed via GET request
     # selected_record = AttendanceDetail.objects.filter(id=selected_record_id).first() if selected_record_id else None
@@ -193,10 +224,8 @@ def exit_view(request):
             return JsonResponse({'message': str(e)}, status=500)
     else:
         return JsonResponse({'message': 'Invalid request method'}, status=405)
-    
 
-
-
+#Note Button
 def save_note_view(request, record_id):
     if request.method == "POST":
         note = request.POST.get("note", "").strip()
@@ -215,4 +244,10 @@ def save_note_view(request, record_id):
 
 #Leave Details
 def leavedetails_view(request):
-    return render(request, 'leavedetails.html')
+    if request.user.is_staff:
+        users = User.objects.exclude(username=request.user.username)  # Exclude the current admin user
+    else:
+        users = User.objects.filter(username=request.user.username)  # Only show the current user for non-admins
+    return render(request, 'leavedetails.html', {
+        'users': users,
+                  })
