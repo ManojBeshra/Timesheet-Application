@@ -82,55 +82,25 @@ def worklog_list(request):
 
 @csrf_exempt 
 @login_required   
-# def worklog_details(request, worklog_id):
-#     worklog_instance = get_object_or_404(worklog, id=worklog_id)
-#     if request.method == 'POST':
-#         form = worklog(request.POST)
-#         # form = Calculate(request.POST) 
-#         print(form.date)
-#         print(form.hours)
-#         print(form.priority)
-
-#         form2 = WorklogForm(request.POST, instance=worklog_instance)
-#         if form2.is_valid():
-#             worklog_instance = form2.save(commit=False)
-#             # print(WorklogForm.data["priority"]) 
-#             worklog_instance.save()
-            
-#             return redirect('worklog')
-#     else:
-        
-#         form2 = WorklogForm(instance=worklog_instance)
-
-#     priority = priority_type.objects.all()
-#     users = User.objects.all()
-#     tickets = ticket.objects.all()
-#     tickettype = ticket_type.objects.all()
-#     projects = project.objects.all()
-    
-
-#     return render(request, 'worklogdetails.html', {
-#         'worklog': worklog_instance,
-#         'priority': priority,
-#         'tickets': tickets,
-#         'users': users,
-#         'tickettype': tickettype,
-#         'projects':projects,
-#         })
 def worklog_details(request, worklog_id):
     worklog_instance = get_object_or_404(worklog, id=worklog_id)
     if request.method == 'POST':
+        
         form = worklog(request.POST)
 
         # Handle the billable field manually if not part of the form
         billable = request.POST.get('billable') == 'on'  # Check if the checkbox was checked
         form2 = WorklogForm(request.POST, instance=worklog_instance)
         
+        current_user = User.objects.get(id = worklog_instance.user.id)
+
+        # print(worklog_instance.user.username)
         if form2.is_valid():
             worklog_instance = form2.save(commit=False)
             worklog_instance.user = request.user
             worklog_instance.billable = billable  # Set the billable field from the form
             worklog_instance.save()
+            worklog.objects.filter(id = worklog_instance.id).update(user=current_user)
             
             return redirect('worklog')
     else:
@@ -150,7 +120,7 @@ def worklog_details(request, worklog_id):
         'tickettype': tickettype,
         'projects': projects,
     })
-    
+
 @csrf_exempt 
 @login_required
 def add_worklog(request):
@@ -164,11 +134,11 @@ def add_worklog(request):
             hours=data.get("hours"),
             ticket_id=data.get("ticket"),
             date=data.get("date"),
-            week=data.get("week"),
-            priority_id=data.get("priority"),
-            project_support_id=data.get("project_support"),
+            # week=data.get("week"),
+            # priority_id=data.get("priority"),
+            # project_support_id=data.get("project_support"),
             category=data.get("category"),
-            note=data.get("note"),
+            # note=data.get("note"),
             billable=data.get("billable"),
         )
         

@@ -6,7 +6,7 @@
 <!--style-->
 {% block style %}
     .small-btn {
-        padding: 2px 8px; /* Adjust padding to reduce button size */
+        padding: 4px 16px 4px 16px; /* Adjust padding to reduce button size */
         font-size: 12px; /* Adjust font size */
         height: 35px; /* Set a specific height */
         width: auto; /* Adjust width as needed */
@@ -135,90 +135,111 @@
                                     <form class="row g-3" id="LogForm" method="POST" action="">
                                         {% csrf_token %}
 
-
-                                        <!--Work Done-->
-                                        <div class="form-group col-10">
-                                            <label for="workdone">Work Done</label>
-                                            <input type="text" class="form-control" id="workdone" name="workdone" aria-describedby="titleHelp" placeholder="Enter Work Done">
-                                        </div>
-
-                                          <!--Billable-->
-                                          <div class="form-group col-2">
-                                            
-                                            <div class="custom-control custom-checkbox d-inline-block mt-7 mb-3">
-                                                <input type="checkbox" class="custom-control-input" id="customCheck2">
-                                                <label class="custom-control-label" for="customCheck2"></label>
-                                              </div>
-                                              <label for="billable">Billable</label>
-                                        </div>
-
-                                        <!--Hours-->
-                                        <div class="form-group col-2">
-                                            <label for="hours">Hours</label>
-                                            <input type="number" class="form-control" id="hours" name="hours" aria-describedby="titleHelp" placeholder="hours">
-                                        </div>
-
-                                        <!-- Ticket -->
-                                        <div class="form-group col-4">
-                                            <label for="ticket">Ticket</label>
-                                            <select class="form-control" id="ticket" name="ticket">
-                                                <option value="" selected>Select</option>
-                                                {% for i in tickets %}
-                                                    <option value="{{ i.id }}">{{ i.ticket_id }}</option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
-                                        
-                                        <!--Date-->
-                                        <div class="form-group col-4">
-                                            <label for="date">Date</label>
-                                            <input type="datetime-local" class="form-control" id="date" aria-describedby="dateHelp" >
-                                        </div>
-
                                         <!--Week-->
-                                        <div class="form-group col-2">
+                                        {% comment %} <div class="form-group col-2">
                                             <label for="week">Week</label>
                                             <input type="text" class="form-control" id="week" aria-describedby="weekHelp" readonly>
-                                        </div>
+                                        </div> {% endcomment %} 
+                                        <!--Date-->
+                                        <div class = "container row">
+                                            <div class="form-group col-3">
+                                                <label for="date">Date</label>
+                                                <input type="date" class="form-control" id="date" aria-describedby="dateHelp" >
+                                            </div>
+
+                                            <!-- Ticket -->
+                                            <div class="form-group col-9">
+                                                <label for="ticket">Ticket</label>
+                                                <select class="form-control" id="ticket" name="ticket">
+                                                    <option value="" selected>Select</option>
+                                                    {% for i in tickets %}
+                                                        <option value="{{ i.id }}">{{ i.ticket_title }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div> 
+                                        </div> 
+
 
                                         <!--Priority-->
-                                        <div class="form-group col-4">
-                                            <label for="exampleFormControlSelect12">Priority</label>
-                                            <select class="form-control" id="prioritylist">
-                                                <option value="" selected>Select</option>
-                                                {% for i in priority %}
-                                                    <option value="{{ i.id }}" {% if i.id == ticket.priority_id %}selected{% endif %}>
-                                                        {{ i.priority_name }}
-                                                    </option>
-                                                {% endfor %}
-                                            </select>
+                                        <div class = "container row">
+
+                                            {% comment %} <div class="form-group col-3">
+                                                <label for="exampleFormControlSelect12">Priority</label>
+                                                <select class="form-control" id="prioritylist">
+                                                    <option value="" selected>Select</option>
+                                                    {% for i in priority %}
+                                                        <option value="{{ i.id }}" {% if i.id == ticket.priority_id %}selected{% endif %}>
+                                                            {{ i.priority_name }}
+                                                        </option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div> {% endcomment %}
+                                            
+
+
+                                            {% comment %} <!--Project-->
+                                            <div class="form-group col-4">
+                                                <label for="exampleFormControlSelect12">Project/Support</label>
+                                                <select class="form-control" id="projects">
+                                                    <option value="" selected>Select</option>
+                                                    {% for i in tickettype %}
+                                                        <option value="{{ i.id }}" {% if i.id == ticket.tickettype %}selected{% endif %}>
+                                                            {{ i.name }}
+                                                        </option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div> {% endcomment %}
+
+
+                                            <!--Category-->
+                                            {% comment %} <div class="form-group col-5">
+                                                <label for="exampleFormControlSelect12">Category</label>
+                                                <input type="text" class="form-control" id="category" name="category" aria-describedby="categoryHelp" placeholder="Enter Category">
+                                            </div> {% endcomment %}
+
                                         </div>
 
-                                        <!--Project-->
-                                        <div class="form-group col-4">
-                                            <label for="exampleFormControlSelect12">Project/Support</label>
-                                            <select class="form-control" id="projects">
-                                                <option value="" selected>Select</option>
-                                                {% for i in tickettype %}
-                                                    <option value="{{ i.id }}" {% if i.id == ticket.tickettype %}selected{% endif %}>
-                                                        {{ i.name }}
-                                                    </option>
-                                                {% endfor %}
-                                            </select>
+                                    
+                                        <div class = "container row">
+
+                                            <!--Work Done-->
+                                            <div class="form-group col-12">
+                                                <label for="workdone">Work Done</label>
+                                                <textarea class="form-control" id="workdone" name="workdone" rows="2"></textarea>
+                                                {% comment %} <input type="textarea" class="form-control" id="workdone" name="workdone" aria-describedby="titleHelp" rows="2" placeholder="Enter Work Done"> {% endcomment %}
+                                            </div>
                                         </div>
 
+                                        
 
-                                        <!--Category-->
-                                        <div class="form-group col-4">
-                                            <label for="exampleFormControlSelect12">Category</label>
-                                            <input type="text" class="form-control" id="category" name="category" aria-describedby="categoryHelp" placeholder="Enter Category">
+                                        <div class = "container row">
+                                            <!--Category-->
+                                            <div class="form-group col-4">
+                                                <label for="exampleFormControlSelect12">Category</label>
+                                                <input type="text" class="form-control" id="category" name="category" aria-describedby="categoryHelp" placeholder="Enter Category">
+                                            </div>
+                                            <!--Hours-->
+                                            <div class="form-group col-2">
+                                                <label for="hours">Hours</label>
+                                                <input type="number" class="form-control" id="hours" name="hours" aria-describedby="titleHelp" placeholder="hours">
+                                            </div>
+
+                                            <!--Billable-->
+                                            <div class="form-group col-2">
+                                                
+                                                <div class="custom-control custom-checkbox d-inline-block mt-7 mb-3">
+                                                    <input type="checkbox" class="custom-control-input" id="customCheck2">
+                                                    <label class="custom-control-label" for="customCheck2"></label>
+                                                </div>
+                                                <label for="billable">Billable</label>
+                                            </div>
                                         </div>
-
+                                        
                                         <!--Notes-->
-                                        <div class="form-group col-12">
+                                        {% comment %} <div class="form-group col-12">
                                             <label for="exampleFormControlTextarea1">Notes</label>
                                             <textarea class="form-control" id="notesarea" rows="2"></textarea>
-                                        </div>
+                                        </div> {% endcomment %}
 
                                         
                                     </form>
@@ -278,146 +299,7 @@
                         </div>
                     </div>
 
-                    <!-- Form Modal for Edit Log -->
-                    <div class="modal fade" id="EditLogForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalFormTitle"
-                        aria-hidden="true">
-                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="tickettitle">Edit Log</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">×</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <form class="row g-3" id="taskForm" method="POST">
-                                        {% csrf_token %}
-
-
-                                        <!--Work Done-->
-                                        <div class="form-group col-10">
-                                            <label for="workdone">Work Done</label>
-                                            <input type="text" class="form-control" id="workdone" name="workdone" aria-describedby="titleHelp" placeholder="Enter Work Done">
-                                        </div>
-
-                                          <!--Billable-->
-                                          <div class="form-group col-2">
-                                            
-                                            <div class="custom-control custom-checkbox d-inline-block mt-7 mb-3">
-                                                <input type="checkbox" class="custom-control-input" id="customCheck2">
-                                                <label class="custom-control-label" for="customCheck2"></label>
-                                              </div>
-                                              <label for="billable">Billable</label>
-                                        </div>
-
-
-                                        <!--Hours-->
-                                        <div class="form-group col-2">
-                                            <label for="hours">Hours</label>
-                                            <input type="text" class="form-control" id="hours" name="hours" aria-describedby="titleHelp" placeholder="Enter hours">
-                                        </div>
-
-                                        <!--Ticket-->
-                                        <div class="form-group col-4">
-                                            <label for="exampleFormControlSelect12">Ticket</label>
-                                            <select class="form-control" id="prioritylist">
-                                                <option value="" selected>Select</option>
-                                                {% for i in tickets %}
-                                                    <option >
-                                                        {{ i.ticket_id }}
-                                                    </option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
-                                        
-
-
-                                    
-                                        <!--Date Opened-->
-                                        <div class="form-group col-4">
-                                            <label for="date">Date Opened</label>
-                                            <input type="datetime-local" class="form-control" id="date" aria-describedby="dateHelp" readonly>
-                                        </div>
-
-                                        
-
-                                        <!--Week-->
-                                        <div class="form-group col-2">
-                                            <label for="date">Week</label>
-                                            <input type="text" class="form-control" id="date" aria-describedby="dateHelp" readonly>
-                                        </div>
-
-                                        <!--Priority-->
-                                        <div class="form-group col-4">
-                                            <label for="exampleFormControlSelect12">Priority</label>
-                                            <select class="form-control" id="prioritylist">
-                                                <option value="" selected>Select</option>
-                                                {% for i in priority %}
-                                                    <option value="{{ i.id }}" {% if i.id == ticket.priority_id %}selected{% endif %}>
-                                                        {{ i.priority_name }}
-                                                    </option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
-
-                                        <!--Project-->
-                                        <div class="form-group col-4">
-                                            <label for="exampleFormControlSelect12">Project/Support</label>
-                                            <select class="form-control" id="projects">
-                                                <option value="" selected>Select</option>
-                                                {% for i in projects %}
-                                                    <option value="{{ i.id }}" {% if i.id == ticket.project_id %}selected{% endif %}>
-                                                        {{ i.name }}
-                                                    </option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
-
-
-                                        <!--Category-->
-                                        <div class="form-group col-4">
-                                            <label for="exampleFormControlSelect12">Category</label>
-                                            <select class="form-control" id="customerlist" >
-                                                {% for i in customers %}
-                                                    <option value="{{ i.id }}" {% if i.id == ticket.customer_id %}selected{% endif %}>
-                                                        {{ i.name }}
-                                                    </option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
-
-
-
-
-
-                                        <!-- State -->
-                                        <!-- <div class="form-group col-6">
-                                            <label for="exampleFormControlSelect12">Status</label>
-                                            <select class="form-control" id="statelist">
-                                                <option value="" selected>Select</option>
-                                                {% for i in state %}
-                                                    <option value="{{ i.id }}" {% if i.id == ticket.state_id %}selected{% endif %}>
-                                                        {{ i.state_name }}
-                                                    </option>
-                                                {% endfor %}
-                                            </select> -->
-
-                                        <!--Operational Notes-->
-                                        <div class="form-group col-12">
-                                            <label for="exampleFormControlTextarea1">Notes</label>
-                                            <textarea class="form-control" id="shortdescriptionarea" rows="2"></textarea>
-                                        </div>
-                                    </form>
-                                </div>
-                                <!--footer-->
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-danger small-btn" data-dismiss="modal">Close</button>
-                                    <button type="button" id="addTaskButton" class="btn btn-success small-btn">Add</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
+                  
                     <!-- Delete Confirmation Modal -->
                     <div class="modal fade" id="DeleteLogForm" tabindex="-1" role="dialog" aria-labelledby="DeleteLogFormTitle"
                         aria-hidden="true">
@@ -657,11 +539,10 @@
             const hours = document.getElementById("hours").value;
             const ticket = document.getElementById("ticket").value;
             const date = document.getElementById("date").value;
-            const week = document.getElementById("week").value;
-            const priority = document.getElementById("prioritylist").value;
-            const project_support = document.getElementById("projects").value;
+            //const week = document.getElementById("week").value;
+            //const project_support = document.getElementById("projects").value;
             const category = document.getElementById("category").value;
-            const note = document.getElementById("notesarea").value;
+            //const note = document.getElementById("notesarea").value;
             const billable = document.getElementById("customCheck2").checked;
         
             // CSRF token from the form
@@ -680,11 +561,11 @@
                     hours: hours,
                     ticket: ticket,
                     date: date,
-                    week: week,
-                    priority: priority,
-                    project_support: project_support,
+                    //week: week,
+                    //priority: priority,
+                    //project_support: project_support,
                     category: category,
-                    note: note,
+                    //note: note,
                     billable: billable
                 })
             })
@@ -756,7 +637,7 @@
             let hours = String(now.getHours()).padStart(2, '0');
             let minutes = String(now.getMinutes()).padStart(2, '0');
 
-            let formattedDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+            let formattedDateTime = `${year}-${month}-${day}`;
             const dateInput = document.getElementById("date");
 
             if (dateInput) {
@@ -768,7 +649,7 @@
     </script>
 
     <!--To set the week-->
-    <script>
+    {% comment %} <script>
         function getWeekOfMonth(date) {
             let firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1); // 1st day of the month
             let firstDayWeekday = firstDayOfMonth.getDay(); // Day of the week (0 = Sunday, 1 = Monday, etc.)
@@ -786,7 +667,7 @@
     
         // Run function when page loads
         window.onload = setWeek;
-    </script>
+    </script> {% endcomment %}
 
     <!--To see note-->
     {% comment %} <script>
