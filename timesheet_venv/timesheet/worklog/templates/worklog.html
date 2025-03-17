@@ -78,7 +78,10 @@
         min-width: 85px;
         max-width:85px;
     }
-
+    .column-head th {
+        background-color: #9e6de0;
+        color: white !important;
+    }
 {% endblock %}
 
 {% block content %}
@@ -464,7 +467,7 @@
                     
                     <table id="productsTable" class="table table-hover table-product" style="width:100%">
                     <thead>
-                      <tr class="column">
+                      <tr class="column-head">
                           <th>Resource&nbsp;&nbsp;&nbsp;&nbsp;</th>
                           <th>Billable&nbsp;&nbsp;&nbsp;&nbsp;</th>
                           <th class="date-header">Date&nbsp;&nbsp;</th>
@@ -536,58 +539,55 @@
     <!--To Add worklog-->
     <script>
         document.getElementById('addLogButton').addEventListener('click', function() {
-            const workdone = document.getElementById("workdone").value;
-            const hours = document.getElementById("hours").value;
-            const ticket = document.getElementById("ticket").value;
-            const date = document.getElementById("date").value;
-            //const week = document.getElementById("week").value;
-            //const project_support = document.getElementById("projects").value;
-            const category = document.getElementById("category").value;
-            //const note = document.getElementById("notesarea").value;
-            const billable = document.getElementById("customCheck2").checked;
+        const form = document.getElementById("LogForm");
         
-            // CSRF token from the form
-            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-        
-            // Send the data to the backend
-            fetch("/worklog/add_worklog/", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": csrfToken
-                },
-                //credentials: "include",  // Ensures authentication is included
-                body: JSON.stringify({
-                    workdone: workdone,
-                    hours: hours,
-                    ticket: ticket,
-                    date: date,
-                    //week: week,
-                    //priority: priority,
-                    //project_support: project_support,
-                    category: category,
-                    //note: note,
-                    billable: billable
-                })
+        // Check if the form is valid
+        if (!form.checkValidity()) {
+            form.reportValidity();  // Show browser's validation message
+            return;  // Stop execution if validation fails
+        }
+    
+        const workdone = document.getElementById("workdone").value;
+        const hours = document.getElementById("hours").value;
+        const ticket = document.getElementById("ticket").value;
+        const date = document.getElementById("date").value;
+        const category = document.getElementById("category").value;
+        const billable = document.getElementById("customCheck2").checked;
+    
+        // CSRF token from the form
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    
+        // Send the data to the backend
+        fetch("/worklog/add_worklog/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrfToken
+            },
+            body: JSON.stringify({
+                workdone: workdone,
+                hours: hours,
+                ticket: ticket,
+                date: date,
+                category: category,
+                billable: billable
             })
-            .then(response => response.json())
-            .then(data => {
-                //alert("Log added successfully!");
-                // Close the modal if needed
-                $('#AddLogForm').modal('hide');
-                location.reload();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert("Error adding log.");
-            });
-            
+        })
+        .then(response => response.json())
+        .then(data => {
+            $('#AddLogForm').modal('hide'); // Close the modal
+            location.reload(); // Reload page to reflect changes
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert("Error adding log.");
         });
-
-        
-    </script>
+        });
+ 
+     </script>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
    <!--For Delete Function  -->
     <script>
         $(function() {
