@@ -12,23 +12,15 @@
         line-height: 1;
     } 
 
-    .view-small-btn   {
-        padding: 2px 8px; /* Adjust padding to make it smaller */
-        font-size: 12px; /* Reduce text size */
-        height: 24px; /* Set height */
-        line-height: 20px; /* Adjust line height for vertical alignment */
-        width: auto; /* Allow width to adjust */
-        display: inline-block; /* Ensures it behaves like a button */
-        text-align: center; /* Center the text */
-    }
+
 {% endblock style %}
 
 {% block content %}
 
         <div class="card card-default m-2">
             <div class="card-header">
-                <div class = "container row">
-                    <div class="form-group col-2">
+                <div class = "container row form-group">
+                    <div class="form-group col-3">
                         <label for="date">Date</label>
                         <input type="date" class="form-control" id="date" name="date" value="{{ worklog.date|date:'Y-m-d' }}" readonly>
                     </div>
@@ -48,19 +40,15 @@
                 
                 <form class="form-group col-12" method="POST" action="{% url 'worklogdetails' worklog.id %}">
                     {% csrf_token %}
-                    <div class = "container row">
-
-                        
-                        
-                         <div class="form-group col-12">
+                    <div class = "row">
+                        <div class="form-group col-12">
                             <label for="workdone">Work Done</label>
                             <textarea class="form-control" id="workdone" name="workdone" rows="2">{{ worklog.workdone }}</textarea>
-                            {% comment %} <input type="textarea" class="form-control" id="workdone" name="workdone" aria-describedby="titleHelp" rows="2" placeholder="Enter Work Done"> {% endcomment %}
                         </div>
 
                     </div>
                        
-                    <div class = "container row">
+                    <div class = " row">
 
                         <!-- Ticket -->
                         <div class="form-group col-4">
@@ -81,7 +69,7 @@
                         <!-- Hours -->
                         <div class="form-group col-2">
                             <label for="hours">Hours</label>
-                            <input type="text" class="form-control" id="hours" name="hours" aria-describedby="titleHelp" placeholder="Enter hours" value = "{{worklog.hours}}">
+                            <input type="number" class="form-control" min="0" max="24" id="hours" name="hours" aria-describedby="titleHelp" placeholder="Enter hours" value = "{{worklog.hours}}">
                         </div>
                          <!-- Billable -->
                         <div class="form-group col-2">
@@ -92,26 +80,15 @@
                               </div>
                               <label for="billable">Billable</label>
                         </div> 
-
-                        
-                    
-
                     </div>
                     
-                    <div class = "container row">
+                    <div class = " row">
 
                         <!--Notes-->
                         <div class="form-group col-12">
                             <label for="exampleFormControlTextarea1">Comments</label>
                             <textarea class="form-control" id="shortdescriptionarea" name= "note" rows="2" >{{ worklog.note }}</textarea>
-                        </div>
-
-                        <!-- Notes -->
-                        {% comment %} <div class="form-group col-12">
-                            <label for="notes">Notes</label>
-                            <textarea class="form-control" id="notes" name="notes" rows="3">{{ worklog.notes }}</textarea>
-                        </div> {% endcomment %}
-                        
+                        </div>                        
                     </div>
 
                     <!-- Footer -->

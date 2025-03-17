@@ -221,7 +221,7 @@
                                             <!--Hours-->
                                             <div class="form-group col-2">
                                                 <label for="hours">Hours</label>
-                                                <input type="number" class="form-control" id="hours" name="hours" aria-describedby="titleHelp" placeholder="hours">
+                                                <input type="number" class="form-control" min="0" max="24" id="hours" name="hours" aria-describedby="titleHelp" placeholder="hours">
                                             </div>
 
                                             <!--Billable-->
@@ -393,8 +393,9 @@
                                 </button>
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item" href="{% url 'worklog' %}?year=">Show All</a>
-                                    {% for y in years %}
-                                        <a class="dropdown-item" href="#" onclick="updateFilters('year', '{{ y }}')">{{ y }}</a>
+                                    {% for y in years|dictsort:"year" %}
+
+                                        <a class="dropdown-item" href="#" onclick="updateFilters('year', '{{ y.year }}')">{{ y.year }}</a>
                                     {% endfor %}
                                 </div>
                             </div>

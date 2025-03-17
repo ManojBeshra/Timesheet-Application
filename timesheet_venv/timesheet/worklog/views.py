@@ -21,6 +21,7 @@ from openpyxl import Workbook
 from django.utils.timezone import make_naive  # Import this
 from django.db.models.functions import ExtractYear, ExtractMonth
 
+
 @login_required
 def worklog_list(request): 
     worklogs = worklog.objects.all()  
@@ -60,12 +61,11 @@ def worklog_list(request):
 
     worklogs = worklogs.filter(**filters)
 
-    
-    # existing_years = worklog.objects.annotate(year=ExtractYear('date')).values_list('year', flat=True).distinct()
+    existing_years = worklog.objects.all().annotate(year=ExtractYear('date')).values('year').distinct()
     months = [(i, datetime(2000, i, 1).strftime('%B')) for i in range(1, 13)]
 
     context = {
-        # 'years': sorted(existing_years, reverse=True),
+        'years': existing_years,
         'months': months,
         'year': int(year) if year else '',
         'month': int(month) if month else '',
