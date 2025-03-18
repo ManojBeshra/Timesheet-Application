@@ -131,14 +131,29 @@ def add_worklog(request):
     if request.method == 'POST':
         data = json.loads(request.body)
 
+        # Convert date string to datetime
+        date_str = data.get("date")
+        if date_str:
+            date = datetime.strptime(date_str, "%Y-%m-%d")  # Convert to datetime
+
+            # Inline week calculation
+            first_day_of_month = date.replace(day=1)
+            first_weekday = first_day_of_month.weekday()
+            week_number = ((date.day + first_weekday) // 7) + 1
+            week_string = f"Week {week_number}" 
+        else:
+            return JsonResponse({"message": "Date is required!", "status": "error"}, status=400)
+
+
+
         # Create a new worklog entry
         worklog_instance = worklog.objects.create(
             user=request.user,  
             workdone=data.get("workdone"),
             hours=data.get("hours"),
             ticket_id=data.get("ticket"),
-            date=data.get("date"),
-            week=data.get("week"),
+            date=date,
+            week=week_string,
             # priority_id=data.get("priority"),
             # project_support_id=data.get("project_support"),
             category=data.get("category"),

@@ -42,9 +42,9 @@
         <div class="card-header">
 
             <!--ClockIn/ClockOut Buttons-->
-            <div class="d-flex justify-content-start " style="gap: 10px;">
+            <div class="d-flex justify-content-start" style="gap: 10px;">
                 {% if not request.user.is_staff %}
-                <div class="btn-group " role="group" aria-label="Basic mixed styles example">
+                <div class="btn-group" role="group" aria-label="Basic mixed styles example">
                     <button id="entry-button" type="button" class="btn btn-outline-success small-btn" data-url="{% url 'entry' %}">Clock In</button>
                     <button id="exit-button" type="button" class="btn btn-outline-danger small-btn" data-url="{% url 'exit' %}">Clock Out</button>
                 </div>

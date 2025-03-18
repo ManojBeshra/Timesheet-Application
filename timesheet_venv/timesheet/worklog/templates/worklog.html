@@ -139,10 +139,10 @@
                                         {% csrf_token %}
 
                                         <!--Week-->
-                                        <div class="form-group col-2" hidden>
+                                        <!-- <div class="form-group col-2" hidden>
                                             <label for="week">Week</label>
                                             <input type="text" class="form-control" id="week" aria-describedby="weekHelp" readonly>
-                                        </div> 
+                                        </div>  -->
                                         <!--Date-->
                                         <div class = "container row">
                                             <div class="form-group col-3">
@@ -209,7 +209,6 @@
                                             <div class="form-group col-12">
                                                 <label for="workdone">Work Done</label>
                                                 <textarea class="form-control" id="workdone" name="workdone" rows="2"></textarea>
-                                                {% comment %} <input type="textarea" class="form-control" id="workdone" name="workdone" aria-describedby="titleHelp" rows="2" placeholder="Enter Work Done"> {% endcomment %}
                                             </div>
                                         </div>
 
@@ -474,9 +473,9 @@
                           <th>Week&nbsp;&nbsp;&nbsp;&nbsp;</th>
                           <th>Ticket&nbsp;&nbsp;&nbsp;&nbsp;</th>
                           <th class="workdone-column">Work Done</th>
-                          <th>Priority&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                          <!-- <th>Priority&nbsp;&nbsp;&nbsp;&nbsp;</th> -->
                           <th>Hours&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                          <th>Project/Support&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                          <!-- <th>Project/Support&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th> -->
                           <th>Category&nbsp;&nbsp;&nbsp;&nbsp;</th>
                           {% comment %} <th>Note&nbsp;&nbsp;&nbsp;&nbsp;</th> {% endcomment %}
                           <th>Actions&nbsp;&nbsp;&nbsp;&nbsp;</th>
@@ -504,15 +503,15 @@
                             </td>
                             
                             <td>{{ log.workdone }}</td>
-                            <td>
+                            <!-- <td>
                                 {% if log.priority %}
                                     {{ log.priority.priority_name }}
                                 {% else %}
                                     None  
                                 {% endif %}
-                            </td>
+                            </td> -->
                             <td>{{ log.hours }}</td>
-                            <td>{{ log.project_support}}</td>
+                            <!-- <td>{{ log.project_support}}</td> -->
                             <td>{{ log.category }}</td>
                             {% comment %} <td align="center">
                                     <i data-toggle="modal" data-target="#NoteForm"
@@ -550,7 +549,6 @@
         const workdone = document.getElementById("workdone").value;
         const hours = document.getElementById("hours").value;
         const ticket = document.getElementById("ticket").value;
-        const week = document.getElementById("week").value;
         const date = document.getElementById("date").value;
         const category = document.getElementById("category").value;
         const billable = document.getElementById("customCheck2").checked;
@@ -572,7 +570,6 @@
                 date: date,
                 category: category,
                 billable: billable,
-                week:week,
             })
         })
         .then(response => response.json())
@@ -651,26 +648,7 @@
         });
     </script>
 
-    <!--To set the week-->
-   <script>
-        function getWeekOfMonth(date) {
-            let firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1); // 1st day of the month
-            let firstDayWeekday = firstDayOfMonth.getDay(); // Day of the week (0 = Sunday, 1 = Monday, etc.)
-            let dayOfMonth = date.getDate(); // Current day in the month
-    
-            // Calculate the week number of the month
-            return Math.ceil((dayOfMonth + firstDayWeekday) / 7);
-        }
-    
-        function setWeek() {
-            let today = new Date();
-            let weekNumber = getWeekOfMonth(today);
-            document.getElementById("week").value = "Week " + weekNumber; // Set formatted week number
-        }
-    
-        // Run function when page loads
-        window.onload = setWeek;
-    </script>
+
 
     <!--To see note-->
     {% comment %} <script>
