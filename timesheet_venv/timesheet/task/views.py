@@ -21,6 +21,10 @@ def filter_tasks(request, user_id=None, project_id=None):
     selected_user = None
     selected_project = None
 
+    # If the logged-in user is not staff, only show their tasks
+    if not request.user.is_staff:
+        tasks = tasks.filter(assigned_to=request.user)
+
     # user filter
     if user_id:
         selected_user = get_object_or_404(User, pk=user_id)

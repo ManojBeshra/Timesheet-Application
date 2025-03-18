@@ -31,48 +31,61 @@ from django.contrib import messages
 @login_required
 def attendance_view(request):
     if request.user.is_staff:
-        users = User.objects.exclude(username=request.user.username)  # Exclude the current admin user
+        users = User.objects.exclude(username=request.user.username)  
     else:
         users = User.objects.filter(username=request.user.username)  # Only show the current user for non-admins
+    
     years = AttendanceDetail.objects.annotate(year=ExtractYear('attendance__date')).values_list('year', flat=True).distinct().order_by('year')
     
     months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
-    selected_user = request.GET.get('selected_user', 'Users') if request.user.is_staff else request.GET.get('selected_user', request.user.username)
-    selected_year = request.GET.get('selected_year', 'Year')
-    selected_month = request.GET.get('selected_month', 'Month')
+    # Get filter parameters from request
+    selected_user_id = request.GET.get('user_id')  
+    selected_user = None  # default
 
-    if request.user.is_staff:
-        attendance_records = AttendanceDetail.objects.all()
-        if selected_user and selected_user != 'Users':
-            attendance_records = attendance_records.filter(attendance__user__username=selected_user)
-    else:
-        attendance_records = AttendanceDetail.objects.filter(attendance__user=request.user)
+    if selected_user_id:
+        try:
+            selected_user = User.objects.get(id=selected_user_id)  
+        except User.DoesNotExist:
+            selected_user = None  
 
-    if selected_year and selected_year != 'Year':
+
+    selected_year = request.GET.get('year')
+    selected_month = request.GET.get('month')
+    
+    # Initialize attendance records
+    attendance_records = AttendanceDetail.objects.all()
+
+
+    # Apply filters
+    if not request.user.is_staff:
+        attendance_records = attendance_records.filter(attendance__user=request.user)
+    elif selected_user:  
+        attendance_records = attendance_records.filter(attendance__user_id=selected_user)
+
+    if selected_year:
         attendance_records = attendance_records.filter(attendance__date__year=int(selected_year))
-    if selected_month and selected_month != 'Month':
-        month_number = months.index(selected_month) + 1
-        attendance_records = attendance_records.filter(attendance__date__month=month_number)
 
-    attendance_records = attendance_records.order_by('-attendance__date', '-entry')
+    if selected_month:
+        try:
+            month_number = months.index(selected_month) + 1
+            attendance_records = attendance_records.filter(attendance__date__month=month_number)
+        except ValueError:
+            pass 
 
     data = [
         {
-            #new added
-            'id': record.id,  # Ensure the id is included
+            'id': record.id,  
             'user': record.attendance.user.username,
             'date': record.attendance.date.strftime('%B %d, %Y'),
             'entry': record.entry.strftime('%I:%M %p') if record.entry else 'N/A',
             'exit': record.exit.strftime('%I:%M %p') if record.exit else 'N/A',
             'hour': f"{record.hour // 3600} hr {(record.hour % 3600) // 60} min {record.hour % 60} sec" if record.hour else 'N/A',
             'note': record.note,
-
         }
         for record in attendance_records
     ]
 
-    
     # Handle the form submission for adding a note
     if request.method == 'POST':
         note = request.POST.get('note')
@@ -105,49 +118,17 @@ def attendance_view(request):
     selected_record_id = request.GET.get('record_id')  # Assuming a `record_id` is passed via GET request
     selected_record = AttendanceDetail.objects.filter(id=selected_record_id).first()
 
-#   # Check for existing entry without an exit
-#     if request.method == 'POST':
-#         action = request.POST.get('action')
-#         user = request.user
-        
-#         # Check for existing entry without an exit
-#         existing_entry = AttendanceDetail.objects.filter(attendance__user=user, exit__isnull=True).first()
-        
-#         if action == 'entry':
-#             if existing_entry:
-#                 # If there's an existing entry without exit, return error
-#                 return JsonResponse({'message': 'An entry already exists with no exit time recorded.'}, status=400)
-#             else:
-#                 # Logic to record a new entry
-#                 AttendanceDetail.objects.create(attendance__user=user, entry=timezone.now())
-#                 messages.success(request, "Entry recorded successfully!")
-#         elif action == 'exit':
-#             if existing_entry:
-#                 # Logic to record exit for the existing entry
-#                 existing_entry.exit = timezone.now()
-#                 existing_entry.save()
-#                 messages.success(request, "Exit recorded successfully!")
-#             else:
-#                 # If no existing entry to exit, return error
-#                 return JsonResponse({'message': 'No entry found to record an exit for.'}, status=400)
-#         else:
-#             messages.warning(request, "Invalid action!")
-        
-#         # Redirect back to the attendance page
-#         return redirect('attendance')
-
-    # selected_record_id = request.GET.get('record_id')  # Assuming a `record_id` is passed via GET request
-    # selected_record = AttendanceDetail.objects.filter(id=selected_record_id).first() if selected_record_id else None
 
     return render(request, 'attendance.html', {
         'users': users,
         'attendance_records': data,
         'years': years,
         'months': months,
-        'selected_user': selected_user,
+        'selected_user': selected_user,  
         'selected_year': selected_year,
         'selected_month': selected_month,
-        'selected_record': selected_record,
+        'selected_record': selected_record, 
+        
     })
 
 #Enrty/Exit Buttons

@@ -139,10 +139,10 @@
                                         {% csrf_token %}
 
                                         <!--Week-->
-                                        {% comment %} <div class="form-group col-2">
+                                        <div class="form-group col-2" hidden>
                                             <label for="week">Week</label>
                                             <input type="text" class="form-control" id="week" aria-describedby="weekHelp" readonly>
-                                        </div> {% endcomment %} 
+                                        </div> 
                                         <!--Date-->
                                         <div class = "container row">
                                             <div class="form-group col-3">
@@ -550,6 +550,7 @@
         const workdone = document.getElementById("workdone").value;
         const hours = document.getElementById("hours").value;
         const ticket = document.getElementById("ticket").value;
+        const week = document.getElementById("week").value;
         const date = document.getElementById("date").value;
         const category = document.getElementById("category").value;
         const billable = document.getElementById("customCheck2").checked;
@@ -570,7 +571,8 @@
                 ticket: ticket,
                 date: date,
                 category: category,
-                billable: billable
+                billable: billable,
+                week:week,
             })
         })
         .then(response => response.json())
@@ -650,7 +652,7 @@
     </script>
 
     <!--To set the week-->
-    {% comment %} <script>
+   <script>
         function getWeekOfMonth(date) {
             let firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1); // 1st day of the month
             let firstDayWeekday = firstDayOfMonth.getDay(); // Day of the week (0 = Sunday, 1 = Monday, etc.)
@@ -668,7 +670,7 @@
     
         // Run function when page loads
         window.onload = setWeek;
-    </script> {% endcomment %}
+    </script>
 
     <!--To see note-->
     {% comment %} <script>

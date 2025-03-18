@@ -48,6 +48,10 @@ def worklog_list(request):
         except ValueError:
             pass  
 
+    # If the logged-in user is not staff, only show their tasks
+    if not request.user.is_staff:
+        worklogs = worklogs.filter(user=request.user)
+
     # user filter
     selected_user = None
     if user_id:
@@ -134,7 +138,7 @@ def add_worklog(request):
             hours=data.get("hours"),
             ticket_id=data.get("ticket"),
             date=data.get("date"),
-            # week=data.get("week"),
+            week=data.get("week"),
             # priority_id=data.get("priority"),
             # project_support_id=data.get("project_support"),
             category=data.get("category"),
