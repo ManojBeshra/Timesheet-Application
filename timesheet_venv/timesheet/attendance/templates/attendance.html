@@ -33,6 +33,12 @@
         background-color: #9e6de0;
         color: white !important;
     }
+    .table-product {
+        width: 100% !important;
+        table-layout: auto; /* Allow columns to size dynamically */
+        white-space: nowrap; /* Prevent text from wrapping */
+    }
+    
 
 {% endblock %}
 
@@ -116,7 +122,8 @@
         <div class="card-body">
             <!--Attendance Table-->
             
-            <table id="productsTable" class="table table-hover table-product" style="width:100%">
+            {% comment %} <table id="productsTable" class="table table-hover table-product" style="width:100%"> {% endcomment %}
+                <table id="productsTable" class="table table-hover table-product w-100">
                 <thead>
                     <tr class="column-head">
                         {% comment %} <th>Sn</th> {% endcomment %}
@@ -138,52 +145,57 @@
                         <td>{{ record.exit }}</td>
                         <td>{{ record.hour }}</td>
                         <td>
-                            <button class="view-btn btn btn-info btn-sm" data-message="{{ record.note|escape }}" data-record-id="{{ record.id }}">
+                            {% comment %} <button class="view-btn btn btn-info btn-sm" data-message="{{ record.note|escape }}" data-record-id="{{ record.id }}">
                                 View Note
-                            </button>
+                            </button> {% endcomment %}
+                            <a href="#" class="view-btn text-success" 
+                                data-toggle="modal" 
+                                data-target="#view-modal" 
+                                data-message="{{ record.note|escape }}" 
+                                data-record-id="{{ record.id }}"
+                                title="View Note">
+                                <i class="fa-regular fa-clipboard"></i> 
+                            </a>
                         </td>
                     </tr>
                     {% endfor %}
                 </tbody>
 
-                <!-- View Message Modal --> 
-                <div id="view-modal" class="modal">
-                    <div class="modal-content position-relative p-4" style="max-width: 500px; margin: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
-                        <!-- Close Button -->
-                        <button 
-                            type="button" 
-                            class="btn-close position-absolute top-0 end-0 m-3 p-3" 
-                            id="close-view-modal" 
-                            aria-label="Close">
-                        </button>
-                        <!-- Modal Header -->
-                        {% if not request.user.is_staff %}
-                        <h3 class="text-center mb-3">Note Form</h3>
-                        {% endif %}
-                        <!-- Message Form -->
-                        <form id="message-form" method="POST" action="{% url 'attendance' %}">
-                            {% csrf_token %}
-                            <input type="hidden" name="record_id" value="selected_record_id"> <!-- Hidden input for record ID -->
-                            <div class="mb-3">
-                                <label for="message-input" class="form-label">Note:</label>
-                                <textarea 
-                                    id="message-input" 
-                                    class="form-control" 
-                                    name="note" 
-                                    rows="4"
-                                    placeholder="Empty Note"
-                                    >
-                                </textarea>
+                <!-- View Note Modal -->
+                <div class="modal fade" id="view-modal" tabindex="-1" role="dialog" aria-labelledby="view-modal-title" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="view-modal-title">Note Form</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                                </button>
                             </div>
-                            <div class="d-flex justify-content-end gap-2">
-                                <button type="submit" class="btn btn-primary btn-sm" id="add-btn">Add</button> <!-- Button to add a new note -->
-                                <button type="button" class="btn btn-secondary btn-sm d-none" id="edit-btn">Edit</button> <!-- Button to edit the note -->
-                                <button type="submit" class="btn btn-success btn-sm d-none" id="update-btn">Update</button> <!-- Button to update the note -->
+
+                            <!-- Modal Body -->
+                            <div class="modal-body">
+                                <form id="message-form" method="POST" action="{% url 'attendance' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="record_id" id="record-id">
+
+                                <div class="mb-3">
+                                    {% comment %} <label for="message-input" class="form-label">Note:</label> {% endcomment %}
+                                    <textarea id="message-input" class="form-control" name="note" rows="4" placeholder="Empty Note"></textarea>
+                                </div>
+                                </form>
                             </div>
-                        </form>
-                        
+
+                            <!-- Modal Footer -->
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary btn-sm" id="add-btn">Add</button> 
+                                <button type="button" class="btn btn-secondary btn-sm d-none" id="edit-btn">Edit</button> 
+                                <button type="submit" class="btn btn-success btn-sm d-none" id="update-btn">Update</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
             </table>
             
         </div>
@@ -228,11 +240,11 @@
                     csrfmiddlewaretoken: "{{ csrf_token }}",
                 },
                 success: function (response) {
-                    $("#message").html('<div class="alert alert-success">' + response.message + "</div>");
+                    $("#attendancemessage").html('<div class="alert alert-success">' + response.message + "</div>");
                     updateTable(response.data);
                 },
                 error: function (response) {
-                    $("#message").html('<div class="alert alert-danger">' + response.responseJSON.message + "</div>");
+                    $("#attendancemessage").html('<div class="alert alert-danger">' + response.responseJSON.message + "</div>");
                 },
             });
         }
@@ -382,7 +394,15 @@
         url.search = params.toString();
         window.location.href = url.toString();
     }
-    </script>
-    
+</script>
+
+<!--Adjust table width-->
+<script>
+    $('.sidebar-toggle').on('click', function () {
+        setTimeout(() => {
+            $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
+        }, 300);
+    });
+</script>
 
 {% endblock %}

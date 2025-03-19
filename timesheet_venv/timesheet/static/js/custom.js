@@ -369,30 +369,6 @@ $(document).ready(function () {
   NProgress.done();
 
   /*======== 14. DATA TABLE ========*/
-  // var productsTable = $("#productsTable");
-  // if (productsTable.length != 0) {
-  //   productsTable.DataTable({
-  //     info: false,
-  //     lengthChange: false,
-  //     lengthMenu: [
-  //       [5, 10, 15, -1],
-  //       [5, 10, 15, "All"],
-  //     ],
-  //     scrollX: true,
-  //     order: [[2, "asc"]],
-  //     columnDefs: [
-  //       {
-  //         // orderable: false,
-  //         // targets: [, 0, 6, -1],
-  //       },
-  //     ],
-  //     language: {
-  //       search: "_INPUT_",
-  //       searchPlaceholder: "Search...",
-  //     },
-  //   });
-  // }
-
   var productsTable = $("#productsTable");
   if (productsTable.length != 0) {
     productsTable.DataTable({
@@ -404,7 +380,7 @@ $(document).ready(function () {
         [4, 10, 15, "All"],
       ],
       scrollX: true,
-      order: [[2, "asc"]],
+      order: [],
       searching: false, // Disable search
       columnDefs: [
         {
@@ -422,23 +398,6 @@ $(document).ready(function () {
   }
 
 
-  // var productSale = $("#product-sale");
-  // if (productSale.length != 0) {
-  //   productSale.DataTable({
-  //     info: false,
-  //     paging: false,
-  //     searching: false,
-  //     scrollX: true,
-  //     order: [[0, "asc"]],
-  //     columnDefs: [
-  //       {
-  //         orderable: false,
-  //         targets: [-1],
-  //       },
-  //     ],
-  //   });
-  // }
-
   var productSale = $("#product-sale");
   if (productSale.length != 0) {
     productSale.DataTable({
@@ -446,7 +405,7 @@ $(document).ready(function () {
       paging: false,
       searching: false, // Disable search
       scrollX: true,
-      order: [[0, "asc"]],
+      order: [],
       columnDefs: [
         {
           orderable: true, // Make all columns orderable
