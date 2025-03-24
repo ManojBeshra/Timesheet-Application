@@ -126,7 +126,7 @@
                 <table id="productsTable" class="table table-hover table-product w-100">
                 <thead>
                     <tr class="column-head">
-                        {% comment %} <th>Sn</th> {% endcomment %}
+                        <th>Sn</th>
                         <th>User</th>
                         <th>Date</th>
                         <th>Clock In</th>
@@ -138,16 +138,13 @@
                 <tbody>
                     {% for record in attendance_records %}
                     <tr>
-                        {% comment %} <th >{{ forloop.counter }}</th> {% endcomment %}
+                        <td>{{ forloop.counter }}</td>
                         <td>{{ record.user }}</td>
                         <td>{{ record.date }}</td>
                         <td>{{ record.entry }}</td>
                         <td>{{ record.exit }}</td>
                         <td>{{ record.hour }}</td>
                         <td>
-                            {% comment %} <button class="view-btn btn btn-info btn-sm" data-message="{{ record.note|escape }}" data-record-id="{{ record.id }}">
-                                View Note
-                            </button> {% endcomment %}
                             <a href="#" class="view-btn text-success" 
                                 data-toggle="modal" 
                                 data-target="#view-modal" 
@@ -222,9 +219,14 @@
                     <td>${record.exit || 'N/A'}</td>
                     <td>${record.hour}</td>
                     <td>
-                        <button class="view-btn btn btn-info btn-sm" data-message="${record.note}" data-record-id="${record.id}">
-                            View Note
-                        </button>
+                        <a href="#" class="view-btn text-success" 
+                                data-toggle="modal" 
+                                data-target="#view-modal" 
+                                data-message="{{ record.note|escape }}" 
+                                data-record-id="{{ record.id }}"
+                                title="View Note">
+                                <i class="fa-regular fa-clipboard"></i> 
+                            </a>
                     </td>
                 </tr>`;
                 tableBody.append(newRow);

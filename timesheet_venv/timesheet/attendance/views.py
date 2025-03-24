@@ -76,8 +76,10 @@ def attendance_view(request):
     data = [
         {
             'id': record.id,  
-            'user': record.attendance.user.username,
-            'date': record.attendance.date.strftime('%B %d, %Y'),
+            # 'user': record.attendance.user.username,
+            'user': record.attendance.user.first_name,
+            # 'date': record.attendance.date.strftime('%B %d, %Y'),
+            'date': record.attendance.date.strftime('%m/%d/%Y'),
             'entry': record.entry.strftime('%I:%M %p') if record.entry else 'N/A',
             'exit': record.exit.strftime('%I:%M %p') if record.exit else 'N/A',
             'hour': f"{record.hour // 3600} hr {(record.hour % 3600) // 60} min {record.hour % 60} sec" if record.hour else 'N/A',
@@ -152,8 +154,10 @@ def entry_view(request):
         attendance_records = AttendanceDetail.objects.filter(attendance__user=user).order_by('-attendance__date', '-entry')
         data = [
             {
-                'user': record.attendance.user.username,
-                'date': record.attendance.date.strftime('%B %d, %Y'),
+                # 'user': record.attendance.user.username,
+                'user': record.attendance.user.first_name,
+                # 'date': record.attendance.date.strftime('%B %d, %Y'),
+                'date': record.attendance.date.strftime('%m/%d/%Y'),
                 'entry': record.entry.strftime('%I:%M %p') if record.entry else 'N/A',
                 'exit': record.exit.strftime('%I:%M %p') if record.exit else 'N/A',
                 'hour': f"{record.hour // 3600} hr {(record.hour % 3600) // 60} min {record.hour % 60} sec" if record.hour else 'N/A',
@@ -188,8 +192,10 @@ def exit_view(request):
             attendance_records = AttendanceDetail.objects.filter(attendance__user=request.user).order_by('-attendance__date', '-entry')
             data = [
                 {
-                    'user': record.attendance.user.username,
-                    'date': record.attendance.date.strftime('%B %d, %Y'),
+                    # 'user': record.attendance.user.username,
+                    'user': record.attendance.user.first_name,
+                    # 'date': record.attendance.date.strftime('%B %d, %Y'),
+                    'date': record.attendance.date.strftime('%m/%d/%Y'),
                     'entry': record.entry.strftime('%I:%M %p') if record.entry else 'N/A',
                     'exit': record.exit.strftime('%I:%M %p') if record.exit else 'N/A',
                     'hour': f"{record.hour // 3600} hr {(record.hour % 3600) // 60} min {record.hour % 60} sec" if record.hour else 'N/A',

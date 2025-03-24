@@ -29,4 +29,6 @@ class RequestreviewForm(forms.ModelForm):
 
     class Meta:
         model = requestreview
-        fields = ["send_to", "requested_note"]
+        fields = [
+            "send_to", 
+            "requested_note"]

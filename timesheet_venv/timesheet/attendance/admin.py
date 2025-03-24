@@ -6,7 +6,7 @@ class AttendanceAdmin(admin.ModelAdmin):
     list_display = ('user', 'date')
 
 class AttendanceDetailAdmin(admin.ModelAdmin):
-    list_display = ('attendance', 'entry', 'exit', 'hour', 'note')
+    list_display = ('attendance', 'entry', 'exit', 'duration', 'note')
 
 class LeaveTypeAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')

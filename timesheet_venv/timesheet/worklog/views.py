@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .models import worklog
+from .models import worklog, requestreview
 from task . models import ticket, priority_type, ticket_type, project
 from .forms import WorklogForm
 from django.contrib.auth.models import User
@@ -166,6 +166,38 @@ def add_worklog(request):
     
     return JsonResponse({"message": "Invalid method", "status": "error"})
 
+# @login_required
+# def requestreview_mail(request):
+#     if request.method == "POST":
+#         form = RequestreviewForm(request.POST)
+#         if form.is_valid():
+#             request_review = form.save(commit=False)
+#             request_review.save()
+#             form.save_m2m()  # Save ManyToMany field after saving instance
+            
+#             recipients = [user.email for user in request_review.send_to.all() if user.email]
+
+#             if recipients:
+#                 try:
+#                     send_mail(
+#                         subject="Worklog Review Request",
+#                         message=f"{request_review.requested_note}\n\nwebsite url: http://127.0.0.1:5000/worklog/worklog/",
+#                         from_email=settings.EMAIL_HOST_USER,
+#                         recipient_list=recipients,
+#                         fail_silently=False,
+#                     )
+#                     messages.success(request, "Email sent successfully!") 
+#                 except Exception as e:
+#                     messages.error(request, f"Error sending email: {e}")  
+
+#             return redirect("worklog")  
+
+#     else:
+#         form = RequestreviewForm()
+
+#     return render(request, "worklog.html", {"form": form})
+
+
 @login_required
 def requestreview_mail(request):
     if request.method == "POST":
@@ -177,11 +209,20 @@ def requestreview_mail(request):
             
             recipients = [user.email for user in request_review.send_to.all() if user.email]
 
+            # Get sender email (Logged-in user)
+            sender_email = request.user.email if request.user.email else settings.EMAIL_HOST_USER
+            print("Sender Email:", sender_email)
+
+            # Fetch Admin Emails
+            admin_users = User.objects.filter(is_superuser=True, email__isnull=False).values_list('email', flat=True)
+            admin_emails = list(admin_users)
+            print("Admin Emails:", admin_emails)
+
             if recipients:
                 try:
                     send_mail(
                         subject="Worklog Review Request",
-                        message=f"{request_review.requested_note}\n\nhttp://127.0.0.1:5000/worklog/worklog/",
+                        message=f"{request_review.requested_note}\n\nwebsite url: http://127.0.0.1:5000/worklog/worklog/",
                         from_email=settings.EMAIL_HOST_USER,
                         recipient_list=recipients,
                         fail_silently=False,
@@ -196,6 +237,8 @@ def requestreview_mail(request):
         form = RequestreviewForm()
 
     return render(request, "worklog.html", {"form": form})
+
+
 
 @login_required
 def export_worklogs_excel(request):
