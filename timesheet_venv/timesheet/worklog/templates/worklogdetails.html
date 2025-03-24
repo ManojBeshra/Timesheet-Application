@@ -55,7 +55,7 @@
                             <label for="ticket">Ticket</label>
                             <select class="form-control" id="ticket" name="ticket" required>
                                 {% for i in tickets %}
-                                    <option value="{{ i.id }}" {% if i.id == worklog.ticket_id %}selected{% endif %}>{{ i.ticket_title }}</option>
+                                    <option value="{{ i.id }}" {% if i.id == worklog.ticket_id %}selected{% endif %}>{{ i.ticket_id }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -87,9 +87,10 @@
                         <!--Notes-->
                         <div class="form-group col-12">
                             <label for="exampleFormControlTextarea1">Comments</label>
-                            <textarea class="form-control" id="shortdescriptionarea" name= "note" rows="2" >{{ worklog.note }}</textarea>
+                            <textarea class="form-control" id="shortdescriptionarea" name= "note" placeholder="Enter comments" rows="2" >{{ worklog.note|default_if_none:"" }}</textarea>
                         </div>                        
                     </div>
+
 
                     <!-- Footer -->
                     <div class="modal-footer">
@@ -102,25 +103,5 @@
             </div>
         </div>
 
-
-        <script>
-            function getWeekOfMonth(date) {
-                let firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1); // 1st day of the month
-                let firstDayWeekday = firstDayOfMonth.getDay(); // Day of the week (0 = Sunday, 1 = Monday, etc.)
-                let dayOfMonth = date.getDate(); // Current day in the month
-        
-                // Calculate the week number of the month
-                return Math.ceil((dayOfMonth + firstDayWeekday) / 7);
-            }
-        
-            function setWeek() {
-                let today = new Date();
-                let weekNumber = getWeekOfMonth(today);
-                document.getElementById("week").value = "Week " + weekNumber; // Set formatted week number
-            }
-        
-            // Run function when page loads
-            window.onload = setWeek;
-        </script>
     
 {% endblock %}
