@@ -107,7 +107,7 @@
                             Request Review
                         </button>
 
-                        <!-- Only for Admin -->
+                        <!-- Export button: Only for Admin -->
                         <form method="GET" action="{% url 'export_worklogs_excel' %}">
                             <input type="hidden" name="month" value="{{ month }}">
                             <input type="hidden" name="year" value="{{ year }}">
@@ -135,11 +135,7 @@
                                     <form class="row g-3" id="LogForm" method="POST" action="">
                                         {% csrf_token %}
 
-                                        <!--Week-->
-                                        <!-- <div class="form-group col-2" hidden>
-                                            <label for="week">Week</label>
-                                            <input type="text" class="form-control" id="week" aria-describedby="weekHelp" readonly>
-                                        </div>  -->
+                                        
                                         <!--Date-->
                                         <div class = "container row">
                                             <div class="form-group col-3">
@@ -205,7 +201,7 @@
                                             <!--Work Done-->
                                             <div class="form-group col-12">
                                                 <label for="workdone">Work Done</label>
-                                                <textarea class="form-control" id="workdone" name="workdone" rows="2"></textarea>
+                                                <textarea class="form-control" id="workdone" name="workdone" rows="2" required></textarea>
                                             </div>
                                         </div>
 
@@ -436,6 +432,7 @@
                                     {% endif %}
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userbtnGroupDrop">
+                                    <a class="dropdown-item" href="{% url 'worklog' %}">Show all</a>
                                     <a class="dropdown-item" href="{% url 'worklog' %}?billable_status=0&user_id={{ selected_user.id }}&year={{ year }}&month={{ month }}">Billable</a>
                                     <a class="dropdown-item" href="{% url 'worklog' %}?billable_status=1&user_id={{ selected_user.id }}&year={{ year }}&month={{ month }}">Non Billable</a>
 
@@ -464,7 +461,7 @@
                     <table id="productsTable" class="table table-hover table-product" style="width:100%">
                     <thead>
                       <tr class="column-head">
-                          <th>Resource&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                          <th {% if not request.user.is_staff %}hidden{% endif %}>Resource&nbsp;&nbsp;&nbsp;&nbsp;</th>
                           <th>Billable&nbsp;&nbsp;&nbsp;&nbsp;</th>
                           <th class="date-header">Date&nbsp;&nbsp;</th>
                           <th>Week&nbsp;&nbsp;&nbsp;&nbsp;</th>
@@ -482,7 +479,7 @@
                     <tbody>
                         {% for log in worklogs %}
                         <tr onclick="window.location='{% url 'worklogdetails' log.id%}'">
-                            <td>{{ log.user.first_name }}</td>
+                            <td {% if not request.user.is_staff %}hidden{% endif %}>{{ log.user.first_name }}</td>
                             <td align="center">
                                 <div class="custom-control custom-checkbox checkbox-dark  d-inline-block mr-3 mb-3">
                                     <input type="checkbox" onclick="return false;" class="custom-control-input" id="customCheckDanger{{ log.id }}" {% if log.billable %}checked{% endif %}>

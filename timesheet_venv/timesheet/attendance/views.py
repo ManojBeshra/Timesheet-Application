@@ -54,7 +54,8 @@ def attendance_view(request):
     selected_month = request.GET.get('month')
     
     # Initialize attendance records
-    attendance_records = AttendanceDetail.objects.all()
+    attendance_records = AttendanceDetail.objects.all().order_by('-attendance__date', '-entry')
+
 
 
     # Apply filters
