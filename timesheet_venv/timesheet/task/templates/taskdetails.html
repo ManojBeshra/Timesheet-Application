@@ -1,7 +1,10 @@
+
+
 {% extends "base.html" %}
 {% load static %}
 {% block title %}Ticket Details{% endblock title %}
 {% block page-title %}Ticket Details{% endblock page-title %}
+
 
 <!--style-->
 {% block style %}
@@ -11,7 +14,8 @@
         height: 35px; /* Set a specific height */
         width: auto; /* Adjust width as needed */
         line-height: 1; /* Adjust line height for better alignment */
-    } 
+    }
+
 
     .view-small-btn   {
         padding: 2px 8px; /* Adjust padding to make it smaller */
@@ -22,101 +26,142 @@
         display: inline-block; /* Ensures it behaves like a button */
         text-align: center; /* Center the text */
     }
+    .hide {
+        display:none !important;
+      }
+
+
+
 
 {% endblock style %}
 
+
 {% block content %}
+
+
 
 
     <!-- ====================================
     ——— CONTENT WRAPPER
     ===================================== -->
-    
+   
             <div class="card card-default m-2">
                 <div class="card-header">
                     <!--Ticket Details-->
 
 
-                    <form class="form-group col-12" method="POST" action="{% url 'taskdetails' ticket.id %}">
+                    <form class="form-group col-12" id="taskForm" method="POST">
                         {% csrf_token %}
                         <div class="row">
+
 
                             <!-- Ticket Title -->
                             <div class="form-group col-12" >
                                 <label for="ticket_title">Title</label>
-                                <input type="text" class="form-control" id="ticketname" name="ticket_title" 
+                                <input type="text" class="form-control" id="ticket_title" name="ticket_title"
                                        value="{{ ticket.ticket_title }}" {% if ticket.state.state_name == "Completed" %}readonly{% endif %}{% if not request.user.is_staff %}readonly{% endif %} >
                             </div>
-                    
+                   
                             <!-- Customer -->
                             <div class="form-group col-4">
                                 <label for="customer">Customer</label>
-                                <select class="form-control" id="customer" name="customer" {% if ticket.state.state_name == "Completed" %}disabled{% endif %}{% if not request.user.is_staff %}disabled{% endif %}>
+                                <select class="form-control {% if not request.user.is_staff %} hide {% endif %}" id="customer" name="customer" {% if ticket.state.state_name == "Completed" %}disabled{% endif %}>
                                     {% for i in customers %}
-                                    <option value="{{ i.id }}" {% if i.id == ticket.customer_id %}selected{% endif %}> 
+                                    <option value="{{ i.id }}" {% if i.id == ticket.customer_id %}selected{% endif %}>
                                         {{ i.name }}
                                     </option>
                                     {% endfor %}
                                 </select>
+                                {% if not request.user.is_staff %}
+                                <input type="text" class="form-control" id="customer"
+                                    value="{% if ticket.customer %}{{ ticket.customer.name }}{% else %}No Customer{% endif %}" readonly>
+                                {% endif %}
+
+
                             </div>
-                    
+                   
                             <!-- Priority -->
                             <div class="form-group col-4">
                                 <label for="priority">Priority</label>
-                                <select class="form-control" id="priority" name="priority" {% if ticket.state.state_name == "Completed" %}disabled{% endif %}{% if not request.user.is_staff %}disabled{% endif %}>
+                                <select class="form-control {% if not request.user.is_staff %} hide {% endif %}" id="priority_types" name="priority" {% if ticket.state.state_name == "Completed" %}disabled{% endif %}>
                                     {% for i in priority_types %}
                                     <option value="{{ i.id }}" {% if i.id == ticket.priority_id %}selected{% endif %} >
                                         {{ i.priority_name }}
                                     </option>
                                     {% endfor %}
                                 </select>
+                                {% if not request.user.is_staff %}
+                                <input type="text" class="form-control" id="priority"  
+                                    value="{{ ticket.priority.priority_name }}" readonly>
+                                {% endif %}
                             </div>
 
+
                             <!--Project-->
-                            <div class="form-group col-4">
+                            <div class="form-group col-4" >
                                 <label for="project">Project</label>
-                                <select class="form-control" id="project" name="project" {% if ticket.state.state_name == "Completed" %}disabled{% endif %}{% if not request.user.is_staff %}disabled{% endif %}>
+                                <select class="form-control {% if not request.user.is_staff %} hide {% endif %}" id="project" name="project" {% if ticket.state.state_name == "Completed" %}disabled{% endif %} >
                                     {% for i in projects%}
                                     <option value="{{ i.id }}" {% if i.id == ticket.project_id %}selected{% endif %} >
                                         {{ i.project_name }}
                                     </option>
                                     {% endfor %}
+                                   
                                 </select>
+                                {% if not request.user.is_staff %}
+                                <input type="text" class="form-control" id="project"  
+                                    value="{{ ticket.project.project_name }}" readonly>
+                                {% endif %}
                             </div>
-                    
+                   
                             <!-- Date Opened (Read-Only) -->
                             <div class="form-group col-4">
                                 <label for="date_opened">Date Opened</label>
                                 <input type="datetime" class="form-control" id="date_opened" name="date_opened"
                                        value="{{ ticket.date_opened }}" readonly>
                             </div>
-                    
+                   
                             <!-- Last Updated -->
-
                             <div class="form-group col-4">
                                 <label for="last_updated_by">Last updated</label>
                                 <input type="datetime" class="form-control" value="{{ ticket.last_updated }}" readonly>
                             </div>
 
-                            <!-- Last Updated by -->
 
+                            <!-- Last Updated by -->
                             <div class="form-group col-4">
                                 <label for="last_updated_by">Updated by</label>
                                 <input type="text" class="form-control" value="{{ ticket.last_updated_by }}" readonly>
                             </div>
-                            
+                           
                             <!-- Assigned To -->
-                            <div class="form-group col-12">
+                            <div class="form-group col-12 {% if not request.user.is_staff %} hide {% endif %}">
                                 <label for="assigned_to">Assigned To</label>
-                                <select class="js-example-basic-multiple form-control" id="assigned_to" name="assigned_to" style="width: 100%; " multiple {% if ticket.state.state_name == "Completed" %}disabled{% endif %}{% if not request.user.is_staff %}disabled{% endif %} >
+                               
+                                <select class="js-example-basic-multiple form-control " id="assigned_to" name="assigned_to" style="width: 100%;" multiple {% if ticket.state.state_name == "Completed" %}disabled{% endif %} >
                                     {% for i in users %}
                                     <option value="{{ i.id }}" {% if i in ticket.assigned_to.all %}selected{% endif %}>
-                                        {% comment %} {{ i.username }} {% endcomment %}
                                         {{ i.first_name }}
                                     </option>
                                     {% endfor %}
                                 </select>
-                            </div> 
+
+
+                            </div>
+
+
+                            <div class = "form-group col-12" >
+                            {% if not request.user.is_staff %}
+                            <label for="assigned_to">Assigned To</label>
+
+                                <input type="text" class="form-control" id="assigned_to_display"
+                                    value="{% for user in ticket.assigned_to.all %}{{ user.first_name }}{% if not forloop.last %}, {% endif %}{% endfor %}"
+                                    readonly>
+                                {% endif %}
+
+
+                            </div>
+
 
                             <!-- Operational Notes -->
                             <div class="form-group col-12">
@@ -125,51 +170,51 @@
                                 {% if not request.user.is_staff %}readonly{% endif %}>{{ ticket.operational_notes }}</textarea>
                             </div>
 
+
                             <!-- Date Closed -->
                             <div class="form-group col-4" {% if ticket.state.state_name != "Completed" %}hidden{% endif %}>
                                 <label for="last_updated_by">Date Closed</label>
                                 <input type="datetime" class="form-control" value="{{ ticket.closed_date}}" readonly>
                             </div>
 
-                            
-                        
-
 
                             <!-- State -->
                             <div class="form-group col-6">
                                 <label for="statelist">Status</label>
-                                <select class="form-control" id="statelist" name="state" {% if not request.user.is_staff %}disabled{% endif %} >
+                                <select class="form-control {% if not request.user.is_staff %} hide {% endif %}" id="statelist" name="state" >
                                     {% for i in states %}
                                     <option value="{{ i.id }}" {% if i.id == ticket.state_id %}selected{% endif %}>
                                         {{ i.state_name }}
                                     </option>
                                     {% endfor %}
                                 </select>
+                                {% if not request.user.is_staff %}
+                                <input type="text" class="form-control" id="state"
+                                    value="{{ ticket.state.state_name }}" readonly>
+                                {% endif %}
                             </div>
 
+
                             <!-- Solutions-->
-                            
                             <div class="form-group col-12" >
                                 <label for="solution">Solution</label>
                                 <textarea class="form-control" id="solution" name="solution" rows="4" {% if ticket.state.state_name == "Completed" %}readonly {% endif %}>{{ ticket.solution }}</textarea>
                             </div>
-                           
 
-                                                       
-                        
+
                         </div>
+                       
                         <!-- Footer -->
-
-                        
-                        {% if ticket.state.state_name != "Completed" %} 
+                        {% if ticket.state.state_name != "Completed" %}
                             <div class="modal-footer">
-                                <button {% if not request.user.is_staff %}hidden{% endif %} type="submit" class="btn btn-outline-success small-btn">Save Changes</button>
+                                <button type="submit" class="btn btn-outline-success small-btn">Save Changes</button>
                                 <a href="{% url 'task' %}" class="btn btn-outline-danger small-btn d-flex justify-content-center align-items-center text-center">
                                     Back
                                 </a>
                             </div>
-                            
+                           
                             {% else %}    
+
 
                                 <div class="modal-footer" >
                                     <button {% if not request.user.is_staff %}hidden{% endif %} type="submit" class="btn btn-outline-success small-btn">Activate</button>
@@ -178,7 +223,7 @@
                                     </a>
                                 </div>
                         {% endif %}
-                            
+                           
                     </form>
 
 
@@ -206,10 +251,12 @@
                             </ul>
                         </div>
 
+
                         <!-- Footer -->
                         <div class="modal-footer">
                             <button {% if ticket.state.state_name == "Completed" %}hidden{% endif %}  type="button" class="btn btn-outline-success small-btn" data-toggle="modal" data-target="#commentModal">Add Comment</button>
                         </div>
+
 
                         <!-- Comment Modal -->
                         <div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="commentModalLabel" aria-hidden="true">
@@ -232,15 +279,70 @@
                             </div>
                         </div>
                     </form>
-                    
+                   
                 </div>
             </div>
 
+
+<!-- for task details -->
+<script>
+    $(document).ready(function () {
+    $("#taskForm").submit(function (event) {
+        // Enable all disabled fields before submitting
+        $('#taskForm select:disabled').prop('disabled', false);
+        event.preventDefault(); // Prevent default form submission
+
+
+
+
+        let formData = {
+            ticket_id: "{{ ticket.id }}", // Pass the existing ticket ID
+            ticket_title: $("#ticket_title").val(),
+            customerlist: $("#customer").val(),
+            priority: $("#priority").val(),
+            assigneduserlist: $("#assigned_to").val(), // Get multiple selected users
+            operational_notes: $("#operational_notes").val(),
+            csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val() // CSRF token
+        };
+
+
+        console.log(formData);
+        console.log("{% url 'taskdetails' ticket.id %}");
+
+
+        $.ajax({
+            type: "POST",
+            url: "{% url 'taskdetails' ticket.id %}", // Your view URL
+            data: formData,
+            dataType: "json",
+            success: function (response) {
+                if (response.success) {
+                    $("#responseMessage").html(
+                        '<div class="alert alert-success">' + response.message + '</div>'
+                    );
+                } else {
+                    $("#responseMessage").html(
+                        '<div class="alert alert-danger">Error: ' + response.message + '</div>'
+                    );
+                }
+            },
+            error: function (xhr) {
+                $("#responseMessage").html(
+                    '<div class="alert alert-danger">Something went wrong. Try again.</div>'
+                );
+            },
+        });
+    });
+});
+
+
+</script>
 <!-- To Add comments-->
 <script>
     document.getElementById("addCommentBtn").addEventListener("click", function () {
         let commentText = document.getElementById("commentarea").value.trim();
         let ticketId = "{{ ticket.id }}";  // Get ticket ID dynamically
+
 
         if (commentText !== "") {
             fetch("{% url 'add_comment' %}", {
@@ -275,9 +377,9 @@
                     `;
                     document.getElementById("comment-list").insertAdjacentHTML("beforeend", commentHTML);
                     document.getElementById("commentarea").value = ""; // Clear textarea
-                    location.reload(); 
+                    location.reload();
                     $("#commentModal").modal("hide"); // Close modal
-                    
+                   
                 } else {
                     alert("Error adding comment: " + data.error);
                 }
@@ -287,6 +389,19 @@
     });
 </script>
 
+
+
+
+
+
+
+
 {% endblock  %}
+
+
+
+
+
+
 
 
