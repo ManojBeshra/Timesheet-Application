@@ -222,7 +222,8 @@ def requestreview_mail(request):
                 try:
                     send_mail(
                         subject="Worklog Review Request",
-                        message=f"{request_review.requested_note}\n\nwebsite url: http://127.0.0.1:5000/worklog/worklog/",
+                        # message=f"{request_review.requested_note}\n\nwebsite url: http://127.0.0.1:5000/worklog/worklog/",
+                        message = f"{request_review.requested_note}\n\nWebsite URL: {request.build_absolute_uri('/')[:-1]}",
                         from_email=settings.EMAIL_HOST_USER,
                         recipient_list=recipients,
                         fail_silently=False,
