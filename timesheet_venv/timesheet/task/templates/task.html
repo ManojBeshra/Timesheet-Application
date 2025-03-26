@@ -80,7 +80,20 @@
         background-color: #9e6de0;
         color: white !important;
     }
+    .project-column {
+        width: 150px;
+        min-width: 150px;
+        max-width:150px;
 
+
+      }
+      .type-column {
+        width: 100px;
+        min-width: 100px;
+        max-width:100px;
+
+
+      }
 
 {% endblock %}
 
@@ -291,7 +304,7 @@
                             <th>Priority&nbsp;&nbsp;&nbsp;&nbsp;</th>
                             <th class = "state-column">Status&nbsp;&nbsp;&nbsp;&nbsp;</th>
                             <th class = "type-column">Type&nbsp;&nbsp;</th>
-                            <th>Project&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                            <th class = "project-column">Project&nbsp;&nbsp;&nbsp;&nbsp;</th>
                             <th class = "title-column">Title</th>
                             
                             <th {% if not request.user.is_staff %}hidden{% endif %}>Assigned To&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>

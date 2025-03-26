@@ -24,7 +24,7 @@ from django.db.models.functions import ExtractYear, ExtractMonth
 
 @login_required
 def worklog_list(request): 
-    worklogs = worklog.objects.all()  
+    worklogs = worklog.objects.all().order_by('-date')
     priority = priority_type.objects.all()
     users = User.objects.all()
     tickets = ticket.objects.all()
@@ -238,6 +238,57 @@ def requestreview_mail(request):
         form = RequestreviewForm()
 
     return render(request, "worklog.html", {"form": form})
+
+
+
+
+# from email.message import EmailMessage
+# @login_required
+# def requestreview_mail(request):
+#     if request.method == "POST":
+#         form = RequestreviewForm(request.POST)
+#         if form.is_valid():
+#             request_review = form.save(commit=False)
+#             request_review.save()
+#             form.save_m2m()  # Save ManyToMany field after saving instance
+           
+#             recipients = [user.email for user in request_review.send_to.all() if user.email]
+
+
+#             # Get sender email (Logged-in user or fallback)
+#             sender_email = request.user.email if request.user.email else settings.EMAIL_HOST_USER
+#             reply_to_email = sender_email  # Use the sender as the Reply-To address
+
+
+#             # Generate dynamic base URL
+#             base_url = request.build_absolute_uri('/')[:-1]
+#             message = f"{request_review.requested_note}\n\n{base_url}"
+
+
+#             # Create email with reply-to
+#             email = EmailMessage(
+#                 subject="Worklog Review Request",
+#                 body=f"{request_review.requested_note}\n\n{base_url}",
+#                 from_email=settings.EMAIL_HOST_USER,  # Ensure sender is set properly
+#                 to=recipients,
+#                 reply_to=[reply_to_email],  # Adding Reply-To header
+#             )
+
+
+#             # Send email
+#             email.send(fail_silently=False)
+
+
+#             return redirect("worklog")  
+
+
+#     else:
+#         form = RequestreviewForm()
+
+
+#     return render(request, "worklog.html", {"form": form})
+
+
 
 
 

@@ -16,7 +16,7 @@ from django.utils.timezone import now
 def filter_tasks(request, user_id=None, project_id=None):
     users = User.objects.all()
     projects = project.objects.all()
-    tasks = ticket.objects.all()  
+    tasks = ticket.objects.all().order_by('-date_opened')  
 
     selected_user = None
     selected_project = None
