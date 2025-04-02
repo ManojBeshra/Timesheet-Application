@@ -107,7 +107,7 @@
                 <!--Button Section-->
                 <div class="card-header">
 
-                     <!--Add Issue Buttons-->
+                     <!--Add Ticket Buttons-->
                     <button type="button" class="btn btn-outline-success small-btn" data-toggle="modal" data-target="#exampleModalForm" {% if not request.user.is_staff %}hidden{% endif %}>
                         Add Ticket
                     </button>
@@ -149,7 +149,7 @@
                                         <!--Date Opened-->
                                         <div class="form-group col-6">
                                             <label for="date">Date Opened</label>
-                                            <input type="datetime-local" class="form-control" id="date" aria-describedby="dateHelp" readonly>
+                                            <input type="datetime-local" class="form-control" id="date" aria-describedby="dateHelp">
                                         </div>
 
 
@@ -255,7 +255,7 @@
                                 {% if selected_user %}
                                     {{ selected_user.first_name }}
                                 {% else %}
-                                    User
+                                    Filter User
                                 {% endif %}
                             </button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userbtnGroupDrop">
@@ -274,7 +274,7 @@
                                 {% if selected_project %}
                                     {{ selected_project.project_name }}
                                 {% else %}
-                                    Project
+                                    Filter Project
                                 {% endif %}
                             </button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userbtnGroupDrop">
@@ -418,7 +418,6 @@
 
             if (dateInput) {
                 dateInput.value = formattedDateTime;
-                dateInput.setAttribute("min", formattedDateTime);  // Disable past dates/times
                 dateInput.setAttribute("max", formattedDateTime);  // Disable future dates/times
             }
         });

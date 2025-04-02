@@ -14,12 +14,13 @@ from django.core.mail import send_mail
 from .forms import RequestreviewForm
 from django.conf import settings
 from datetime import datetime
-from django.db.models.functions import ExtractYear
 import pandas as pd
 from django.http import HttpResponse
 from openpyxl import Workbook
 from django.utils.timezone import make_naive  # Import this
 from django.db.models.functions import ExtractYear, ExtractMonth
+from django.utils.dateparse import parse_date
+
 
 
 @login_required
@@ -31,24 +32,14 @@ def worklog_list(request):
     tickettype = ticket_type.objects.all()
 
     # Get filter parameters
-    month = request.GET.get('month')
-    year = request.GET.get('year')
     user_id = request.GET.get('user_id')  
     billable_status = request.GET.get('billable_status')
+    start_date = request.GET.get('start_date')  # new parameter
+    end_date = request.GET.get('end_date')  # new parameter
 
     filters = {}
 
-    # date filter
-    if year or month:  
-        try:
-            if year:
-                filters["date__year"] = int(year)
-            if month:
-                filters["date__month"] = int(month)
-        except ValueError:
-            pass  
-
-    # If the logged-in user is not staff, only show their tasks
+    # If the logged-in user is not staff
     if not request.user.is_staff:
         worklogs = worklogs.filter(user=request.user)
 
@@ -59,30 +50,50 @@ def worklog_list(request):
         filters["user"] = selected_user
 
     # billable filter
-    if billable_status in ["0", "1"]:  
+    if billable_status in ["0", "1"]:
         is_billable = billable_status == "0"
         filters["billable"] = is_billable
 
+
+     # Apply date filters 
+    if start_date:
+        parsed_start_date = parse_date(start_date)
+
+        if parsed_start_date:
+            filters["date__gte"] = parsed_start_date  
+
+    if end_date:
+        parsed_end_date = parse_date(end_date)
+
+        if parsed_end_date:
+            filters["date__lte"] = parsed_end_date  
+
+
+    # Apply filters
     worklogs = worklogs.filter(**filters)
 
-    existing_years = worklog.objects.all().annotate(year=ExtractYear('date')).values('year').distinct()
-    months = [(i, datetime(2000, i, 1).strftime('%B')) for i in range(1, 13)]
+    # Get unique dates for dropdowns
+    unique_dates = worklog.objects.values_list('date', flat=True).distinct().order_by('date')
 
+    # Context to maintain filter values on page reload
     context = {
-        'years': existing_years,
-        'months': months,
-        'year': int(year) if year else '',
-        'month': int(month) if month else '',
         'worklogs': worklogs,
         'priority': priority,
         'tickets': tickets,
         'users': users,
         'tickettype': tickettype,
         'selected_user': selected_user,
-        'billable_status': billable_status
+        'billable_status': billable_status,
+        'start_date': start_date,
+        'end_date': end_date,
+        'unique_dates': unique_dates
+
     }
 
     return render(request, 'worklog.html', context)
+
+
+
 
 @csrf_exempt 
 @login_required   

@@ -294,7 +294,6 @@
                         </div>
                     </div>
 
-                  
                     <!-- Delete Confirmation Modal -->
                     <div class="modal fade" id="DeleteLogForm" tabindex="-1" role="dialog" aria-labelledby="DeleteLogFormTitle"
                         aria-hidden="true">
@@ -345,104 +344,79 @@
                         </div>
                     </div>
 
-
-                    <!--User/Date/Billable filter buttons-->
-                    <form method="GET" action="{% url 'worklog' %}" class="d-flex gap-2">
-                        <div class="d-flex justify-content-end " style="gap: 10px;">
-                            <!--Dropdown Filters-->
-
-                            <!-- User Dropdown Only for Admin -->
-                            <div class="d-flex gap-2">
-
-                                <div class="btn-group " role="group" aria-label="Basic example" {% if not request.user.is_staff %}hidden{% endif %}>
-                                    <button type="button" id = "user" class="btn btn-outline-danger dropdown-toggle small-btn " id="userbtnGroupDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        {% if selected_user %}
-                                            {{ selected_user.first_name }}
-                                        {% else %}
-                                            User
-                                        {% endif %}
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userbtnGroupDrop">
-                                        <a class="dropdown-item" href="{% url 'worklog' %}">Show all</a>
-                                        {% for i in users %}
-                                        <a class="dropdown-item" href="{% url 'worklog' %}?user_id={{ i.id }}&year={{ year }}&month={{ month }}&billable_status={{ billable_status }}">
-
-                                                {{ i.first_name }}
-                                            </a>
-                                        {% endfor %}
-                                        
-                                    </div>
-                                    
-                                </div>
-                            
+                    <!-- User/Date/Billable filter buttons -->
+                    <form method="GET" action="{% url 'worklog' %}" class="d-flex justify-content-end align-items-center" style="gap:10px">
+                        <!-- User Dropdown Only for Admin -->
+                        <div class="btn-group" role="group" {% if not request.user.is_staff %}hidden{% endif %}>
+                            <button type="button" id="user" class="btn btn-outline-danger dropdown-toggle small-btn" data-toggle="dropdown">
+                                {% if selected_user %}
+                                    {{ selected_user.first_name }}
+                                {% else %}
+                                    User
+                                {% endif %}
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a class="dropdown-item" href="{% url 'worklog' %}?billable_status={{ billable_status }}">Show all</a>
+                                {% for i in users %}
+                                    <a class="dropdown-item" href="{% url 'worklog' %}?user_id={{ i.id }}&billable_status={{ billable_status }}&start_date={{start_date}}">
+                                        {{ i.first_name }}
+                                    </a>
+                                {% endfor %}
                             </div>
-
-                            <!-- Year Filter -->
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    {% if year %}
-                                        {{ year }}
-                                    {% else %}
-                                        Select Year
-                                    {% endif %}
-                                </button>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="{% url 'worklog' %}?year=">Show All</a>
-                                    {% for y in years|dictsort:"year" %}
-
-                                        <a class="dropdown-item" href="#" onclick="updateFilters('year', '{{ y.year }}')">{{ y.year }}</a>
-                                    {% endfor %}
-                                </div>
-                            </div>
-
-                            
-                            <!-- Month Filter Dropdown -->
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    {% if month %}
-                                        {% for m in months %}
-                                            {% if m.0 == month %}
-                                                {{ m.1 }}
-                                            {% endif %}
-                                        {% endfor %}
-                                
-                                    {% else %}
-                                        Select Month
-                                    {% endif %}
-                                </button>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="{% url 'worklog' %}?month=">Show All</a>
-                                    {% for m in months %}
-                                        <a class="dropdown-item" href="#" onclick="updateFilters('month', '{{ m.0 }}')">{{ m.1 }}</a>
-                                    {% endfor %}
-                                </div>
-                            </div>
-
-                            
-
-                            <!-- Billable Filter -->
-                            <div class="btn-group " role="group" aria-label="Basic example" >
-                                <button type="button" id = "date" class="btn btn-outline-danger dropdown-toggle small-btn " id="userbtnGroupDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    {% if billable_status == '0' %}
-                                        Billable
-                                    {% elif billable_status == '1' %}
-                                        Non Billable
-                                    {% else %}
-                                        Select Billable Type
-                                    {% endif %}
-                                </button>
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userbtnGroupDrop">
-                                    <a class="dropdown-item" href="{% url 'worklog' %}">Show all</a>
-                                    <a class="dropdown-item" href="{% url 'worklog' %}?billable_status=0&user_id={{ selected_user.id }}&year={{ year }}&month={{ month }}">Billable</a>
-                                    <a class="dropdown-item" href="{% url 'worklog' %}?billable_status=1&user_id={{ selected_user.id }}&year={{ year }}&month={{ month }}">Non Billable</a>
-
-                                </div>
-                            </div>
-                            
-
                         </div>
-                    </form>
+                        
+                        <!-- Billable Filter -->
+                        <div class="btn-group" role="group">
+                            <button type="button" id="billable-filter" class="btn btn-outline-danger dropdown-toggle small-btn" data-toggle="dropdown">
+                                {% if billable_status == '0' %}
+                                    Billable
+                                {% elif billable_status == '1' %}
+                                    Non Billable
+                                {% else %}
+                                    Select Billable Type
+                                {% endif %}
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a class="dropdown-item" href="{% url 'worklog' %}?billable_status={{ billable_status }}">Show all</a>
+                                <a class="dropdown-item" href="{% url 'worklog' %}?billable_status=0&user_id={{ selected_user.id }}&start_date={{start_date}}">Billable</a>
+                                <a class="dropdown-item" href="{% url 'worklog' %}?billable_status=1&user_id={{ selected_user.id }}&start_date={{start_date}}">Non Billable</a>
+                            </div>
+                        </div>
 
+                        <!-- Start Date Filter -->
+                        <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn" data-toggle="dropdown">
+                            {% if start_date %}
+                                {{ start_date }}
+                            {% else %}
+                                Start Date
+                            {% endif %}
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="{% url 'worklog' %}">Show all</a>
+                            <input type="date" id="start-date-input" class="form-control"
+                                    onchange="updateFilters('start_date', this.value)">
+                        </div>
+                        </div>
+
+
+                        <!-- End Date Filter -->
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn" data-toggle="dropdown">
+                                {% if end_date %}
+                                    {{ end_date }}
+                                {% else %}
+                                    End Date
+                                {% endif %}
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a class="dropdown-item" href="{% url 'worklog' %}">Show all</a>
+                                <input type="date" id="end-date-input" class="form-control"
+                                    onchange="updateFilters('end_date', this.value)">
+                            </div>
+                        </div>
+
+                    </form>
                 </div>
                                     
                  <!--All Worklog-->
@@ -453,7 +427,7 @@
                                 {{ message }}
                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
-                                </button>
+                                </button>S
                             </div>
                         {% endfor %}
                     {% endif %} {% endcomment %}
@@ -467,9 +441,7 @@
                           <th>Week&nbsp;&nbsp;&nbsp;&nbsp;</th>
                           <th>Ticket&nbsp;&nbsp;&nbsp;&nbsp;</th>
                           <th class="workdone-column">Work Done</th>
-                          <!-- <th>Priority&nbsp;&nbsp;&nbsp;&nbsp;</th> -->
                           <th>Hours&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                          <!-- <th>Project/Support&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th> -->
                           <th>Category&nbsp;&nbsp;&nbsp;&nbsp;</th>
                           {% comment %} <th>Note&nbsp;&nbsp;&nbsp;&nbsp;</th> {% endcomment %}
                           <th>Actions&nbsp;&nbsp;&nbsp;&nbsp;</th>
@@ -497,15 +469,9 @@
                             </td>
                             
                             <td>{{ log.workdone }}</td>
-                            <!-- <td>
-                                {% if log.priority %}
-                                    {{ log.priority.priority_name }}
-                                {% else %}
-                                    None  
-                                {% endif %}
-                            </td> -->
+
                             <td>{{ log.hours }}</td>
-                            <!-- <td>{{ log.project_support}}</td> -->
+                    
                             <td>{{ log.category }}</td>
                             {% comment %} <td align="center">
                                     <i data-toggle="modal" data-target="#NoteForm"
@@ -689,25 +655,59 @@
         }, 5000);
     </script>
     
+
+    <!-- filters js -->
     <script>
         function updateFilters(key, value) {
             let params = new URLSearchParams(window.location.search);
-        
+    
             // Preserve existing filters
             let user_id = params.get("user_id");
             let billable_status = params.get("billable_status");
-        
+            let start_date = params.get("start_date");
+            let end_date = params.get("end_date");
+    
             // Update selected filter
-            params.set(key, value);
-        
-            // Ensure user_id and billable_status are not lost
+            if (value) {
+                params.set(key, value);
+            } else {
+                params.delete(key); // Remove filter if empty
+            }
+    
+            // Ensure all filters persist
             if (user_id) params.set("user_id", user_id);
             if (billable_status) params.set("billable_status", billable_status);
-        
+            if (start_date && key !== "start_date") params.set("start_date", start_date);
+            if (end_date && key !== "end_date") params.set("end_date", end_date);
+    
             // Redirect with new parameters
             window.location.href = window.location.pathname + "?" + params.toString();
         }
     </script>
+    
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let startDateInput = document.getElementById("startdate");
+        let endDateInput = document.getElementById("enddate");
+    
+        startDateInput.addEventListener("change", function() {
+            if (endDateInput.value && startDateInput.value > endDateInput.value) {
+                alert("Start date cannot be after the end date!");
+                startDateInput.value = "";
+            }
+        });
+    
+        endDateInput.addEventListener("change", function() {
+            if (startDateInput.value && endDateInput.value < startDateInput.value) {
+                alert("End date cannot be before the start date!");
+                endDateInput.value = "";
+            }
+        });
+    });
+    </script>
+    
+
 {% endblock  %}
  
 
