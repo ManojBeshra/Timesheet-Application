@@ -358,9 +358,11 @@
                             <div class="dropdown-menu dropdown-menu-right">
                                 <a class="dropdown-item" href="{% url 'worklog' %}?billable_status={{ billable_status }}">Show all</a>
                                 {% for i in users %}
-                                    <a class="dropdown-item" href="{% url 'worklog' %}?user_id={{ i.id }}&billable_status={{ billable_status }}&start_date={{start_date}}">
-                                        {{ i.first_name }}
-                                    </a>
+                                    {% if not i.is_superuser %}
+                                        <a class="dropdown-item" href="{% url 'worklog' %}?user_id={{ i.id }}&billable_status={{ billable_status }}&start_date={{start_date}}&end_date={{end_date}}">
+                                            {{ i.first_name }}
+                                        </a>
+                                    {% endif %}
                                 {% endfor %}
                             </div>
                         </div>
