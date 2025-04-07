@@ -54,6 +54,7 @@
                         <div class="form-group col-4">
                             <label for="ticket">Ticket</label>
                             <select class="form-control" id="ticket" name="ticket" required>
+                                <option value="" {% if not worklog.ticket_id %}selected{% endif %} disabled hidden>Select a ticket</option>
                                 {% for i in tickets %}
                                     <option value="{{ i.id }}" {% if i.id == worklog.ticket_id %}selected{% endif %}>{{ i.ticket_id }}</option>
                                 {% endfor %}
