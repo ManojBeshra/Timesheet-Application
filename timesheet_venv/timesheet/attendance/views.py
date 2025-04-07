@@ -238,3 +238,24 @@ def leavedetails_view(request):
     return render(request, 'leavedetails.html', {
         'users': users,
                   })
+
+
+
+from django.views.decorators.csrf import csrf_exempt
+@csrf_exempt
+def delete_attendance(request):
+    if request.method == 'POST':
+        record_id = request.POST.get('record_id')  # Get the record ID from the form data
+
+        print ("id",record_id)
+        
+        if not record_id:
+            return HttpResponse("Error: No record ID provided", status=400)
+
+        
+        try:
+            record = get_object_or_404(AttendanceDetail, id=record_id)
+            record.delete()
+            return redirect('attendance') 
+        except AttendanceDetail.DoesNotExist:
+            return HttpResponse("Error: Record not found", status=404)
