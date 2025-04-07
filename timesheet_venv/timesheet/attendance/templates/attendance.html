@@ -127,7 +127,7 @@
                 <thead>
                     <tr class="column-head">
                         <th>Sn</th>
-                        <th>User</th>
+                        <th {% if not request.user.is_staff %}hidden{% endif %} >User</th>
                         <th>Date</th>
                         <th>Clock In</th>
                         <th>Clock Out</th>
@@ -139,8 +139,8 @@
                     {% for record in attendance_records %}
                     <tr>
                         <td>{{ forloop.counter }}</td>
-                        <td>{{ record.user }}</td>
-                        <td>{{ record.date }}</td>
+                        <td {% if not request.user.is_staff %}hidden{% endif %}>{{ record.user }}</td>
+                        <td>{{ record.date }}</td> 
                         <td>{{ record.entry }}</td>
                         <td>{{ record.exit }}</td>
                         <td>{{ record.hour }}</td>
