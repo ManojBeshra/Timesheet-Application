@@ -116,11 +116,13 @@
                                 {% endif %}
                             </button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userbtnGroupDrop">
-                                <a class="dropdown-item" href="{% url 'taskhistory' %}">Show all</a>
+                                <a class="dropdown-item" href="{% url 'task' %}">Show all</a>
                                 {% for i in users %}
-                                    <a class="dropdown-item" href="{% url 'filterTaskhistoryByUserAndProject' user_id=i.id project_id=selected_project.id|default:"0" %}">
-                                        {{ i.first_name }}
-                                    </a>
+                                    {% if not i.is_superuser %}
+                                        <a class="dropdown-item" href="{% url 'filterTaskByUserAndProject' user_id=i.id project_id=selected_project.id|default:"0" %}">
+                                            {{ i.first_name }}
+                                        </a>
+                                    {% endif %}
                                 {% endfor %}
                             </div>
                         </div>
