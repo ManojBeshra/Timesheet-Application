@@ -1,0 +1,749 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Worklog{% endblock title %}
+{% block page-title %}Worklog{% endblock page-title %}
+
+
+<!--style-->
+{% block style %}
+    .small-btn {
+        padding: 4px 16px 4px 16px; /* Adjust padding to reduce button size */
+        font-size: 12px; /* Adjust font size */
+        height: 35px; /* Set a specific height */
+        width: auto; /* Adjust width as needed */
+        line-height: 1; /* Adjust line height for better alignment */
+    }  
+
+
+    .view-small-btn   {
+        padding: 2px 8px; /* Adjust padding to make it smaller */
+        font-size: 12px; /* Reduce text size */
+        height: 24px; /* Set height */
+        line-height: 20px; /* Adjust line height for vertical alignment */
+        width: auto; /* Allow width to adjust */
+        display: inline-block; /* Ensures it behaves like a button */
+        text-align: center; /* Center the text */
+    }
+
+
+    /* Custom styles for smaller pagination buttons */
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        padding: 5px 10px; /* Adjust padding for smaller buttons */
+        font-size: 12px; /* Adjust font size */
+        margin: 0 2px; /* Adjust margin between buttons */
+    }
+
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+        background: #007bff; /* Change background color for the current page */
+        color: white; /* Change text color for the current page */
+    }
+
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+        background: #0056b3; /* Change background color on hover */
+        color: white; /* Change text color on hover */
+    }
+
+
+    /* Custom styles for the products table */
+    .table-product {
+        table-layout: fixed; /* Use fixed layout to respect column widths */
+        width: 100%; /* Ensure the table takes full width */
+    }
+
+
+    .table-product th, .table-product td {
+        overflow: hidden; /* Hide overflow text */
+        text-overflow: ellipsis; /* Optional: Add ellipsis for overflow text */
+    }
+
+
+    .table-product th:nth-child(3), .table-product td:nth-child(3) {
+        width: 500px; /* Title column */
+        white-space: normal; /* Allow text to wrap */
+    }
+
+
+    .i-circle {
+        display: inline-block;
+        color: #fff;
+        border-radius: 50%;
+        font-size: 15px;
+        line-height: 20px; /* set to same size as width, height */
+        width: 20px;
+        height: 20px;
+        text-align: center;
+    }
+
+
+    .workdone-column {
+        width: 650px;
+        min-width: 555px;
+        max-width:650px;
+      }
+
+
+    .date-header {
+        width: 80px;
+        min-width: 85px;
+        max-width:85px;
+    }
+    .column-head th {
+        background-color: #9e6de0;
+        color: white !important;
+    }
+{% endblock %}
+
+
+{% block content %}
+
+
+    <!-- ====================================
+    ——— CONTENT WRAPPER
+    ===================================== -->
+   
+            <div class="card card-default m-2">
+
+
+                <!--Button Section-->
+                <div class="card-header">
+
+
+                     <!--Add Issue Buttons-->
+                    <div class="d-flex justify-content-start " style="gap: 10px;">
+
+
+                        <!-- Only for User    -->
+                        <button type="button" id = "addlog" class="btn btn-outline-success small-btn" data-toggle="modal" data-target="#AddLogForm" {% if request.user.is_staff %}hidden{% endif %}>
+                            Add Log
+                        </button>
+
+
+                        <button type="button" id = "requestreview" class="btn btn-outline-success small-btn" data-toggle="modal" data-target="#RequestReviewForm" >
+                            Request Review
+                        </button>
+
+
+                        <!-- Export button: Only for Admin -->
+                        <form method="GET" action="{% url 'export_worklogs_csv' %}">
+                            <input type="hidden" name="user_id" value="{{ selected_user.id }}">
+                            <input type="hidden" name="billable_status" value="{{ billable_status }}">
+                            <input type="hidden" name="start_date" value="{{ start_date }}">
+                            <input type="hidden" name="end_date" value="{{ end_date }}">
+                           
+                            <button type="submit" id="report" class="btn btn-outline-success small-btn" {% if not request.user.is_staff %}hidden{% endif %}>
+                                Export <span class="mdi mdi-download"></span>
+                            </button>
+                        </form>
+                    </div>
+
+
+                    <!-- Form Modal for Add Log -->
+                    <div class="modal fade" id="AddLogForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalFormTitle"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="tickettitle">Add Log</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    {% comment %} <form class="row g-3" id="taskForm" method="POST"> {% endcomment %}
+                                    <form class="row g-3" id="LogForm" method="POST" action="">
+                                        {% csrf_token %}
+
+                                       
+                                        <!--Date-->
+                                        <div class = "container row">
+                                            <div class="form-group col-3">
+                                                <label for="date">Date</label>
+                                                <input type="date" class="form-control" id="date" aria-describedby="dateHelp" >
+                                            </div>
+
+
+                                            <!-- Ticket -->
+                                            <div class="form-group col-9">
+                                                <label for="ticket">Ticket</label>
+                                                <select class="form-control" id="ticket" name="ticket">
+                                                    <option value="" selected>Select</option>
+                                                    {% for i in tickets %}
+                                                        <option value="{{ i.id }}">{{ i.ticket_title }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <!--Priority-->
+                                        <div class = "container row">
+
+
+                                            {% comment %} <div class="form-group col-3">
+                                                <label for="exampleFormControlSelect12">Priority</label>
+                                                <select class="form-control" id="prioritylist">
+                                                    <option value="" selected>Select</option>
+                                                    {% for i in priority %}
+                                                        <option value="{{ i.id }}" {% if i.id == ticket.priority_id %}selected{% endif %}>
+                                                            {{ i.priority_name }}
+                                                        </option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div> {% endcomment %}
+                                           
+                                            {% comment %} <!--Project-->
+                                            <div class="form-group col-4">
+                                                <label for="exampleFormControlSelect12">Project/Support</label>
+                                                <select class="form-control" id="projects">
+                                                    <option value="" selected>Select</option>
+                                                    {% for i in tickettype %}
+                                                        <option value="{{ i.id }}" {% if i.id == ticket.tickettype %}selected{% endif %}>
+                                                            {{ i.name }}
+                                                        </option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div> {% endcomment %}
+
+                                            <!--Category-->
+                                            {% comment %} <div class="form-group col-5">
+                                                <label for="exampleFormControlSelect12">Category</label>
+                                                <input type="text" class="form-control" id="category" name="category" aria-describedby="categoryHelp" placeholder="Enter Category">
+                                            </div> {% endcomment %}
+
+
+                                        </div>
+
+
+                                   
+                                        <div class = "container row">
+
+
+                                            <!--Work Done-->
+                                            <div class="form-group col-12">
+                                                <label for="workdone">Work Done</label>
+                                                <textarea class="form-control" id="workdone" name="workdone" rows="2" required></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class = "container row">
+                                            <!--Category-->
+                                            <div class="form-group col-4">
+                                                <label for="exampleFormControlSelect12">Category</label>
+                                                <input type="text" class="form-control" id="category" name="category" aria-describedby="categoryHelp" placeholder="Enter Category">
+                                            </div>
+                                            <!--Hours-->
+                                            <div class="form-group col-2">
+                                                <label for="hours">Hours</label>
+                                                <input type="number" class="form-control" min="0" max="24" id="hours" name="hours" aria-describedby="titleHelp" placeholder="hours">
+                                            </div>
+
+
+                                            <!--Billable-->
+                                            <div class="form-group col-2">
+                                               
+                                                <div class="custom-control custom-checkbox d-inline-block mt-7 mb-3">
+                                                    <input type="checkbox" class="custom-control-input" id="customCheck2">
+                                                    <label class="custom-control-label" for="customCheck2"></label>
+                                                </div>
+                                                <label for="billable">Billable</label>
+                                            </div>
+                                        </div>
+                                       
+                                        <!--Notes-->
+                                        {% comment %} <div class="form-group col-12">
+                                            <label for="exampleFormControlTextarea1">Notes</label>
+                                            <textarea class="form-control" id="notesarea" rows="2"></textarea>
+                                        </div> {% endcomment %}
+                                    </form>
+                                </div>
+                                <!--footer-->
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger small-btn" data-dismiss="modal">Close</button>
+                                    <button type="button" id="addLogButton" class="btn btn-success small-btn">Add</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Form Modal for Request Review -->
+                    <div class="modal fade" id="RequestReviewForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalFormTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="tickettitle">Request Review</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form class="row g-3" id="requestreviewform" method="POST" action="{% url 'requestreview_mail' %}">
+                                        {% csrf_token %}
+
+
+                                        <!-- Assigned To -->
+                                        <div class="form-group col-6">
+                                            <label for="requestassigneduserlist">Assigned To</label>
+                                            <select id="requestassigneduserlist" class="js-example-basic-multiple form-control" name="send_to" style="width: 100%; " multiple>
+                                                {% for i in users %}
+                                                    <option value="{{ i.id }}">{{ i.first_name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+
+
+                                        <!-- Date Requested (Read-only) -->
+                                        <div class="form-group col-4">
+                                            <label for="daterequest">Date Requested</label>
+                                            <input type="datetime-local" class="form-control" id="daterequest" readonly>
+                                        </div>
+
+
+                                        <!-- Operational Notes -->
+                                        <div class="form-group col-12">
+                                            <label for="requestnotesarea">Notes</label>
+                                            <textarea class="form-control" id="requestnotesarea" name="requested_note" rows="2"></textarea>
+                                        </div>
+                                    </form>
+                                </div>
+                                <!-- Footer -->
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger small-btn" data-dismiss="modal">Close</button>
+                                    <button type="submit" form="requestreviewform" class="btn btn-success small-btn">Request Review</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Delete Confirmation Modal -->
+                    <div class="modal fade" id="DeleteLogForm" tabindex="-1" role="dialog" aria-labelledby="DeleteLogFormTitle"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Delete Log</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="deleteLogForm" method="POST">
+                                    {% csrf_token %}
+                                    <p class="mb-4">Are you sure you want to delete this log?</p>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-success small-btn" data-dismiss="modal">No</button>
+                                <button type="submit" class="btn btn-danger small-btn" id="confirmDelete">Yes, Delete</button>
+                               
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Note Modal -->
+                    <div class="modal fade" id="NoteForm" tabindex="-1" role="dialog" aria-labelledby="NoteFormLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Note</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="NoteForm" method="POST">
+                                    {% csrf_token %}
+                                    <p id="note-content" class="mb-4"></p> <!-- Placeholder for dynamic note -->
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger small-btn" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+
+                    <!-- User/Date/Billable filter buttons -->
+                    <form method="GET" action="{% url 'worklog' %}" class="d-flex justify-content-end align-items-center" style="gap:10px">
+                        <!-- User Dropdown Only for Admin -->
+                        <div class="btn-group" role="group" {% if not request.user.is_staff %}hidden{% endif %}>
+                            <button type="button" id="user" class="btn btn-outline-danger dropdown-toggle small-btn" data-toggle="dropdown">
+                                {% if selected_user %}
+                                    {{ selected_user.first_name }}
+                                {% else %}
+                                    Filter User
+                                {% endif %}
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a class="dropdown-item" href="{% url 'worklog' %}?billable_status={{ billable_status }}">Show all</a>
+                                {% for i in users %}
+                                    {% if not i.is_superuser %}
+                                        <a class="dropdown-item" href="{% url 'worklog' %}?user_id={{ i.id }}&billable_status={{ billable_status }}&start_date={{start_date}}&end_date={{end_date}}">
+                                            {{ i.first_name }}
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                       
+                        <!-- Billable Filter -->
+                        <div class="btn-group" role="group">
+                            <button type="button" id="billable-filter" class="btn btn-outline-danger dropdown-toggle small-btn" data-toggle="dropdown">
+                                {% if billable_status == '0' %}
+                                    Billable
+                                {% elif billable_status == '1' %}
+                                    Non Billable
+                                {% else %}
+                                    Billable Type
+                                {% endif %}
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a class="dropdown-item" href="{% url 'worklog' %}?billable_status={{ billable_status }}">Show all</a>
+                                <a class="dropdown-item" href="{% url 'worklog' %}?billable_status=0&user_id={{ selected_user.id }}&start_date={{start_date}}&end_date={{end_date}}">Billable</a>
+                                <a class="dropdown-item" href="{% url 'worklog' %}?billable_status=1&user_id={{ selected_user.id }}&start_date={{start_date}}&end_date={{end_date}}">Non Billable</a>
+                            </div>
+                        </div>
+
+
+                        <!-- Start Date Filter -->
+                        <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn " data-toggle="dropdown">
+                            {% if start_date %}
+                                {{ start_date }}
+                            {% else %}
+                                Filter From
+                            {% endif %}
+                        </button>
+                        <div class="dropdown-menu ">
+                            <a class="dropdown-item" href="{% url 'worklog' %}">Show all</a>
+                            <input type="date" id="start-date-input" class="form-control"
+                                    onchange="updateFilters('start_date', this.value)">
+                        </div>
+                        </div>
+
+
+                        <!-- End Date Filter -->
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn" data-toggle="dropdown">
+                                {% if end_date %}
+                                    {{ end_date }}
+                                {% else %}
+                                    Filter To
+                                {% endif %}
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a class="dropdown-item" href="{% url 'worklog' %}">Show all</a>
+                                <input type="date" id="end-date-input" class="form-control"
+                                    onchange="updateFilters('end_date', this.value)">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                                   
+                 <!--All Worklog-->
+                <div class="card-body">
+                    {% comment %} {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>S
+                            </div>
+                        {% endfor %}
+                    {% endif %} {% endcomment %}
+                   
+                    <table id="productsTable" class="table table-hover table-product" style="width:100%">
+                    <thead>
+                      <tr class="column-head">
+                          <th {% if not request.user.is_staff %}hidden{% endif %}>Resource&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                          <th>Billable&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                          <th class="date-header">Date&nbsp;&nbsp;</th>
+                          <th>Week&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                          <th>Ticket&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                          <th class="workdone-column">Work Done</th>
+                          <th>Hours&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                          <th>Category&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                          {% comment %} <th>Note&nbsp;&nbsp;&nbsp;&nbsp;</th> {% endcomment %}
+                          <th>Actions&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                      </tr>
+                    </thead>
+
+
+                    <tbody>
+                        {% for log in worklogs %}
+                        <tr onclick="window.location='{% url 'worklogdetails' log.id%}'">
+                            <td {% if not request.user.is_staff %}hidden{% endif %}>{{ log.user.first_name }}</td>
+                            <td align="center">
+                                <div class="custom-control custom-checkbox checkbox-dark  d-inline-block mr-3 mb-3">
+                                    <input type="checkbox" onclick="return false;" class="custom-control-input" id="customCheckDanger{{ log.id }}" {% if log.billable %}checked{% endif %}>
+                                    <label class="custom-control-label" for="customCheckDanger{{ log.id }}"></label>
+                                </div>
+                            </td>
+                            <td>{{ log.date|date:'m/d/Y'  }}</td>
+                            <td>{{ log.week }}</td>
+                            <td>
+                                {% if log.ticket %}
+                                    {{ log.ticket.ticket_id }}
+                                {% else %}
+                                    None  
+                                {% endif %}
+                            </td>
+                           
+                            <td>{{ log.workdone }}</td>
+
+
+                            <td>{{ log.hours }}</td>
+                   
+                            <td>{{ log.category }}</td>
+                            {% comment %} <td align="center">
+                                    <i data-toggle="modal" data-target="#NoteForm"
+                                       class="fa-regular fa-clipboard changes-color note-log"
+                                       data-id="{{ log.id }}"
+                                       data-note="{{ log.note }}">
+                                    </i>
+                            </td> {% endcomment %}
+                            <td align="center">
+                                <i data-toggle="modal" data-target="#DeleteLogForm" class="fa-solid fa-trash-can hover delete-log" data-id="{{ log.id }}"  onclick="openDeleteModal(event, '{{ log.id }}')"></i>
+                               
+                            </td>
+                        </tr>
+                       
+                        {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+            </div>
+   
+    <!--To Add worklog-->
+    <script>
+        document.getElementById('addLogButton').addEventListener('click', function() {
+        const form = document.getElementById("LogForm");
+       
+        // Check if the form is valid
+        if (!form.checkValidity()) {
+            form.reportValidity();  // Show browser's validation message
+            return;  // Stop execution if validation fails
+        }
+   
+        const workdone = document.getElementById("workdone").value;
+        const hours = document.getElementById("hours").value;
+        const ticket = document.getElementById("ticket").value;
+        const date = document.getElementById("date").value;
+        const category = document.getElementById("category").value;
+        const billable = document.getElementById("customCheck2").checked;
+   
+        // CSRF token from the form
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+   
+        // Send the data to the backend
+        fetch("/worklog/add_worklog/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrfToken
+            },
+            body: JSON.stringify({
+                workdone: workdone,
+                hours: hours,
+                ticket: ticket,
+                date: date,
+                category: category,
+                billable: billable,
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            $('#AddLogForm').modal('hide'); // Close the modal
+            location.reload(); // Reload page to reflect changes
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert("Error adding log.");
+        });
+        });
+ 
+     </script>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+   
+   <!--For Delete Function  -->
+    <script>
+        $(function() {
+            let workLogIdToDelete = null;
+   
+            // Store work log ID when trash icon is clicked
+            $(".delete-log").on("click", function() {
+                workLogIdToDelete = $(this).data("id");
+            });
+   
+            // Handle deletion on "Yes, Delete" button click
+            $("#confirmDelete").on("click", function() {
+                if (workLogIdToDelete) {
+                    $.post("{% url 'delete_worklog' %}", {
+                        id: workLogIdToDelete,
+                        csrfmiddlewaretoken: "{{ csrf_token }}"
+                    }, function(response) {
+                        if (response.success) {
+                            location.reload();  // Refresh page after deletion
+                        } else {
+                            alert(response.message);
+                        }
+                    }).fail(function() {
+                        alert("Error deleting the log.");
+                    });
+                }
+            });
+        });
+   
+   
+   
+    function openDeleteModal(event, logId) {
+        event.stopPropagation(); // Prevents the row click event from firing
+        $('#DeleteLogForm').modal('show'); // Ensures the modal opens properly
+        // Optional: Set the log ID in the modal if needed
+        $('#DeleteLogForm').find('[name="log_id"]').val(logId);
+    }
+     </script>
+
+
+    <!--To set the date -->
+    <script>
+        // Get the current datetime
+        document.addEventListener("DOMContentLoaded", function () {
+            let now = new Date();
+            let year = now.getFullYear();
+            let month = String(now.getMonth() + 1).padStart(2, '0'); // Ensure two digits
+            let day = String(now.getDate()).padStart(2, '0');
+            let hours = String(now.getHours()).padStart(2, '0');
+            let minutes = String(now.getMinutes()).padStart(2, '0');
+
+
+            let formattedDateTime = `${year}-${month}-${day}`;
+            //let formattedDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+            const dateInput = document.getElementById("date");
+
+
+            if (dateInput) {
+                dateInput.value = formattedDateTime;
+                //dateInput.setAttribute("min", formattedDateTime);  // Disable past dates/times
+                //dateInput.setAttribute("max", formattedDateTime);  // Disable future dates/times
+            }
+        });
+    </script>
+
+
+
+
+
+
+    <!--To see note-->
+    {% comment %} <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Select all clipboard icons
+            document.querySelectorAll(".note-log").forEach(function (icon) {
+                icon.addEventListener("click", function () {
+                    // Get the note text from the clicked icon's data attribute
+                    var noteText = this.getAttribute("data-note");
+   
+                    // Set the note inside the modal
+                    document.getElementById("note-content").innerText = noteText || "No note available";
+                });
+            });
+        });
+    </script> {% endcomment %}
+
+
+    <!--Date Requested-->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let now = new Date();
+            let year = now.getFullYear();
+            let month = String(now.getMonth() + 1).padStart(2, '0');
+            let day = String(now.getDate()).padStart(2, '0');
+            let hours = String(now.getHours()).padStart(2, '0');
+            let minutes = String(now.getMinutes()).padStart(2, '0');
+       
+            let formattedDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+            document.getElementById("daterequest").value = formattedDateTime;
+        });
+    </script>
+
+
+    <!--To remove the success email notification -->
+    <script>
+        // Automatically remove alerts after 5 seconds
+        setTimeout(function() {
+            let alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                alert.classList.remove('show');  
+                alert.classList.add('fade');  
+                setTimeout(() => alert.remove(), 500);
+            });
+        }, 5000);
+    </script>
+   
+
+
+    <!-- filters js -->
+    <script>
+        function updateFilters(key, value) {
+            let params = new URLSearchParams(window.location.search);
+   
+            // Preserve existing filters
+            let user_id = params.get("user_id");
+            let billable_status = params.get("billable_status");
+            let start_date = params.get("start_date");
+            let end_date = params.get("end_date");
+   
+            // Update selected filter
+            if (value) {
+                params.set(key, value);
+            } else {
+                params.delete(key); // Remove filter if empty
+            }
+   
+            // Ensure all filters persist
+            if (user_id) params.set("user_id", user_id);
+            if (billable_status) params.set("billable_status", billable_status);
+            if (start_date && key !== "start_date") params.set("start_date", start_date);
+            if (end_date && key !== "end_date") params.set("end_date", end_date);
+   
+            // Redirect with new parameters
+            window.location.href = window.location.pathname + "?" + params.toString();
+        }
+    </script>
+   
+
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let startDateInput = document.getElementById("startdate");
+        let endDateInput = document.getElementById("enddate");
+   
+        startDateInput.addEventListener("change", function() {
+            if (endDateInput.value && startDateInput.value > endDateInput.value) {
+                alert("Start date cannot be after the end date!");
+                startDateInput.value = "";
+            }
+        });
+   
+        endDateInput.addEventListener("change", function() {
+            if (startDateInput.value && endDateInput.value < startDateInput.value) {
+                alert("End date cannot be before the start date!");
+                endDateInput.value = "";
+            }
+        });
+    });
+    </script>
+   
+
+
+{% endblock  %}

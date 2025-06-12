@@ -1,0 +1,412 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Attendance{% endblock title %}
+{% block page-title %}Attendance{% endblock page-title %}
+
+{% block style %}
+    .small-btn {
+        padding: 2px 8px; /* Adjust padding to reduce button size */
+        font-size: 12px; /* Adjust font size */
+        height: 35px; /* Set a specific height */
+        width: auto; /* Adjust width as needed */
+        line-height: 1; /* Adjust line height for better alignment */
+    }  
+    
+    /* Custom styles for smaller pagination buttons */
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        padding: 5px 10px; /* Adjust padding for smaller buttons */
+        font-size: 12px; /* Adjust font size */
+        margin: 0 2px; /* Adjust margin between buttons */
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+        background: #007bff; /* Change background color for the current page */
+        color: white; /* Change text color for the current page */
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+        background: #0056b3; /* Change background color on hover */
+        color: white; /* Change text color on hover */
+    }
+    
+    .column-head th {
+        background-color: #9e6de0;
+        color: white !important;
+    }
+    .table-product {
+        width: 100% !important;
+        table-layout: auto; /* Allow columns to size dynamically */
+        white-space: nowrap; /* Prevent text from wrapping */
+    }
+    
+
+{% endblock %}
+
+{% block content %}
+    <div class="card card-default m-2">
+        <!--Buttons Section-->
+        <div class="card-header">
+
+            <!--ClockIn/ClockOut Buttons-->
+            <div class="d-flex justify-content-start" style="gap: 10px;">
+                {% if not request.user.is_staff %}
+                <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                    <button id="entry-button" type="button" class="btn btn-outline-success small-btn" data-url="{% url 'entry' %}">Clock In</button>
+                    <button id="exit-button" type="button" class="btn btn-outline-danger small-btn" data-url="{% url 'exit' %}">Clock Out</button>
+                </div>
+                {% endif %}
+            </div>
+
+            <!--User/Year/Month Buttons-->
+            <div class="d-flex justify-content-end " style="gap: 10px;">
+                <!-- User Dropdown Only for Admin -->
+                <div class="btn-group" {% if not request.user.is_staff %}hidden{% endif %}>
+                    <button type="button" id="user" class="btn btn-outline-danger dropdown-toggle small-btn" id="userbtnGroupDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {% if selected_user %}
+                            {{ selected_user.first_name }}  
+                        {% else %}
+                            Filter User
+                        {% endif %}
+                    </button>
+                    
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#" onclick="updateFilters('user_id', '')">Show All</a>
+                        {% for user in users %}
+                            <a class="dropdown-item" href="#" onclick="updateFilters('user_id', '{{ user.id }}')">
+                                {{ user.first_name }}
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+
+                <!-- Year Filter -->
+                <div class="btn-group">
+                    <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn" data-toggle="dropdown">
+                        {% if selected_year %}
+                            {{ selected_year }}
+                        {% else %}
+                            Filter Year
+                        {% endif %}
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#" onclick="updateFilters('year', '')">Show All</a>
+                        {% for y in years %}
+                            <a class="dropdown-item" href="#" onclick="updateFilters('year', '{{ y }}')">{{ y }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+
+                <!-- Month Filter Dropdown -->
+                <div class="btn-group ">
+                    <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn" data-toggle="dropdown">
+                        {% if selected_month %}
+                            {{ selected_month }}
+                        {% else %}
+                            Filter Month
+                        {% endif %}
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="#" onclick="updateFilters('month', '')">Show All</a>
+                        {% for month in months %}
+                            <a class="dropdown-item" href="#" onclick="updateFilters('month', '{{ month }}')">{{ month }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+            </div>
+
+        </div>
+
+        <div class="card-body">
+            <!--Attendance Table-->
+            
+            {% comment %} <table id="productsTable" class="table table-hover table-product" style="width:100%"> {% endcomment %}
+                <table id="productsTable" class="table table-hover table-product w-100">
+                <thead>
+                    <tr class="column-head">
+                        <th>Sn</th>
+                        {% comment %} <th>User</th> {% endcomment %}
+                        <th {% if not request.user.is_staff %}hidden{% endif %} >User</th>
+                        <th>Date</th>
+                        <th>Clock In</th>
+                        <th>Clock Out</th>
+                        <th>Hour</th>
+                        <th>Note</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in attendance_records %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        {% comment %} <td>{{ record.user }}</td> {% endcomment %}
+                        <td {% if not request.user.is_staff %}hidden{% endif %}>{{ record.user }}</td>
+                        <td>{{ record.date }}</td>
+                        <td>{{ record.entry }}</td>
+                        <td>{{ record.exit }}</td>
+                        <td>{{ record.hour }}</td>
+                        <td>
+                            <a href="#" class="view-btn text-success" 
+                                data-toggle="modal" 
+                                data-target="#view-modal" 
+                                data-message="{{ record.note|escape }}" 
+                                data-record-id="{{ record.id }}"
+                                title="View Note">
+                                <i class="fa-regular fa-clipboard"></i> 
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+                <!-- View Note Modal -->
+                <div class="modal fade" id="view-modal" tabindex="-1" role="dialog" aria-labelledby="view-modal-title" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="view-modal-title">Note Form</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+
+                            <!-- Modal Body -->
+                            <div class="modal-body">
+                                <form id="message-form" method="POST" action="{% url 'attendance' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="record_id" id="record-id">
+
+                                <div class="mb-3">
+                                    {% comment %} <label for="message-input" class="form-label">Note:</label> {% endcomment %}
+                                    <textarea id="message-input" class="form-control" name="note" rows="4" placeholder="Empty Note"></textarea>
+                                </div>
+                                </form>
+                            </div>
+
+                            <!-- Modal Footer -->
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary btn-sm" id="add-btn">Add</button> 
+                                <button type="button" class="btn btn-secondary btn-sm d-none" id="edit-btn">Edit</button> 
+                                <button type="submit" class="btn btn-success btn-sm d-none" id="update-btn">Update</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </table>
+            
+        </div>
+    </div>
+
+
+<!-- for table -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<!--To Add Attendance-->
+<script>
+    $(document).ready(function () {
+        function updateTable(data) {
+            let tableBody = $("#productsTable tbody");
+            tableBody.empty();
+            
+            data.forEach(function (record) {
+                let newRow = `<tr>
+                    <td>${record.user}</td>
+                    <td>${record.date}</td>
+                    <td>${record.entry || 'N/A'}</td>
+                    <td>${record.exit || 'N/A'}</td>
+                    <td>${record.hour}</td>
+                    <td>
+                        <a href="#" class="view-btn text-success" 
+                                data-toggle="modal" 
+                                data-target="#view-modal" 
+                                data-message="{{ record.note|escape }}" 
+                                data-record-id="{{ record.id }}"
+                                title="View Note">
+                                <i class="fa-regular fa-clipboard"></i> 
+                            </a>
+                    </td>
+                </tr>`;
+                tableBody.append(newRow);
+                location.reload();
+            });
+        }
+
+        function handleClockAction(action, url) {
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {
+                    csrfmiddlewaretoken: "{{ csrf_token }}",
+                },
+                success: function (response) {
+                    $("#attendancemessage").html('<div class="alert alert-success">' + response.message + "</div>");
+                    updateTable(response.data);
+                },
+                error: function (response) {
+                    $("#attendancemessage").html('<div class="alert alert-danger">' + response.responseJSON.message + "</div>");
+                },
+            });
+        }
+
+        $("#entry-button").click(function () {
+            handleClockAction("entry", "{% url 'entry' %}");
+        });
+
+        $("#exit-button").click(function () {
+            handleClockAction("exit", "{% url 'exit' %}");
+        });
+
+    });
+    
+</script>
+
+<!--Handling add/edit/update buttons of modal-->
+<script>
+    // Get modal elements
+    const viewModal = document.getElementById('view-modal');
+    const closeViewModal = document.getElementById('close-view-modal');
+    const messageInput = document.getElementById('message-input');
+
+    const isStaff = {{ request.user.is_staff|yesno:"true,false" }};
+    const addButton = document.getElementById('add-btn');
+    const editButton = document.getElementById('edit-btn');
+    const updateButton = document.getElementById('update-btn');
+    // Hide the add button if the user is a staff member
+    if (isStaff) {
+    addButton.style.display = 'none'; // Hide the add button
+    editButton.style.display = 'none'; // Hide the edit button
+    updateButton.style.display = 'none'; // Hide the update button
+    }
+
+    // Function to show the modal
+    const showModal = (message, recordId) => {
+    messageInput.value = message?.trim() || ""; // Use provided message or default to empty
+    const recordIdInput = document.querySelector('input[name="record_id"]');
+    recordIdInput.value = recordId; // Set the record ID
+    //alert("Record ID:", recordId); // Add this line to check the value
+
+    // Toggle button visibility
+    if (message === "") {
+        addButton.classList.remove('d-none');
+        editButton.classList.add('d-none');
+        updateButton.classList.add('d-none');
+        //messageInput.removeAttribute('readonly');
+    } else {
+        addButton.classList.add('d-none');
+        editButton.classList.remove('d-none');
+        updateButton.classList.add('d-none');
+        messageInput.setAttribute('readonly', true);
+    }
+
+    viewModal.style.display = 'flex'; // Show modal
+    };
+
+    // Close the modal function
+    const closeModal = () => {
+    viewModal.style.display = 'none'; // Hide modal
+    messageInput.value = ""; 
+    const recordIdInput = document.querySelector('input[name="record_id"]');
+    recordIdInput.value = ""; // Clear the record ID input
+    };
+
+    // Bind "View" buttons to open the modal with the correct message and record ID
+    document.querySelectorAll('.view-btn').forEach(button => {
+    button.addEventListener('click', function () {
+        const note = this.getAttribute('data-message');
+        const recordId = this.getAttribute('data-record-id');
+
+        // Populate the textarea with the note
+        const messageInput = document.getElementById('message-input');
+        messageInput.value = note;
+
+        // Set the hidden input for record_id
+        const recordIdInput = document.querySelector('input[name="record_id"]');
+        recordIdInput.value = recordId; // Ensure this is set correctly
+
+        // Show the modal
+        showModal(note, recordId);
+    });
+    });
+
+    // Add button functionality
+    addButton.addEventListener('click', (event) => {
+    event.preventDefault(); // Prevent the default form submission
+
+    const newMessage = messageInput.value.trim();
+    const recordIdInput = document.querySelector('input[name="record_id"]');
+    //alert("Record ID before submit:", recordIdInput.value); // Log the record ID
+
+    if (!newMessage) {
+        alert("Message cannot be empty!");
+        return;
+    }
+
+    // Submit the form
+    document.getElementById('message-form').submit();
+    });
+
+    // Edit button functionality
+    editButton.addEventListener('click', () => {
+    messageInput.removeAttribute('readonly'); // Unlock textarea
+    editButton.classList.add('d-none');
+    updateButton.classList.remove('d-none'); // Show update button
+    });
+
+    // Update button functionality
+    updateButton.addEventListener('click', () => {
+    const currentMessage = messageInput.value.trim();
+    const recordIdInput = document.querySelector('input[name="record_id"]');
+    //alert("Record ID before submit:", recordIdInput.value); // Log the record ID
+
+    if (!currentMessage) {
+        alert("Message cannot be empty!");
+        return;
+    }
+
+    // Submit the form
+    document.getElementById('message-form').submit();
+    });
+
+    // Close the modal when the close button is clicked
+    closeViewModal.addEventListener('click', closeModal);
+
+    // Close the modal when clicking outside the modal content
+    window.addEventListener('click', (event) => {
+    if (event.target === viewModal) {
+        closeModal();
+    }
+    });
+
+</script>
+
+<script>
+    function updateFilters(param, value) {
+        let url = new URL(window.location.href);
+        let params = new URLSearchParams(url.search);
+    
+        if (value) {
+            params.set(param, value);
+        } else {
+            params.delete(param);  // Remove parameter if "Show All" is selected
+        }
+    
+        url.search = params.toString();
+        window.location.href = url.toString();
+    }
+</script>
+
+<!--Adjust table width-->
+<script>
+    $('.sidebar-toggle').on('click', function () {
+        setTimeout(() => {
+            $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
+        }, 300);
+    });
+</script>
+
+{% endblock %}
