@@ -201,8 +201,9 @@
                             </a>
                           </li>
                         
-                          <li class="{% if request.resolver_match.url_name == 'attendance' %}active{% endif %}">
-                            <a class="sidenav-item-link" href="#">
+                          {% comment %} <li class="{% if request.resolver_match.url_name == 'attendance' %}active{% endif %}"> {% endcomment %}
+                          <li>
+                            <a class="sidenav-item-link" href="{% url 'leavedetails' %}">
                               <span class="nav-text">PTO</span>
                               
                             </a>
