@@ -483,8 +483,7 @@
                             <td {% if not request.user.is_staff %}hidden{% endif %}>{{ log.user.first_name }}</td>
                             <td align="center">
                                 <div class="custom-control custom-checkbox checkbox-dark  d-inline-block mr-3 mb-3">
-                                    <input type="checkbox" onclick="return false;" class="custom-control-input" id="customCheckDanger{{ log.id }}" {% if log.billable %}checked{% endif %}>
-                                    <label class="custom-control-label" for="customCheckDanger{{ log.id }}"></label>
+                                    <input type="checkbox" onclick="return false;" class="customCheckDark" id="customCheckDanger{{ log.id }}" {% if log.billable %}checked{% endif %}>
                                 </div>
                             </td>
                             <td>{{ log.date|date:'m/d/Y'  }}</td>
