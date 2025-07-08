@@ -48,12 +48,43 @@ class Approval(models.Model):
     def __str__(self):
         return self.name
 
+#Leave Details
+class LeaveType(models.Model):
+    name = models.CharField(max_length=30, null=True, default=None)
+    days = models.IntegerField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+    
+class Approval(models.Model):
+    name = models.CharField(max_length=30)
+
+    def __str__(self):
+        return self.name
+
 class LeaveDetails(models.Model):
     requested_date = models.DateField(auto_now_add=True)
     type = models.ForeignKey(LeaveType, on_delete=models.SET_NULL, null=True)
     leave_from = models.DateField(null=True)
     leave_to = models.DateField(null=True)
     approval = models.ForeignKey(Approval, on_delete=models.SET_NULL, null=True)
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="RequestedUser")
     description = models.TextField(default = "")
     remarks = models.TextField(default="")
+    approvedby = models.ForeignKey(User, on_delete=models.SET_NULL, null= True, blank= True, related_name="ApprovedBy")
+
+class userLeaveDays(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    type = models.ForeignKey(LeaveType, on_delete=models.SET_NULL, null=True)
+    leaveTaken = models.IntegerField()
+    availableDays = models.IntegerField(blank=True, null=True) 
+
+    def save(self, *args, **kwargs):
+        if self.type:
+            self.availableDays = self.type.days - self.leaveTaken
+        else:
+            self.availableDays = 0  
+        super(userLeaveDays, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.user} - {self.type} : {self.availableDays} days available"
