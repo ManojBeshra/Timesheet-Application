@@ -414,14 +414,17 @@
                         <!-- Start Date Filter -->
                         <div class="btn-group" role="group">
                             <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn " data-toggle="dropdown">
-                                {% if start_date %}
+<!--                                 {% if start_date %} -->
+                                {% if start_date and start_date != 'None' %}
+
                                     {{ start_date }}
                                 {% else %}
                                     Filter From
                                 {% endif %}
                             </button>
                             <div class="dropdown-menu ">
-                                <a class="dropdown-item" href="{% url 'worklog' %}">Show all</a>
+<!--                                 <a class="dropdown-item" href="{% url 'worklog' %}">Show all</a> -->
+                                 <a class="dropdown-item" href="{% url 'worklog' %}?user_id={{ selected_user.id }}&start_date={{start_date}}&end_date={{end_date}}">Show all</a>
                                 <input type="date" id="start-date-input" class="form-control"
                                         onchange="updateFilters('start_date', this.value)">
                             </div>
