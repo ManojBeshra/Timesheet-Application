@@ -30,8 +30,14 @@ def worklog_list(request):
     worklogs = worklog.objects.filter(user__in=visible_users).order_by('-date')  # restrict to visible users
     priority = priority_type.objects.all()
     users = visible_users  # only show users the current user can filter by
-    tickets = ticket.objects.all()
     tickettype = ticket_type.objects.all()
+    if request.user.is_staff:
+        tickets = ticket.objects.all()
+    else:
+        user = request.user
+        tickets = ticket.objects.filter(assigned_to=user)
+        
+
 
 
     # Get filter parameters
