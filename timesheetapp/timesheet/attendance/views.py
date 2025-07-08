@@ -250,108 +250,42 @@ def save_note_view(request, record_id):
     return JsonResponse({"error": "Invalid request method!"}, status=405)
 
 #Leave Details
-def leavedetails_view(request):
-    if request.user.is_staff:
-        users = User.objects.exclude(username=request.user.username)
-    else:
-        users = User.objects.filter(username=request.user.username)
+class LeaveType(models.Model):
+    name = models.CharField(max_length=30, null=True, default=None)
+    days = models.IntegerField(blank=True, null=True)
 
-    selected_user_id = request.GET.get('user_id')
-    selected_date = request.GET.get('date')
-    selected_category = request.GET.get('category')
-    selected_status = request.GET.get('status')
+    def __str__(self):
+        return self.name
+    
+class Approval(models.Model):
+    name = models.CharField(max_length=30)
 
-    categories = LeaveType.objects.all()
-    approvals = Approval.objects.all()
+    def __str__(self):
+        return self.name
 
+class LeaveDetails(models.Model):
+    requested_date = models.DateField(auto_now_add=True)
+    type = models.ForeignKey(LeaveType, on_delete=models.SET_NULL, null=True)
+    leave_from = models.DateField(null=True)
+    leave_to = models.DateField(null=True)
+    approval = models.ForeignKey(Approval, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="RequestedUser")
+    description = models.TextField(default = "")
+    remarks = models.TextField(default="")
+    approvedby = models.ForeignKey(User, on_delete=models.SET_NULL, null= True, blank= True, related_name="ApprovedBy")
 
-    leaves = LeaveDetails.objects.all()
+class userLeaveDays(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    type = models.ForeignKey(LeaveType, on_delete=models.SET_NULL, null=True)
+    leaveTaken = models.IntegerField()
+    availableDays = models.IntegerField(blank=True, null=True) 
 
-    # Filter by user
-    if request.user.is_staff and selected_user_id:
-        leaves = leaves.filter(user__id=selected_user_id)
-    elif not request.user.is_staff:
-        leaves = leaves.filter(user=request.user)
+    def save(self, *args, **kwargs):
+        if self.type:
+            self.availableDays = self.type.days - self.leaveTaken
+        else:
+            self.availableDays = 0  
+        super(userLeaveDays, self).save(*args, **kwargs)
 
-    # Filter by date
-    if selected_date:
-        try:
-            date_obj = datetime.strptime(selected_date, '%Y-%m-%d').date()
-            leaves = leaves.filter(requested_date=date_obj)
-        except ValueError:
-            pass  # ignore invalid dates
-
-    # Filter by category
-    if selected_category:
-        leaves = leaves.filter(type__name__iexact=selected_category)
-
-    # Filter by status
-    if selected_status:
-        leaves = leaves.filter(approval__name__iexact=selected_status)
-
-    selected_user = None
-    if selected_user_id:
-        try:
-            selected_user = User.objects.get(id=selected_user_id)
-        except User.DoesNotExist:
-            selected_user = None
-
-    return render(request, 'leavedetails.html', {
-        'users': users,
-        'selected_user': selected_user,
-        'leaves': leaves,  
-        'selected_category': selected_category,
-        'selected_status': selected_status,
-        'categories': categories,
-        'approvals': approvals,
-        'selected_date': selected_date
-    })
-
-
-@login_required
-def add_leave_details(request):
-    if request.method == 'POST':
-        leave_type_id = request.POST.get("type")
-        leave_from = request.POST.get("leave_from")
-        leave_to = request.POST.get("leave_to")
-        approval_id = request.POST.get("approval")
-        description = request.POST.get("description")
-
-
-        if not leave_type_id or not leave_from or not leave_to:
-            return HttpResponse("Missing data", status=400)
-
-
-        LeaveDetails.objects.create(
-            user=request.user,
-            type_id=leave_type_id,
-            leave_from=leave_from,
-            leave_to=leave_to,
-            approval_id=approval_id,
-            description = description
-        )
-        return redirect('leavedetails')
-
-
-    return HttpResponse("Invalid method", status=405)
-
-
-@csrf_exempt
-@login_required
-def approve_leave(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        leave_id = data.get('leave_id')
-        approval_id = data.get('approval_id')
-        remarks = data.get('remarks')
-
-        try:
-            leave = LeaveDetails.objects.get(id=leave_id)
-            leave.approval_id = approval_id
-            leave.remarks = remarks
-            # If you want to store remarks, add a remarks field to your model
-            leave.save()
-            return JsonResponse({'status': 'success'})
-        except LeaveDetails.DoesNotExist:
-            return JsonResponse({'status': 'error', 'message': 'Leave not found'}, status=404)
-    return JsonResponse({'status': 'invalid'}, status=400)
+    def __str__(self):
+        return f"{self.user} - {self.type} : {self.availableDays} days available"
