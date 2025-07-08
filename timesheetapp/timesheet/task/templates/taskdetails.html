@@ -58,8 +58,14 @@
                             <!-- Ticket Title -->
                             <div class="form-group col-12" >
                                 <label for="ticket_title">Title</label>
-                                <input type="text" class="form-control" id="ticket_title" name="ticket_title"
+                                <input type="text" class="form-control {% if not request.user.is_staff %} hide {% endif %}" id="ticket_title" name="ticket_title"
                                        value="{{ ticket.ticket_title }}" {% if ticket.state.state_name == "Completed" %}readonly{% endif %}{% if not request.user.is_staff %}readonly{% endif %} >
+
+
+                                {% if not request.user.is_staff %}
+                                <input type="text" class="form-control" id="customer"
+                                    value="{{ ticket.ticket_title }}" readonly>
+                                {% endif %}
                             </div>
                    
                             <!-- Customer -->
