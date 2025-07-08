@@ -19,9 +19,11 @@ def filter_tasks(request, user_id=None, project_id=None):
 
 
     users = visible_users  # only show these users in the filter dropdown
-    projects = project.objects.all()
     tasks = ticket.objects.filter(assigned_to__in=visible_users).order_by('-date_opened')
-
+    if not request.user.is_staff:
+        projects = project.objects.filter(ticket__assigned_to__in=visible_users).distinct()
+    else:
+        projects = project.objects.all()
 
     selected_user = None
     selected_project = None
