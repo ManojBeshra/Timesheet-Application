@@ -27,4 +27,11 @@ class requestreview(models.Model):
 
 
 
-
+class MailNotification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    week_start_date = models.DateField(null=False)
+    notification_seen = models.BooleanField(default=False)  
+    def __str__(self):
+        return f"Notification for {self.user} on {self.created_at}"

@@ -1,0 +1,443 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Log Report{% endblock title %}
+{% block page-title %}Log Report{% endblock page-title %}
+
+{% block style %}
+    .small-btn {
+        padding: 2px 8px; /* Adjust padding to reduce button size */
+        font-size: 12px; /* Adjust font size */
+        height: 35px; /* Set a specific height */
+        width: auto; /* Adjust width as needed */
+        line-height: 1; /* Adjust line height for better alignment */
+    }  
+    
+    /* Custom styles for smaller pagination buttons */
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        padding: 5px 10px; /* Adjust padding for smaller buttons */
+        font-size: 12px; /* Adjust font size */
+        margin: 0 2px; /* Adjust margin between buttons */
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+        background: #007bff; /* Change background color for the current page */
+        color: white; /* Change text color for the current page */
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+        background: #0056b3; /* Change background color on hover */
+        color: white; /* Change text color on hover */
+    }
+    
+    .column-head th {
+        background-color: #9e6de0;
+        color: white !important;
+    }
+    .table-product {
+        width: 100% !important;
+        table-layout: auto; /* Allow columns to size dynamically */
+        white-space: nowrap; /* Prevent text from wrapping */
+    }
+    .pie-chart {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    margin: 0 auto;
+}
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="card card-default m-2">
+
+        <!--Buttons Section-->
+        <div class="card-header">
+
+            <!--Create Report Buttons-->
+            {% comment %} <div class="d-flex justify-content-start hide" style="gap: 5px;">
+                <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                    <button id="report-button" type="button" class="btn btn-outline-success small-btn" data-url="#">Create Report</button>
+                </div>
+            </div> {% endcomment %}
+
+            <!--Filter Section-->
+            {% comment %} <div class="d-flex justify-content-end" style="gap: 5px;"> {% endcomment %}
+            <div class="d-flex justify-content-end flex-wrap w-100 " style="gap: 5px;">
+
+                <!-- User Filter -->
+                {% if request.user.is_staff %}
+
+                <div class="btn-group" >
+                    <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {% if selected_user %}
+                            {{ selected_user.first_name }}
+                        {% else %}
+                            Filter User
+                        {% endif %}
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item {% if not selected_user %}active{% endif %}" href="#" onclick="updateFilters('user_id', '')">Show All</a>
+                        {% for user in users %}
+                            <a class="dropdown-item {% if selected_user and selected_user.id == user.id %}active{% endif %}"
+                            href="#" onclick="updateFilters('user_id', '{{ user.id }}')">
+                                {{ user.first_name }}
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Start Date Filter -->
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn" data-toggle="dropdown">
+                        {% if start_date %}
+                            From: {{ start_date }}
+                        {% else %}
+                            Filter From
+                        {% endif %}
+                    </button>
+                    <div class="dropdown-menu p-2">
+                        <input type="date" id="start-date-input" class="form-control"
+                            onchange="updateFilters('start_date', this.value)" value="{{ start_date|default:'' }}">
+                    </div>
+                </div>
+
+                <!-- End Date Filter -->
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn" data-toggle="dropdown">
+                        {% if end_date %}
+                            To: {{ end_date }}
+                        {% else %}
+                            Filter To
+                        {% endif %}
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right p-2">
+                        <input type="date" id="end-date-input" class="form-control"
+                            onchange="updateFilters('end_date', this.value)" value="{{ end_date|default:'' }}">
+                    </div>
+                </div>
+
+                <!-- Clear All Filters Button -->
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-outline-secondary small-btn" onclick="clearAllFilters()">
+                        Clear All Filters
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!--Report Section-->
+        <div class="card ml-6 mr-6 mb-6">
+            <!--Report Header-->
+            <div class="card ml-6 mr-6 mt-4">
+                <div class="px-2 py-2 text-center" style="background-color: #9e6de0; color: white; ">
+                    <p class="fw-bold fs-1 mb-0">EMPLOYEE'S LOG REPORT</p>
+                </div>
+            </div>
+
+            <!--Body section-->
+                <div class="card-body">
+                    <!--Chart section-->
+                    <div class="row d-flex align-items-stretch">
+                        <!-- Pie chart Container -->
+                        <div class="col-md-6 d-flex ">
+                            <div class="card card-default w-100 " style="min-height: auto;">
+                                <div class="card-header py-2"><h5 class="mb-0">Work Hours Distribution</h5></div>
+                                {% comment %} <div class="card-body p-2"> {% endcomment %}
+                                <div class="card-body text-center flex-grow-1 d-flex flex-column justify-content-center">
+                                    {% comment %} <canvas id="simple-pie-chart" class="pie-chart"></canvas> {% endcomment %}
+                                    {% comment %} <canvas class="pie-chart" id="simple-pie-chart" style="max-width: 100%; max-height: 300px; cursor: pointer;"></canvas> {% endcomment %}
+                                    {% if total_hours > 0 %}
+                                        <canvas class="pie-chart" id="simple-pie-chart" style="max-width: 100%; max-height: 300px; cursor: pointer;"></canvas>
+                                    {% else %}
+                                        <p class="text-muted">No Hours to display.</p>
+                                    {% endif %}                                    
+                                    <p>
+                                        <strong>Billable:</strong> {{ billable|default:0 }} hrs |
+                                        <strong>Non-Billable:</strong> {{ non_billable|default:0 }} hrs |
+                                        <strong>Total:</strong> {{ total_hours|default:0 }} hrs
+                                    </p>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                        <!-- Bar Chart Container -->
+                        <div class="col-md-6">
+                            <div class="card card-default">
+                                {% comment %} <div class="card-header"><h2>WorkLog Count by Ticket Type</h2></div> {% endcomment %}
+                                <div class="card-header"><h2>Count Of Ticket Type</h2></div>
+                                <div class="card-body">
+                                    <canvas id="barchartlg2" width="400" height="300"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--Task and related details Table-->
+                    <table id="productsTable" class="table table-hover table-product w-100" >
+                        <thead>
+                            <tr class="column-head">
+                                <th>Sn</th>
+                                <th>Task ID</th>
+                                <th>Assigned Group</th>
+                                <th>Start Date</th>
+                                <th>Complete Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for t in table_tickets %}
+                            
+                            <tr style="cursor: pointer;" onclick="window.location.href='{% url 'projectdetailsreport' t.id %}'">
+                                {% comment %} <tr style="cursor: pointer;" onclick="window.location.href='{% url 'projectdetailsreport' t.ticket_id %}'"> {% endcomment %}
+
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ t.ticket_id }}</td>
+                                <td>
+                                    {% for user in t.assigned_to.all %}
+                                        {{ user.first_name }}{% if not forloop.last %}, {% endif %}
+                                    {% empty %}
+                                        No assignee
+                                    {% endfor %}
+                                </td>
+
+
+                                <td>{{ t.date_opened|date:'Y-m-d' }}</td>
+                                <td>{{ t.closed_date|date:'Y-m-d' }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="4" class="text-center">No tickets found.</td></tr>
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+
+                </div>
+
+            <!--Details in Cards-->
+            <div class="card-body">
+
+                <div class="row ">
+                    <!-- New box -->
+                    <div class="col-xl-3 col-md-6 d-flex">
+                        <div class="card card-default bg-dark flex-fill">
+                        <div class="d-flex p-5">
+                            <div class="text-left">
+                            <span class="h2 d-block text-white">{{ state_counts.New|default:0 }}</span>
+                            <p class="text-white">New</p>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+                    <!-- In Development box -->
+                    <div class="col-xl-3 col-md-6 d-flex">
+                        <div class="card card-default bg-secondary flex-fill">
+                        <div class="d-flex p-5">
+                            <div class="text-left">
+                            <span class="h2 d-block text-white">{{ state_counts.In_Development|default:0 }}</span>
+                            <p class="text-white">In Development</p>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+                    <!-- In Testing box -->
+                    <div class="col-xl-3 col-md-6 d-flex">
+                        <div class="card card-default bg-info flex-fill">
+                        <div class="d-flex p-5">
+                            <div class="text-left">
+                            <span class="h2 d-block text-white">{{ state_counts.In_Testing|default:0 }}</span>
+                            <p class="text-white">In Testing</p>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+                    <!-- In Business Review box -->
+                    <div class="col-xl-3 col-md-6 d-flex">
+                        <div class="card card-default bg-primary flex-fill">
+                        <div class="d-flex p-5">
+                            <div class="text-left">
+                            <span class="h2 d-block text-white">{{ state_counts.In_Business_Review|default:0 }}</span>
+                            <p class="text-white">In Business Review</p>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+                    <!-- Completed box -->
+                    <div class="col-xl-3 col-md-6 d-flex">
+                        <div class="card card-default bg-success flex-fill">
+                        <div class="d-flex p-5">
+                            <div class="text-left">
+                            <span class="h2 d-block text-white">{{ state_counts.Completed|default:0 }}</span>
+                            <p class="text-white">Completed</p>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+                    <!-- On Hold box -->
+                    <div class="col-xl-3 col-md-6 d-flex">
+                        <div class="card card-default bg-warning flex-fill">
+                        <div class="d-flex p-5">
+                            <div class="text-left">
+                            <span class="h2 d-block text-white">{{ state_counts.On_Hold|default:0 }}</span>
+                            <p class="text-white">On Hold</p>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+                    <!-- Canceled box -->
+                    <div class="col-xl-3 col-md-6 d-flex">
+                        <div class="card card-default bg-danger flex-fill">
+                        <div class="d-flex p-5">
+                            <div class="text-left">
+                            <span class="h2 d-block text-white">{{ state_counts.Canceled|default:0 }}</span>
+                            <p class="text-white">Canceled</p>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    
+                </div>
+
+            </div>
+
+            <!--Download Buttons-->
+            <div class="card-header">
+                <div class="d-flex justify-content-end w-100">
+                    <div class="btn-group" role="group">
+                        <a href="{% url 'download_pro_report' %}" class="btn btn-outline-danger small-btn"
+                        style="display: flex; align-items: center; justify-content: center;">
+                        Download Report
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+<!-- for table -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!--Adjust table width-->
+<script>
+    $('.sidebar-toggle').on('click', function () {
+        setTimeout(() => {
+            $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
+        }, 300);
+    });
+</script>
+
+<!--scripts for pie chart-->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctxPie = document.getElementById('simple-pie-chart').getContext('2d');
+
+    new Chart(ctxPie, {
+        type: 'pie',
+        data: {
+            labels: ['Billable', 'Non-Billable'],
+            datasets: [{
+                data: [{{ billable }}, {{ non_billable }}],
+                backgroundColor: ['#28a745', '#dc3545'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let total = {{ total_hours }};
+                            let val = context.parsed;
+                            let pct = ((val / total) * 100).toFixed(1);
+                            return `${context.label}: ${val} hrs (${pct}%)`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+<!--scripts for bar chart-->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const ctx = document.getElementById('barchartlg2').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: {{ bar_labels|safe }},
+                datasets: [{
+                    label: 'Number of WorkLogs',
+                    data: {{ bar_counts|safe }},
+                    backgroundColor: '#17a2b8',
+                    borderRadius: 5,
+                    borderSkipped: false,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.parsed.y} logs`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { stepSize: 1 }
+                    }
+                }
+            }
+        });
+    });
+</script>
+
+<!--for update the filteration-->
+
+<script>
+function updateFilters(param, value) {
+    const url = new URL(window.location.href);
+    if (value) {
+        url.searchParams.set(param, value);
+    } else {
+        url.searchParams.delete(param);
+    }
+    
+    window.location.href = url.toString();
+}
+
+function clearAllFilters() {
+    const url = new URL(window.location.href);
+    url.searchParams.delete('user_id');
+    url.searchParams.delete('start_date');
+    url.searchParams.delete('end_date');
+    url.searchParams.delete('project_id'); 
+    window.location.href = url.toString();
+}
+</script>
+
+{% endblock %}

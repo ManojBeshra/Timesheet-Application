@@ -2377,8 +2377,10 @@ if (SimplePieChart !== null) {
       width: 350,
       type: "pie",
     },
-    colors: ["#9e6de0", "#46c79e", "#fd5190"],
-    labels: ["First Data", "Second Data", "Third Data"],
+    // colors: ["#9e6de0", "#46c79e", "#fd5190"],
+    colors: ["#9e6de0", "#46c79e"],
+    // labels: ["First Data", "Second Data", "Third Data"],
+    labels: ["Billable Hours", "Non-Billable Hours"],
     legend: {
       position: "top",
       horizontalAlign: "left",
@@ -2386,7 +2388,8 @@ if (SimplePieChart !== null) {
         radius: 0,
       },
     },
-    series: [65, 25, 10],
+    // series: [65, 25, 10],
+    series: [65, 25],
   };
 
   var simpleplePieChartRander = new ApexCharts(

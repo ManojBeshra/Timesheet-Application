@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views
+from .views import mark_notifications_seen
+
 
 urlpatterns = [
     path('worklog/', views.worklog_list, name='worklog'),
@@ -9,6 +11,8 @@ urlpatterns = [
     # path("export_worklogs_excel/", views.export_worklogs_excel, name="export_worklogs_excel"),
     path("export_worklogs_csv/", views.export_worklogs_csv, name="export_worklogs_csv"),
     path('delete-worklog/', views.delete_worklog, name='delete_worklog'),
+    path('notifications/mark-seen/', views.mark_notifications_seen, name='mark_notifications_seen'),
 
 
 ]
+

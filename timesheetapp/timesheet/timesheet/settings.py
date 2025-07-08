@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+from celery.schedules import crontab    
 
 from pathlib import Path
 
@@ -59,7 +60,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     #created apps
-    'authentication',
+    'authentication.apps.AuthenticationConfig',
+    # 'authentication',
     'worklog',
     'attendance',
     'task',
@@ -80,6 +82,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     #new
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'authentication.middleware.ForcePasswordChangeMiddleware',
 
 ]
 
@@ -180,13 +183,38 @@ EMAIL_HOST_USER = "beshra9988@gmail.com"
 EMAIL_HOST_PASSWORD = "hqgkyulhmtnpvggq"
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+
+CELERY_BEAT_SCHEDULE = {
+    'send-weekly-email': {
+        'task': 'worklog.tasks.send_weekly_email',
+        'schedule': crontab(hour=10, minute=15, day_of_week='wednesday'),  # Wed at 12:12 PM
+    },
+    'send-weekly-worklog-review-reminder-to-admin': { 
+        'task': 'worklog.tasks.send_worklog_review_reminder_to_admin',
+        'schedule': crontab(hour=12, minute=15, day_of_week='wednesday'),  # Wed at 12:30 PM
+    },
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}
+
 CSRF_TRUSTED_ORIGINS = [
-    "https://e1df-2400-1a00-b040-d660-b847-9aa6-ebae-74ef.ngrok-free.app",
-    "https://c168-2400-1a00-b040-d660-b847-9aa6-ebae-74ef.ngrok-free.app",
-    "https://saved-lobster-frequently.ngrok-free.app",
-    "https://c95c-2400-1a00-b040-d660-5164-6566-6941-3fbb.ngrok-free.app",
-    "https://hyena-fit-ibex.ngrok-free.app",
-    "https://hyena-fit-ibex.ngrok-free.app",
     "https://sub.glaciersystemsinc.com",
     "https://timesheet1.glaciersystemsinc.com",
     "http://timesheet1.glaciersystemsinc.com",

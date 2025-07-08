@@ -23,4 +23,5 @@ urlpatterns = [
     path('task/', include('task.urls')),
     path('worklog/', include('worklog.urls')),
     path('attendance/', include('attendance.urls')),
+    path('report/', include('report.urls')),
 ]

@@ -15,102 +15,13 @@ from django.core.mail import send_mail
 from .forms import RequestreviewForm
 from django.conf import settings
 from datetime import datetime
-import pandas as pd
+# import pandas as pd
 from django.http import HttpResponse
-from openpyxl import Workbook
+# from openpyxl import Workbook
 from django.utils.timezone import make_naive  # Import this
 from django.db.models.functions import ExtractYear, ExtractMonth
 from django.utils.dateparse import parse_date
-
-
-
-
-
-
-# @login_required
-# def worklog_list(request):
-#     worklogs = worklog.objects.all().order_by('-date')
-#     priority = priority_type.objects.all()
-#     users = User.objects.all()
-#     tickets = ticket.objects.all()
-#     tickettype = ticket_type.objects.all()
-
-
-#     # Get filter parameters
-#     user_id = request.GET.get('user_id')  
-#     billable_status = request.GET.get('billable_status')
-#     start_date = request.GET.get('start_date')  # new parameter
-#     end_date = request.GET.get('end_date')  # new parameter
-
-
-#     filters = {}
-
-
-#     # If the logged-in user is not staff
-#     if not request.user.is_staff:
-#         worklogs = worklogs.filter(user=request.user)
-
-
-#     # user filter
-#     selected_user = None
-#     if user_id:
-#         selected_user = get_object_or_404(User, pk=user_id)
-#         filters["user"] = selected_user
-
-
-#     # billable filter
-#     if billable_status in ["0", "1"]:
-#         is_billable = billable_status == "0"
-#         filters["billable"] = is_billable
-
-
-
-
-#      # Apply date filters
-#     if start_date:
-#         parsed_start_date = parse_date(start_date)
-
-
-#         if parsed_start_date:
-#             filters["date__gte"] = parsed_start_date  
-
-
-#     if end_date:
-#         parsed_end_date = parse_date(end_date)
-
-
-#         if parsed_end_date:
-#             filters["date__lte"] = parsed_end_date  
-
-
-
-
-#     # Apply filters
-#     worklogs = worklogs.filter(**filters)
-
-
-#     # Get unique dates for dropdowns
-#     unique_dates = worklog.objects.values_list('date', flat=True).distinct().order_by('date')
-
-
-#     # Context to maintain filter values on page reload
-#     context = {
-#         'worklogs': worklogs,
-#         'priority': priority,
-#         'tickets': tickets,
-#         'users': users,
-#         'tickettype': tickettype,
-#         'selected_user': selected_user,
-#         'billable_status': billable_status,
-#         'start_date': start_date,
-#         'end_date': end_date,
-#         'unique_dates': unique_dates
-
-
-#     }
-
-
-#     return render(request, 'worklog.html', context)
+from worklog.models import MailNotification
 
 from user.utils import get_visible_users
 @login_required
@@ -186,9 +97,6 @@ def worklog_list(request):
 
 
     return render(request, 'worklog.html', context)
-
-
-
 
 
 @csrf_exempt
@@ -283,44 +191,6 @@ def add_worklog(request):
     return JsonResponse({"message": "Invalid method", "status": "error"})
 
 
-# @login_required
-# def requestreview_mail(request):
-#     if request.method == "POST":
-#         form = RequestreviewForm(request.POST)
-#         if form.is_valid():
-#             request_review = form.save(commit=False)
-#             request_review.save()
-#             form.save_m2m()  # Save ManyToMany field after saving instance
-           
-#             recipients = [user.email for user in request_review.send_to.all() if user.email]
-
-
-#             if recipients:
-#                 try:
-#                     send_mail(
-#                         subject="Worklog Review Request",
-#                         message=f"{request_review.requested_note}\n\nwebsite url: http://127.0.0.1:5000/worklog/worklog/",
-#                         from_email=settings.EMAIL_HOST_USER,
-#                         recipient_list=recipients,
-#                         fail_silently=False,
-#                     )
-#                     messages.success(request, "Email sent successfully!")
-#                 except Exception as e:
-#                     messages.error(request, f"Error sending email: {e}")  
-
-
-#             return redirect("worklog")  
-
-
-#     else:
-#         form = RequestreviewForm()
-
-
-#     return render(request, "worklog.html", {"form": form})
-
-
-
-
 @login_required
 def requestreview_mail(request):
     if request.method == "POST":
@@ -368,85 +238,7 @@ def requestreview_mail(request):
 
     return render(request, "worklog.html", {"form": form})
 
-
-
-
-
-
-
-
-# from email.message import EmailMessage
-# @login_required
-# def requestreview_mail(request):
-#     if request.method == "POST":
-#         form = RequestreviewForm(request.POST)
-#         if form.is_valid():
-#             request_review = form.save(commit=False)
-#             request_review.save()
-#             form.save_m2m()  # Save ManyToMany field after saving instance
-           
-#             recipients = [user.email for user in request_review.send_to.all() if user.email]
-
-
-
-
-#             # Get sender email (Logged-in user or fallback)
-#             sender_email = request.user.email if request.user.email else settings.EMAIL_HOST_USER
-#             reply_to_email = sender_email  # Use the sender as the Reply-To address
-
-
-
-
-#             # Generate dynamic base URL
-#             base_url = request.build_absolute_uri('/')[:-1]
-#             message = f"{request_review.requested_note}\n\n{base_url}"
-
-
-
-
-#             # Create email with reply-to
-#             email = EmailMessage(
-#                 subject="Worklog Review Request",
-#                 body=f"{request_review.requested_note}\n\n{base_url}",
-#                 from_email=settings.EMAIL_HOST_USER,  # Ensure sender is set properly
-#                 to=recipients,
-#                 reply_to=[reply_to_email],  # Adding Reply-To header
-#             )
-
-
-
-
-#             # Send email
-#             email.send(fail_silently=False)
-
-
-
-
-#             return redirect("worklog")  
-
-
-
-
-#     else:
-#         form = RequestreviewForm()
-
-
-
-
-#     return render(request, "worklog.html", {"form": form})
-
-
-
-
-
-
-
-
-
-
 import csv
-
-
 @login_required
 def export_worklogs_csv(request):
     # Get filter parameters
@@ -537,3 +329,29 @@ def delete_worklog(request):
         worklogs.delete()
         return JsonResponse({"success": True, "message": "Work log deleted successfully."})
     return JsonResponse({"success": False, "message": "Invalid request."}, status=400)
+
+
+#new fn
+
+def dashboard_view(request):
+    recent_notifications = MailNotification.objects.filter(user=request.user).order_by('-created_at')[:5]
+
+    unseen_notification_count = MailNotification.objects.filter(user=request.user, notification_seen=False).count()
+
+    context = {
+        'recent_notifications': recent_notifications,
+        'unseen_notification_count': unseen_notification_count,
+    }
+
+    return render(request, 'base.html', context)
+
+def worklog_view(request):
+    if request.user.is_authenticated:
+        # Mark all unseen notifications as seen
+        MailNotification.objects.filter(user=request.user, notification_seen=False).update(notification_seen=True)
+#added
+@login_required
+def mark_notifications_seen(request):
+    MailNotification.objects.filter(user=request.user, notification_seen=False).update(notification_seen=True)
+    return JsonResponse({'status': 'ok'})
+    print("Notifications seen marked for:", request.user)

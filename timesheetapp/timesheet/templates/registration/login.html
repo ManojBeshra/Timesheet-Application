@@ -1,37 +1,32 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Login</title>
-    <!--favicon-->
-    <link href="{% static 'img/galcierlogo.png' %}" rel="icon">
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- GOOGLE FONTS -->
+    <link href="https://fonts.googleapis.com/css?family=Karla:400,700|Roboto" rel="stylesheet">
+    <link href="{% static 'plugins/material/css/materialdesignicons.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'plugins/simplebar/simplebar.css' %}" rel="stylesheet" />
+    <link href="{% static 'plugins/nprogress/nprogress.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" />
+    <link href="{% static 'images/favicon.png' %}" rel="shortcut icon" />
+    <script src="{% static 'plugins/nprogress/nprogress.js' %}"></script>
+    <!-- FAVICON -->
+    <link href="{% static 'images/glacierlogo.png' %}" rel="shortcut icon" />
+  </head>
 
-    <style>
-        .center-container {
-            min-height: 100vh; /* Full height */
-            display: flex;
-            justify-content: center; /* Center horizontally */
-            align-items: center; /* Center vertically */
-        }
-        .custom-card{
-            width: 100%;
-            max-width: 450px; /* Maximum width of the form */
-            padding: 15px;
-            margin: auto;
-        }
-    </style>
+  <body class="bg-light-gray" id="body">
+    <div class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-10 col-lg-6">
+            <div class="card card-default">
+              <div class="card-body p-5">
+                <h4 class="text-dark mb-5">Login</h4>
 
-</head>
-    
-<body>
-    
-    <div class="container center-container">
-        <div class="card o-hidden border-0 shadow-lg my-5 custom-card">
-            <div class="card-body p-5">
                 <form method="post" action="{% url 'login' %}">
                     {% csrf_token %}
                     <!--To show a confirmation error message when login details is incorrect-->
@@ -49,13 +44,20 @@
                         <input type="password" class="form-control" id="password" name="password" required>
                     </div>
                     <button type="submit" class="btn btn-primary w-100">Login</button>
+                    <!-- Custom password change link -->
+                    <div class="text-center mt-3">
+                        <a href="{% url 'manual_change_password' %}" class="text-blue">change your password?</a>
+                    </div>
                 </form>
-            </div>
-        </div>
-    </div>
 
-    <!-- Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-</body>
+
+              </div>
+            </div>
+          </div> 
+        </div>
+      </div>
+    </div>
+  </body>
+
 </html>
+

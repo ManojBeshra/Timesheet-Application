@@ -1,11 +1,6 @@
 from django.contrib.auth.models import User
 from .models import ManagerAssignment
 
-
-
-
-
-
 def get_visible_users(user):
     if user.profile.role == 'admin':
         return User.objects.all()

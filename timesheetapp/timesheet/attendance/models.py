@@ -55,3 +55,5 @@ class LeaveDetails(models.Model):
     leave_to = models.DateField(null=True)
     approval = models.ForeignKey(Approval, on_delete=models.SET_NULL, null=True)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    description = models.TextField(default = "")
+    remarks = models.TextField(default="")
