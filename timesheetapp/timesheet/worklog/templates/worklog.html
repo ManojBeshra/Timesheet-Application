@@ -378,7 +378,7 @@
 
 
                     <!-- User/Date/Billable filter buttons -->
-                    <form method="GET" action="{% url 'worklog' %}" class="d-flex justify-content-end align-items-center" style="gap:10px">
+                    <div class="d-flex justify-content-end align-items-center" style="gap:10px">
                         <!-- User Dropdown Only for Admin -->
                         <div class="btn-group" role="group" {% if not request.user.is_staff %}hidden{% endif %}>
                             <button type="button" id="user" class="btn btn-outline-danger dropdown-toggle small-btn" data-toggle="dropdown">
@@ -460,7 +460,7 @@
                             </div>
                         </div>
                         
-                    </form>
+                    </div>
                 </div>
                                    
                  <!--All Worklog-->
