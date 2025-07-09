@@ -412,7 +412,7 @@
                                 {% endif %}
                             </button>
                             <div class="dropdown-menu dropdown-menu-right">
-                                <a class="dropdown-item" href="{% url 'worklog' %}?billable_status={{ billable_status }}">Show all</a>
+                                <a class="dropdown-item" href="{% url 'worklog' %}">Show all</a>
                                 <a class="dropdown-item" href="{% url 'worklog' %}?billable_status=0&user_id={{ selected_user.id }}&start_date={{start_date}}&end_date={{end_date}}">Billable</a>
                                 <a class="dropdown-item" href="{% url 'worklog' %}?billable_status=1&user_id={{ selected_user.id }}&start_date={{start_date}}&end_date={{end_date}}">Non Billable</a>
                             </div>
