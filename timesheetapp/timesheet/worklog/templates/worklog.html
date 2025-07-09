@@ -421,20 +421,20 @@
 
                         <!-- Start Date Filter -->
                         <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn" data-toggle="dropdown">
-                                {% if start_date %}
-                                    {{ start_date }}
-                                {% else %}
-                                    Filter From
-                                {% endif %}
+                            <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn " data-toggle="dropdown">
+                            {% if start_date and start_date != 'None' %}
+                                {{ start_date }}
+                            {% else %}
+                                Filter From
+                            {% endif %}
                             </button>
-                            <div class="dropdown-menu dropdown-menu-right" >
+
+
+                            <div class="dropdown-menu dropdown-menu-right px-3 py-2">  <!-- spacing added here -->
                                 <a class="dropdown-item" href="{% url 'worklog' %}">Show all</a>
-                                <form class="d-flex align-items-center gap-2" onsubmit="event.preventDefault(); updateFilters('start_date', this.elements['start_date'].value);">
-                                    <input type="date" name="start_date" id = "startdate"  class="form-control">
-                                    <button type="submit" class="btn btn-danger btn-xs">
-                                        Apply
-                                    </button>
+                                <form class="form-inline" onsubmit="event.preventDefault(); updateFilters('start_date', this.elements['start_date'].value);">
+                                    <input type="date" name="start_date" class="form-control mr-2">
+                                    <button type="submit" class="btn btn-danger btn-xs">Apply</button>
                                 </form>
                             </div>
                         </div>
@@ -443,21 +443,21 @@
                         <!-- End Date Filter -->
                         <div class="btn-group" role="group">
                             <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn" data-toggle="dropdown">
-                                {% if end_date %}
+                                {% if end_date and end_date != 'None' %}
                                     {{ end_date }}
                                 {% else %}
                                     Filter To
                                 {% endif %}
                             </button>
+
+
                             <div class="dropdown-menu dropdown-menu-right" >
                                 <a class="dropdown-item" href="{% url 'worklog' %}">Show all</a>
                                 <form class="d-flex align-items-center gap-2" onsubmit="event.preventDefault(); updateFilters('end_date', this.elements['end_date'].value);">
-                                    <input type="date" name="end_date" id = "enddate"  class="form-control">
-                                    <button type="submit" class="btn btn-danger btn-xs">
-                                        Apply
-                                    </button>
+                                    <input type="date" name="end_date" class="form-control">
+                                    <button type="submit" class="btn btn-danger btn-xs"> Apply</button>
                                 </form>
-                            </div>
+                            </div>                       
                         </div>
                         
                     </div>
