@@ -118,11 +118,11 @@
                 <div class="card-header">
 
 
-                     <!--Add Issue Buttons-->
+                    <!--Add Issue Buttons-->
                     <div class="d-flex justify-content-start " style="gap: 10px;">
 
 
-                        <!-- Only for User    -->
+                        <!-- Only for User -->
                         <button type="button" id = "addlog" class="btn btn-outline-success small-btn" data-toggle="modal" data-target="#AddLogForm" {% if request.user.is_staff %}hidden{% endif %}>
                             Add Log
                         </button>
@@ -412,7 +412,7 @@
                                 {% endif %}
                             </button>
                             <div class="dropdown-menu dropdown-menu-right">
-                                <a class="dropdown-item" href="{% url 'worklog' %}">Show all</a>
+                                <a class="dropdown-item" href="{% url 'worklog' %}?billable_status={{ '' }}">Show all</a>
                                 <a class="dropdown-item" href="{% url 'worklog' %}?billable_status=0&user_id={{ selected_user.id }}&start_date={{start_date}}&end_date={{end_date}}">Billable</a>
                                 <a class="dropdown-item" href="{% url 'worklog' %}?billable_status=1&user_id={{ selected_user.id }}&start_date={{start_date}}&end_date={{end_date}}">Non Billable</a>
                             </div>
@@ -428,7 +428,6 @@
                                 Filter From
                             {% endif %}
                             </button>
-
 
                             <div class="dropdown-menu dropdown-menu-right px-3 py-2">  <!-- spacing added here -->
                                 <a class="dropdown-item" href="{% url 'worklog' %}">Show all</a>
@@ -450,7 +449,6 @@
                                 {% endif %}
                             </button>
 
-
                             <div class="dropdown-menu dropdown-menu-right" >
                                 <a class="dropdown-item" href="{% url 'worklog' %}">Show all</a>
                                 <form class="d-flex align-items-center gap-2" onsubmit="event.preventDefault(); updateFilters('end_date', this.elements['end_date'].value);">
@@ -459,7 +457,6 @@
                                 </form>
                             </div>                       
                         </div>
-                        
                     </div>
                 </div>
                                    
@@ -477,62 +474,61 @@
                     {% endif %} {% endcomment %}
                    
                     <table id="productsTable" class="table table-hover table-product" style="width:100%">
-                    <thead>
-                      <tr class="column-head">
-                          <th {% if not request.user.is_staff %}hidden{% endif %}>Resource&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                          <th>Billable&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                          <th class="date-header">Date&nbsp;&nbsp;</th>
-                          <th>Week&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                          <th>Ticket&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                          <th class="workdone-column">Work Done</th>
-                          <th>Hours&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                          <th>Category&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                          {% comment %} <th>Note&nbsp;&nbsp;&nbsp;&nbsp;</th> {% endcomment %}
-                          <th>Actions&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                      </tr>
-                    </thead>
+                        <thead>
+                            <tr class="column-head">
+                                <th {% if not request.user.is_staff %}hidden{% endif %}>Resource&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                <th>Billable&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                <th class="date-header">Date&nbsp;&nbsp;</th>
+                                <th>Week&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                <th>Ticket&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                <th class="workdone-column">Work Done</th>
+                                <th>Hours&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                <th>Category&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                {% comment %} <th>Note&nbsp;&nbsp;&nbsp;&nbsp;</th> {% endcomment %}
+                                <th>Actions&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                            </tr>
+                        </thead>
 
 
-                    <tbody>
-                        {% for log in worklogs %}
-                        <tr onclick="window.location='{% url 'worklogdetails' log.id%}'">
-                            <td {% if not request.user.is_staff %}hidden{% endif %}>{{ log.user.first_name }}</td>
-                            <td align="center">
-                                <div class="custom-control custom-checkbox checkbox-dark  d-inline-block mr-3 mb-3">
-                                    <input type="checkbox" onclick="return false;" class="customCheckDark" id="customCheckDanger{{ log.id }}" {% if log.billable %}checked{% endif %}>
-                                </div>
-                            </td>
-                            <td>{{ log.date|date:'m/d/Y'  }}</td>
-                            <td>{{ log.week }}</td>
-                            <td>
-                                {% if log.ticket %}
-                                    {{ log.ticket.ticket_id }}
-                                {% else %}
-                                    None  
-                                {% endif %}
-                            </td>
-                           
-                            <td>{{ log.workdone }}</td>
+                        <tbody>
+                            {% for log in worklogs %}
+                                <tr onclick="window.location='{% url 'worklogdetails' log.id%}'">
+                                    <td {% if not request.user.is_staff %}hidden{% endif %}>{{ log.user.first_name }}</td>
+                                    <td align="center">
+                                        <div class="custom-control custom-checkbox checkbox-dark  d-inline-block mr-3 mb-3">
+                                            <input type="checkbox" onclick="return false;" class="customCheckDark" id="customCheckDanger{{ log.id }}" {% if log.billable %}checked{% endif %}>
+                                        </div>
+                                    </td>
+                                    <td>{{ log.date|date:'m/d/Y'  }}</td>
+                                    <td>{{ log.week }}</td>
+                                    <td>
+                                        {% if log.ticket %}
+                                            {{ log.ticket.ticket_id }}
+                                        {% else %}
+                                            None  
+                                        {% endif %}
+                                    </td>
+                                
+                                    <td>{{ log.workdone }}</td>
 
 
-                            <td>{{ log.hours }}</td>
-                   
-                            <td>{{ log.category }}</td>
-                            {% comment %} <td align="center">
-                                    <i data-toggle="modal" data-target="#NoteForm"
-                                       class="fa-regular fa-clipboard changes-color note-log"
-                                       data-id="{{ log.id }}"
-                                       data-note="{{ log.note }}">
-                                    </i>
-                            </td> {% endcomment %}
-                            <td align="center">
-                                <i data-toggle="modal" data-target="#DeleteLogForm" class="fa-solid fa-trash-can hover delete-log" data-id="{{ log.id }}"  onclick="openDeleteModal(event, '{{ log.id }}')"></i>
-                               
-                            </td>
-                        </tr>
-                       
-                        {% endfor %}
-                    </tbody>
+                                    <td>{{ log.hours }}</td>
+                        
+                                    <td>{{ log.category }}</td>
+                                    {% comment %} <td align="center">
+                                            <i data-toggle="modal" data-target="#NoteForm"
+                                            class="fa-regular fa-clipboard changes-color note-log"
+                                            data-id="{{ log.id }}"
+                                            data-note="{{ log.note }}">
+                                            </i>
+                                    </td> {% endcomment %}
+                                    <td align="center">
+                                        <i data-toggle="modal" data-target="#DeleteLogForm" class="fa-solid fa-trash-can hover delete-log" data-id="{{ log.id }}"  onclick="openDeleteModal(event, '{{ log.id }}')"></i>
+                                    
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
                   </table>
                 </div>
             </div>
@@ -585,7 +581,7 @@
         });
         });
  
-     </script>
+    </script>
 
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -621,12 +617,12 @@
    
    
    
-    function openDeleteModal(event, logId) {
-        event.stopPropagation(); // Prevents the row click event from firing
-        $('#DeleteLogForm').modal('show'); // Ensures the modal opens properly
-        // Optional: Set the log ID in the modal if needed
-        $('#DeleteLogForm').find('[name="log_id"]').val(logId);
-    }
+        function openDeleteModal(event, logId) {
+            event.stopPropagation(); // Prevents the row click event from firing
+            $('#DeleteLogForm').modal('show'); // Ensures the modal opens properly
+            // Optional: Set the log ID in the modal if needed
+            $('#DeleteLogForm').find('[name="log_id"]').val(logId);
+        }
      </script>
 
 
@@ -654,9 +650,6 @@
             }
         });
     </script>
-
-
-
 
 
 

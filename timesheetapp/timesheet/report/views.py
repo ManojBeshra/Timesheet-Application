@@ -485,3 +485,5 @@ def download_pro_report(request):
         writer.writerow([idx, project.ticket_id, assigned_users, project.date_opened, project.closed_date or 'NULL'])
 
     return response
+
+

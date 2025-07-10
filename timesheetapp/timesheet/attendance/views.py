@@ -1,7 +1,7 @@
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from .models import Attendance, AttendanceDetail 
+from .models import Attendance, AttendanceDetail, LeaveDetails, LeaveType, User, userLeaveDays
 from django.utils import timezone
 import datetime
 from django.contrib.auth.models import User
@@ -370,6 +370,14 @@ def add_leave_details(request):
         days_requested = weekdayscount(leave_from_date, leave_to_date)
         if days_requested <= 0:
             return redirect(f"{reverse('leavedetails')}?error=No days selected.")
+        
+        # Check for duplicate leave
+        if LeaveDetails.objects.filter(user=request.user, leave_from=leave_from_date).exists():
+            return redirect(f"{reverse('leavedetails')}?error=You  have taken leave on this date.")
+        
+        # No leave type selected 
+        if not leave_type_id:
+            return redirect(f"{reverse('leavedetails')}?error=Please select the required fields.")
 
 
         # Update user leave days

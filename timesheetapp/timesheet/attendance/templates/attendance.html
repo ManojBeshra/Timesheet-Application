@@ -121,9 +121,8 @@
 
         <div class="card-body">
             <!--Attendance Table-->
-            
-            
-                <table id="productsTable" class="table table-hover table-product w-100">
+
+            <table id="productsTable" class="table table-hover table-product w-100">
                 <thead>
                     <tr class="column-head">
                         <th>Sn</th>
@@ -168,20 +167,20 @@
                             <div class="modal-header">
                                 <h5 class="modal-title" id="view-modal-title">Note Form</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
+                                    <span aria-hidden="true">×</span>
                                 </button>
                             </div>
 
                             <!-- Modal Body -->
                             <div class="modal-body">
                                 <form id="message-form" method="POST" action="{% url 'attendance' %}">
-                                {% csrf_token %}
-                                <input type="hidden" name="record_id" id="record-id">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="record_id" id="record-id">
 
-                                <div class="mb-3">
-                                    {% comment %} <label for="message-input" class="form-label">Note:</label> {% endcomment %}
-                                    <textarea id="message-input" class="form-control" name="note" rows="4" placeholder="Empty Note"></textarea>
-                                </div>
+                                    <div class="mb-3">
+                                        {% comment %} <label for="message-input" class="form-label">Note:</label> {% endcomment %}
+                                        <textarea id="message-input" class="form-control" name="note" rows="4" placeholder="Empty Note"></textarea>
+                                    </div>
                                 </form>
                             </div>
 
@@ -228,7 +227,7 @@
                                 data-record-id="{{ record.id }}"
                                 title="View Note">
                                 <i class="fa-regular fa-clipboard"></i> 
-                            </a>
+                        </a>
                     </td>
                 </tr>`;
                 tableBody.append(newRow);
