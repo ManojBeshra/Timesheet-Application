@@ -1,7 +1,7 @@
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from .models import Attendance, AttendanceDetail, LeaveDetails, LeaveType, User, userLeaveDays
+from .models import Attendance, AttendanceDetail, LeaveDetails, LeaveType, User, userLeaveDays, EarnedLeaveDay
 from django.utils import timezone
 import datetime
 from django.contrib.auth.models import User
@@ -32,6 +32,14 @@ from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
 import json
 from .models import LeaveDetails, LeaveType, Approval
+from datetime import timedelta
+from django.db.models import Sum
+from django.urls import reverse
+from django.http import HttpResponse
+from datetime import datetime
+from .models import LeaveDetails, userLeaveDays, LeaveType
+
+
 @login_required
 def attendance_view(request):
     visible_users = get_visible_users(request.user)
@@ -153,7 +161,6 @@ def attendance_view(request):
        
     })
 
-
 #Enrty/Exit Buttons
 @login_required
 def entry_view(request):
@@ -249,8 +256,9 @@ def save_note_view(request, record_id):
 
     return JsonResponse({"error": "Invalid request method!"}, status=405)
 
-#Leave Details
+@login_required
 def leavedetails_view(request):
+    # User list for admin/ users
     if request.user.is_staff:
         users = User.objects.exclude(username=request.user.username)
     else:
@@ -264,16 +272,17 @@ def leavedetails_view(request):
     categories = LeaveType.objects.all()
     approvals = Approval.objects.all()
 
-    leavedays = userLeaveDays.objects.filter(user = request.user)
-
-
     leaves = LeaveDetails.objects.all()
 
-    # Filter by user
+    # Filter leaves by user
     if request.user.is_staff and selected_user_id:
         leaves = leaves.filter(user__id=selected_user_id)
+        user_for_leaves = User.objects.filter(id=selected_user_id).first()
     elif not request.user.is_staff:
         leaves = leaves.filter(user=request.user)
+        user_for_leaves = request.user
+    else:
+        user_for_leaves = None
 
     # Filter by date
     if selected_date:
@@ -281,7 +290,7 @@ def leavedetails_view(request):
             date_obj = datetime.strptime(selected_date, '%Y-%m-%d').date()
             leaves = leaves.filter(requested_date=date_obj)
         except ValueError:
-            pass  # ignore invalid dates
+            pass
 
     # Filter by category
     if selected_category:
@@ -291,6 +300,7 @@ def leavedetails_view(request):
     if selected_status:
         leaves = leaves.filter(approval__name__iexact=selected_status)
 
+    # Selected user object
     selected_user = None
     if selected_user_id:
         try:
@@ -298,119 +308,122 @@ def leavedetails_view(request):
         except User.DoesNotExist:
             selected_user = None
 
+    # Get leave_from dates for JS validation (format as 'YYYY-MM-DD')
+    if user_for_leaves:
+        existing_leave_from_dates = list(
+            LeaveDetails.objects.filter(user=user_for_leaves).values_list('leave_from', flat=True)
+        )
+        existing_leave_from_dates = [d.strftime('%Y-%m-%d') for d in existing_leave_from_dates]
+    else:
+        existing_leave_from_dates = []
+
+    # Calculate earned leave days from EarnedLeaveDay model
+    earned_record = EarnedLeaveDay.objects.filter(user=user_for_leaves).first()
+    earned_days = earned_record.earned_leave_days if earned_record else 0
+
+    # Calculate total leave taken ONLY from approved leaves (exclude pending/denied)
+    approved_statuses = ['Approved']  # Modify if needed
+    leaves_approved = LeaveDetails.objects.filter(
+        user=user_for_leaves,
+        approval__name__in=approved_statuses
+    )
+
+    total_leave_taken = 0
+    for leave in leaves_approved:
+        total_leave_taken += weekdayscount(leave.leave_from, leave.leave_to)
+
+    # Remaining leave days = earned - taken
+    remaining_leave_days = earned_days - total_leave_taken
+    if remaining_leave_days < 0:
+        remaining_leave_days = 0  # Avoid negative
+
     return render(request, 'leavedetails.html', {
         'users': users,
         'selected_user': selected_user,
-        'leaves': leaves,  
+        'leaves': leaves,
         'selected_category': selected_category,
         'selected_status': selected_status,
         'categories': categories,
         'approvals': approvals,
         'selected_date': selected_date,
-        'leavedays': leavedays
+        'existing_leave_from_dates': existing_leave_from_dates,
+        'total_leave_taken': total_leave_taken,
+        'earned_days': earned_days,
+        'remaining_leave_days': remaining_leave_days,
     })
 
 
-# @login_required
-# def add_leave_details(request):
-#     if request.method == 'POST':
-#         leave_type_id = request.POST.get("type")
-#         leave_from = request.POST.get("leave_from")
-#         leave_to = request.POST.get("leave_to")
-#         approval_id = request.POST.get("approval")
-#         description = request.POST.get("description")
 
 
-#         if not leave_type_id or not leave_from or not leave_to:
-#             return HttpResponse("Missing data", status=400)
-
-
-#         LeaveDetails.objects.create(
-#             user=request.user,
-#             type_id=leave_type_id,
-#             leave_from=leave_from,
-#             leave_to=leave_to,
-#             approval_id=approval_id,
-#             description = description
-#         )
-#         return redirect('leavedetails')
-
-
-#     return HttpResponse("Invalid method", status=405)
-
-from datetime import timedelta
 
 def weekdayscount(start_date, end_date):
     day_count = 0
     current_day = start_date
     while current_day <= end_date:
-        if current_day.weekday() < 5:  
+        if current_day.weekday() < 5:  # Monday=0 to Friday=4
             day_count += 1
         current_day += timedelta(days=1)
     return day_count
 
-
-from django.urls import reverse
-from django.http import HttpResponse
-from datetime import datetime
-from .models import LeaveDetails, userLeaveDays, LeaveType
-
 @login_required
 def add_leave_details(request):
-    if request.method == 'POST':
-        leave_type_id = request.POST.get("type")
-        leave_from = request.POST.get("leave_from")
-        leave_to = request.POST.get("leave_to")
-        approval_id = request.POST.get("approval")
-        description = request.POST.get("description")
+    if request.method != 'POST':
+        return HttpResponse("Invalid method", status=405)
 
-        # Calculate days requested
+    leave_type_id = request.POST.get("type")
+    leave_from = request.POST.get("leave_from")
+    leave_to = request.POST.get("leave_to")
+    approval_id = request.POST.get("approval")
+    description = request.POST.get("description", "")
+
+    if not leave_type_id or not leave_from or not leave_to:
+        return redirect(f"{reverse('leavedetails')}?error=Please fill all required fields.")
+
+    try:
         leave_from_date = datetime.strptime(leave_from, '%Y-%m-%d').date()
         leave_to_date = datetime.strptime(leave_to, '%Y-%m-%d').date()
-        days_requested = weekdayscount(leave_from_date, leave_to_date)
-        if days_requested <= 0:
-            return redirect(f"{reverse('leavedetails')}?error=No days selected.")
-        
-        # Check for duplicate leave
-        if LeaveDetails.objects.filter(user=request.user, leave_from=leave_from_date).exists():
-            return redirect(f"{reverse('leavedetails')}?error=You  have taken leave on this date.")
-        
-        # No leave type selected 
-        if not leave_type_id:
-            return redirect(f"{reverse('leavedetails')}?error=Please select the required fields.")
+    except ValueError:
+        return redirect(f"{reverse('leavedetails')}?error=Invalid date format.")
 
+    days_requested = weekdayscount(leave_from_date, leave_to_date)
+    if days_requested <= 0:
+        return redirect(f"{reverse('leavedetails')}?error=No valid weekdays selected.")
 
-        # Update user leave days
-        user_leave_days, created = userLeaveDays.objects.get_or_create(
-            user=request.user,
-            type_id=leave_type_id,
-            defaults={'leaveTaken': 0, 'availableDays': LeaveType.objects.get(id=leave_type_id).days}
-        )
+    # Check duplicate leave_from date for the user
+    if LeaveDetails.objects.filter(user=request.user, leave_from=leave_from_date).exists():
+        return redirect(f"{reverse('leavedetails')}?error=Leave already taken for this start date.")
 
-        leave_type = LeaveType.objects.get(id=leave_type_id)
+    # Get earned leave days based on tenure
+    earned_record = EarnedLeaveDay.objects.filter(user=request.user).first()
+    earned_days = earned_record.earned_leave_days if earned_record else 0
 
-        if user_leave_days.availableDays < days_requested:  
-            return redirect(
-                f"{reverse('leavedetails')}?error=Not enough leave days. "
-                f"You have only {user_leave_days.availableDays} days left for {leave_type.name}"
-            )
+    # Calculate total leave taken (only approved leaves)
+    approved_statuses = ['Approved']
+    leaves_approved = LeaveDetails.objects.filter(
+        user=request.user,
+        approval__name__in=approved_statuses
+    )
 
-        user_leave_days.leaveTaken += days_requested
-        user_leave_days.save()
+    total_leave_taken = 0
+    for leave in leaves_approved:
+        total_leave_taken += weekdayscount(leave.leave_from, leave.leave_to)
 
-        # Create leave detail record
-        LeaveDetails.objects.create(
-            user=request.user,
-            type_id=leave_type_id,
-            leave_from=leave_from,
-            leave_to=leave_to,
-            approval_id=approval_id,
-            description=description
-        )
+    remaining_days = earned_days - total_leave_taken
 
-        return redirect(f"{reverse('leavedetails')}?msg=You have {user_leave_days.availableDays} days left of {user_leave_days.type.name} left")
+    if remaining_days < days_requested:
+        return redirect(f"{reverse('leavedetails')}?error=Insufficient remaining leave days.")
 
-    return HttpResponse("Invalid method", status=405)
+    # Create leave request with default approval (probably Pending)
+    LeaveDetails.objects.create(
+        user=request.user,
+        type_id=leave_type_id,
+        leave_from=leave_from_date,
+        leave_to=leave_to_date,
+        approval_id=approval_id,
+        description=description
+    )
+
+    return redirect(reverse('leavedetails'))
 
 
 
@@ -434,4 +447,9 @@ def approve_leave(request):
         except LeaveDetails.DoesNotExist:
             return JsonResponse({'status': 'error', 'message': 'Leave not found'}, status=404)
     return JsonResponse({'status': 'invalid'}, status=400)
+
+
+
+
+
 

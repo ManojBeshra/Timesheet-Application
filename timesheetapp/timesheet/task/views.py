@@ -71,10 +71,11 @@ def filter_taskhistory(request, user_id=None, project_id=None):
     completed_states = state.objects.filter(state_name__in=["Completed", "Canceled"])
     tasks = ticket.objects.filter(state__in=completed_states, assigned_to__in=visible_users)
 
+    # Only projects with completed/canceled tasks
+    projects_cc = project.objects.filter(ticket__in=tasks).distinct()
 
     selected_user = None
     selected_project = None
-
 
     # user filter
     if user_id:
@@ -84,18 +85,15 @@ def filter_taskhistory(request, user_id=None, project_id=None):
         else:
             tasks = tasks.none()  # user tried to filter someone they're not allowed to see
 
-
-    # project filter
+    # project filter 
     if project_id:
         selected_project = get_object_or_404(project, pk=project_id)
         tasks = tasks.filter(project=selected_project)
-
 
     customers = customer.objects.all()
     tickettype = ticket_type.objects.all()
     priority = priority_type.objects.all()
     statelist = state.objects.all()
-
 
     return render(request, 'taskhistory.html', {
         'tasks': tasks,
@@ -107,10 +105,9 @@ def filter_taskhistory(request, user_id=None, project_id=None):
         'projects': projects,
         'selected_user': selected_user,
         'selected_project': selected_project,
+        'projects_cc': projects_cc,
+        
     })
-
-
-
 
 
 @login_required

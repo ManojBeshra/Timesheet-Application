@@ -21,5 +21,6 @@ class ManagerAssignment(models.Model):
     def __str__(self):
         return f"{self.manager.username} → {self.user.username}"
 
-
-
+class Teams(models.Model):
+    teamname = models.TextField()
+    assigned_users = models.ManyToManyField(User)  # Allow multiple users

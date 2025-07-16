@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User 
 from datetime import datetime
+from django.utils import timezone
+from datetime import date
+
 
 # Create your models here.
 
@@ -17,7 +20,6 @@ class AttendanceDetail(models.Model):
     entry = models.TimeField(null=True, blank=True)
     exit = models.TimeField(null=True, blank=True)
     hour = models.IntegerField(default=0)
-    # hour = models.DurationField(default="00:00:00")
     note = models.TextField(default="")
 
     def save(self, *args, **kwargs):
@@ -31,9 +33,6 @@ class AttendanceDetail(models.Model):
     def duration(self):
         return f"{self.hour // 3600} hr {(self.hour % 3600) // 60} min {self.hour % 60} sec" if self.hour else 'N/A'
 
-    # def __str__(self):
-    #     return f"{self.attendance.user.username} - {self.attendance.date} - {self.entry} - {self.exit}"
-
 
 #Leave Details
 class LeaveType(models.Model):
@@ -45,21 +44,7 @@ class LeaveType(models.Model):
 class Approval(models.Model):
     name = models.CharField(max_length=30)
 
-    def __str__(self):
-        return self.name
-
-#Leave Details
-class LeaveType(models.Model):
-    name = models.CharField(max_length=30, null=True, default=None)
-    days = models.IntegerField(blank=True, null=True)
-
-    def __str__(self):
-        return self.name
-    
-class Approval(models.Model):
-    name = models.CharField(max_length=30)
-
-    def __str__(self):
+    def __str__(self):  
         return self.name
 
 class LeaveDetails(models.Model):
@@ -76,15 +61,31 @@ class LeaveDetails(models.Model):
 class userLeaveDays(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     type = models.ForeignKey(LeaveType, on_delete=models.SET_NULL, null=True)
-    leaveTaken = models.IntegerField()
-    availableDays = models.IntegerField(blank=True, null=True) 
+    leaveTaken = models.IntegerField(default=0) 
+    def __str__(self):
+        return f"{self.user} - {self.type} : {self.leaveTaken} days taken"
 
-    def save(self, *args, **kwargs):
-        if self.type:
-            self.availableDays = self.type.days - self.leaveTaken
-        else:
-            self.availableDays = 0  
-        super(userLeaveDays, self).save(*args, **kwargs)
+
+
+
+class EarnedLeaveDay(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    joined_date = models.DateField(default=timezone.now)
+    last_updated = models.DateField(auto_now=True)
+    earned_leave_days = models.IntegerField(default=0)
 
     def __str__(self):
-        return f"{self.user} - {self.type} : {self.availableDays} days available"
+        return f"{self.user.username} - {self.earned_leave_days} days"
+
+    def calculate_earned_leave(self):
+        join_date = self.joined_date  
+        today = self.last_updated 
+       
+        total_years = (today - join_date).days / 365.25  
+
+        if total_years <= 3:
+            return 10
+        elif 3 < total_years < 5:
+            return 13
+        else:
+            return 16

@@ -18,6 +18,14 @@ import base64
 from .models import AttendanceReport
 from django.db.models.functions import ExtractYear
 
+####################################################################################################################
+import matplotlib.pyplot as plt
+from io import StringIO
+import numpy as np
+from attendance.models import userLeaveDays
+from attendance.models import AttendanceDetail
+# from bs4 import BeautifulSoup
+from user.models import Teams
 
 # function for calculating working days (weekdays)
 def calculate_working_days(start_date, end_date):
@@ -25,6 +33,7 @@ def calculate_working_days(start_date, end_date):
         1 for d in (start_date + timedelta(n) for n in range((end_date - start_date).days + 1))
         if d.weekday() < 5  # Monday to Friday are considered
     )
+
 
 # Function to calculate total leave days within a given range
 def calculate_leave_taken(leave_qs, start_date, end_date):
@@ -99,6 +108,7 @@ def get_weekdays(start_date, end_date):
         current_date += timedelta(days=1)
     return weekdays
 
+
 @login_required
 def attendancereport_view(request):
     user_id = request.GET.get("user_id")
@@ -142,7 +152,7 @@ def attendancereport_view(request):
     attendance_records = Attendance.objects.filter(
     user=selected_user,
     date__range=(start_date, end_date)
-)
+    )
 
     present_days = set(attendance_records)  # Set of Attendance objects
 
@@ -152,6 +162,7 @@ def attendancereport_view(request):
         leave_from__lte=end_date,
         leave_to__gte=start_date
     )
+
     pto_summary = defaultdict(lambda: {'total_days': 0, 'approved_by': set()})
 
     for leave in leave_qs:
@@ -199,7 +210,8 @@ def attendancereport_view(request):
 
     }
 
-    return render(request, "attendancereport.html", context)
+    return render(request, "userreport.html", context)
+
 
 def logreport_view(request):
     user_id = request.GET.get('user_id')
@@ -325,6 +337,7 @@ def logreport_view(request):
 
     return render(request, 'logreport.html', context)
 
+
 @login_required
 def download_report(request):
     user_id = request.GET.get("user_id")
@@ -412,6 +425,7 @@ def download_report(request):
 
     return response
 
+
 @login_required
 def projectdetailsreport(request, ticket_id):
     manager = ManagerAssignment.objects.all()
@@ -465,9 +479,6 @@ def projectdetailsreport(request, ticket_id):
     })
 
 
-
-
-
 def download_pro_report(request):
     # Query the necessary data for the report
     projects = ticket.objects.all()
@@ -487,3 +498,186 @@ def download_pro_report(request):
     return response
 
 
+####################################################################################################################
+# def createbargraph():
+#     users = User.objects.all()
+#     leavedays = userLeaveDays.objects.all()
+#     attendances = AttendanceDetail.objects.all()
+
+#     x = []
+#     workeddays = []
+#     leavetaken = []
+
+#     total_worked = 0
+#     total_leave = 0
+
+#     # data
+#     for user in users:
+#         x.append(user.first_name)
+#         leavecount = 0
+#         attendancecount = 0
+
+#         for leaveday in leavedays:
+#             if leaveday.user == user:
+#                 leavecount += leaveday.leaveTaken
+#         leavetaken.append(leavecount)
+#         total_leave += leavecount
+
+#         for attendance in attendances:
+#             if attendance.attendance.user == user:
+#                 attendancecount += 1
+#         workeddays.append(attendancecount)
+#         total_worked += attendancecount
+
+
+#     fig, axs = plt.subplots(1, 2, figsize=(12,5))  # two plots side by side
+
+#     # Horizontal bar chart
+#     axs[0].barh(x, workeddays, height=0.5, label="Worked", color="#9e6de0")
+#     axs[0].barh(x, leavetaken, left=workeddays, height=0.5, label="Leave", color="#fe5461")
+#     axs[0].set_xlabel("Days", fontsize=12, fontweight='bold')
+#     axs[0].set_ylabel("Users", fontsize=12, fontweight='bold')
+#     axs[0].legend()
+#     axs[0].set_title("Days Overview per User")
+
+#     # pi chart
+#     axs[1].pie(
+#         [total_worked, total_leave],
+#         labels=["Worked Days", "Leave Days"],
+#         autopct='%1.1f%%',
+#         startangle=90,
+#         colors=["#9e6de0", "#fe5461"]
+#     )
+#     axs[1].set_title("Total Days Distribution")
+
+#     # save to svg
+#     imgdata = StringIO()
+#     fig.tight_layout()
+#     fig.savefig(imgdata, format='svg')
+#     imgdata.seek(0)
+
+#     data = imgdata.getvalue()
+#     return data
+
+
+
+def createbargraphbasedonteam():
+    team = Teams.objects.get(teamname="Team 2")
+    users = team.assigned_users.all()
+
+    leavedays = userLeaveDays.objects.all()
+    attendances = AttendanceDetail.objects.all()
+
+    x = []           
+    workeddays = []  
+    leavetaken = []  
+
+    total_worked = 0
+    total_leave = 0
+
+    
+    for user in users:
+        x.append(user.first_name)
+        leavecount = 0
+        attendancecount = 0
+
+        for leaveday in leavedays:
+            if leaveday.user == user:
+                leavecount += leaveday.leaveTaken
+        leavetaken.append(leavecount)
+        total_leave += leavecount
+
+        for attendance in attendances:
+            if attendance.attendance.user == user:
+                attendancecount += 1
+        workeddays.append(attendancecount)
+        total_worked += attendancecount
+
+    # plot
+    fig, axs = plt.subplots(1, 2, figsize=(10,6)) 
+
+    # Bar chart
+    axs[0].bar(x, workeddays, label="Worked Days", color="#9e6de0")
+    axs[0].bar(x, leavetaken, bottom=workeddays, label="Leave Days", color="#fe5461")
+    axs[0].set_ylabel("Days", fontweight = "bold")
+    axs[0].set_xlabel("Users", fontweight = "bold")
+    axs[0].set_title("Days Overview per User")
+    axs[0].legend()
+
+    # Pie chart
+    axs[1].pie([total_worked, total_leave], labels=["Worked", "Leave",], autopct='%1.1f%%', colors=["#9e6de0", "#fe5461"])
+    axs[1].set_title("Team's Total Days Distribution")
+
+    fig.tight_layout()
+
+    # save to svg
+    imgdata = StringIO()
+    fig.savefig(imgdata, format='svg')
+    imgdata.seek(0)
+    data = imgdata.getvalue()
+    return data
+
+
+
+
+def createbargraphforteams():
+    teams = Teams.objects.all()  
+
+    leavedays = userLeaveDays.objects.all()
+    attendances = AttendanceDetail.objects.all()
+
+    x = []          
+    workeddays = []  
+    leavetaken = []  
+
+    for team in teams:
+        team_users = team.assigned_users.all()
+
+        team_worked = 0
+        team_leave = 0
+
+        for user in team_users:
+            user_leave = sum(
+                leaveday.leaveTaken 
+                for leaveday in leavedays 
+                if leaveday.user == user
+            )
+            team_leave += user_leave
+
+            user_worked = sum(
+                1 for attendance in attendances 
+                if attendance.attendance.user == user
+            )
+            team_worked += user_worked
+
+        x.append(team.teamname)
+        workeddays.append(team_worked)
+        leavetaken.append(team_leave)
+
+    # plot
+    fig, ax = plt.subplots(figsize=(10,6))
+    ax.bar(x, workeddays, label="Worked Days", color="#9e6de0")
+    ax.bar(x, leavetaken, bottom=workeddays, label="Leave Days", color="#fe5461")
+
+    ax.set_ylabel("Days", fontweight = "bold")
+    ax.set_xlabel("Teams", fontweight = "bold")
+    ax.set_title("Worked vs Leave Days per Team")
+    ax.legend()
+
+    fig.tight_layout()
+
+    # save to svg
+    imgdata = StringIO()
+    fig.savefig(imgdata, format='svg')
+    imgdata.seek(0)
+    data = imgdata.getvalue()
+    return data
+
+
+
+
+def landingpage(request):
+    context = {}
+    context['graph1'] = createbargraphforteams()
+    context['graph2'] = createbargraphbasedonteam()
+    return render(request, 'attendancereport.html', context)

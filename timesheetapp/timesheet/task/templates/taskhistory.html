@@ -165,7 +165,7 @@
                             </button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userbtnGroupDrop">
                                 <a class="dropdown-item" href="{% url 'taskhistory' %}">Show all</a>
-                                {% for i in projects %}
+                                {% for i in projects_cc %}
                                     <a class="dropdown-item" href="{% url 'filterTaskhistoryByUserAndProject' user_id=selected_user.id|default:"0" project_id=i.id %}">
                                         {{ i.project_name }}
                                     </a>
