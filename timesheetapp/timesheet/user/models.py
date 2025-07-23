@@ -3,13 +3,15 @@ from django.db import models
 
 class Profile(models.Model):
     ROLE_CHOICES = [
-        ('admin', 'Admin'),
-        ('manager', 'Manager'),
-        ('user', 'User'),
+        ('Admin', 'Admin'),
+        ('Manager', 'Manager'),
+        ('User', 'User'),
     ]
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='user')
+    salaried = models.BooleanField()
+    wages = models.DecimalField(max_digits=7, decimal_places=2)
 
     def __str__(self):
         return f"{self.user.username} - {self.role}"
@@ -24,3 +26,6 @@ class ManagerAssignment(models.Model):
 class Teams(models.Model):
     teamname = models.TextField()
     assigned_users = models.ManyToManyField(User)  # Allow multiple users
+
+    def __str__(self):
+            return f"{self.teamname}"

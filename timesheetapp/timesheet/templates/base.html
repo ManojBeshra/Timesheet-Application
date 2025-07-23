@@ -173,7 +173,7 @@
                 <li
                   >
                   <a class="sidenav-item-link" href="{% url 'task' %}">
-                    <i class="fa-solid fa-list-check"></i>
+                    <i class="fa-solid fa-bars-progress"></i>
                     <span class="nav-text">Task</span>
                   </a>
                 </li>
@@ -228,12 +228,21 @@
                     data-parent="#sidebar-menu">
                     <div class="sub-menu">
                       
+                        {% if not request.user.is_staff%}
+                        <!--attendance report for users-->
                           <li >
-                            <a class="sidenav-item-link" href="{% url 'report' %}">
+                            <a class="sidenav-item-link" href="{% url 'userattendancereport' %}">
                               <span class="nav-text">Attendance Report</span>
-                              
                             </a>
                           </li>
+                          {% else %}
+                          <!--attendance report for admin-->
+                          <li >
+                            <a class="sidenav-item-link" href="{% url 'adminattendancereport' %}">
+                              <span class="nav-text">Attendance Report</span>
+                            </a>
+                          </li>
+                          {% endif %}
 
                           <li >
                             <a class="sidenav-item-link" href="{% url 'logreport' %}">

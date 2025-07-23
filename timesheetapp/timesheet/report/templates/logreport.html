@@ -54,21 +54,9 @@
 
         <!--Buttons Section-->
         <div class="card-header">
-
-            <!--Create Report Buttons-->
-            {% comment %} <div class="d-flex justify-content-start hide" style="gap: 5px;">
-                <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                    <button id="report-button" type="button" class="btn btn-outline-success small-btn" data-url="#">Create Report</button>
-                </div>
-            </div> {% endcomment %}
-
-            <!--Filter Section-->
-            {% comment %} <div class="d-flex justify-content-end" style="gap: 5px;"> {% endcomment %}
             <div class="d-flex justify-content-end flex-wrap w-100 " style="gap: 5px;">
-
                 <!-- User Filter -->
                 {% if request.user.is_staff %}
-
                 <div class="btn-group" >
                     <button type="button" class="btn btn-outline-danger dropdown-toggle small-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {% if selected_user %}

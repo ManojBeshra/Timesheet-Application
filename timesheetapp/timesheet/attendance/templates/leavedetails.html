@@ -65,6 +65,7 @@
 <div class="card card-default m-2">
     <!--Buttons Section-->
     <div class="card-header">
+
         <!--Request PTO Buttons-->
         <div class="d-flex justify-content-start" style="gap: 10px;">
             {% if not request.user.is_staff %}
@@ -177,7 +178,7 @@
                         <td>{{ leave.type.name }}</td>
                         <td>{{ leave.leave_from }}</td>
                         <td>{{ leave.leave_to }}</td>
-                        <td>{{ leave.approval.name|default:"Pending" }}</td>
+                        <td>{{ leave.approval.name }}</td>
                         {% if request.user.is_staff %}
                             <td>{{ leave.user.first_name }}</td>
                         {% else %}
@@ -192,6 +193,7 @@
                                data-approval-id="{{ leave.approval.id }}"
                                data-remarks="{{ leave.remarks|escapejs }}"
                                data-description="{{ leave.description|escapejs }}"
+                               data-exceededdays = "{{ leave.exceeded_days }}"
                                title="Edit or Approve Leave">
                             </i>
                         </td>
@@ -225,6 +227,20 @@
                         </div>
                         <div class="text-center">
                             <p>Remaining Days</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Unpaid leaves -->
+            <div class="col-xl-3 col-md-3">
+                <div class="card card-default">
+                    <div class="d-flex p-5 align-items-center flex-column">
+                        <div class="icon-md bg-secondary rounded-circle mb-2">
+                            <i class="col-md-3 text-center h2">{{ unpaidcount }}</i>
+                        </div>
+                        <div class="text-center">
+                            <p>Total Unpaid Leaves</p>
                         </div>
                     </div>
                 </div>
@@ -319,10 +335,9 @@
                     <input type="hidden" id="leaveId" name="leave_id">
 
                     <!-- Approval Status -->
-                    <div class="mb-3">
+                    <div class="mb-3" {% if not request.user.is_staff %}hidden{% endif %}>
                         <label for="approvalStatus" class="form-label">Approval Status</label>
-                        <select class="form-control" id="approvalStatus" name="approval_id"
-                            {% if not request.user.is_staff %}disabled{% endif %}>
+                        <select class="form-control" id="approvalStatus" name="approval_id">
                             <option selected disabled>Select status</option>
                             {% for approval in approvals %}
                                 <option value="{{ approval.id }}">{{ approval.name }}</option>
@@ -333,13 +348,19 @@
                     <!-- User Description -->
                     <div class="mb-3">
                         <label for="userRemarks" class="form-label">User Description</label>
-                        <textarea class="form-control" id="userRemarks" rows="3" readonly></textarea>
+                        <textarea class="form-control" id="userRemarks" rows="3" {% if request.user.is_staff %}readonly{% endif %}></textarea>
+                    </div>
+
+                    <!-- Exceeded Days -->
+                    <div class="mb-3">
+                        <label for="exceededDays" class="form-label">Unpaid Days</label>
+                        <textarea class="form-control" id="exceededDays" rows="1" readonly></textarea>
                     </div>
 
                     <!-- Remarks -->
                     <div class="mb-3">
                         <label for="adminRemarks" class="form-label">Remarks (optional)</label>
-                        <textarea class="form-control" id="adminRemarks" rows="3"></textarea>
+                        <textarea class="form-control" id="adminRemarks" rows="3" {% if not request.user.is_staff %}readonly{% endif %}></textarea>
                     </div>
                 </form>
             </div>
@@ -351,190 +372,214 @@
     </div>
 </div>
 
-    <!--Date Requested-->
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            let now = new Date();
-            let year = now.getFullYear();
-            let month = String(now.getMonth() + 1).padStart(2, '0');
-            let day = String(now.getDate()).padStart(2, '0');
-            let hours = String(now.getHours()).padStart(2, '0');
-            let minutes = String(now.getMinutes()).padStart(2, '0');
-        
-            let formattedDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
-            document.getElementById("daterequest").value = formattedDateTime;
-        });
-    </script>
+<!--Date Requested-->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let now = new Date();
+        let year = now.getFullYear();
+        let month = String(now.getMonth() + 1).padStart(2, '0');
+        let day = String(now.getDate()).padStart(2, '0');
+        let hours = String(now.getHours()).padStart(2, '0');
+        let minutes = String(now.getMinutes()).padStart(2, '0');
+    
+        let formattedDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+        document.getElementById("daterequest").value = formattedDateTime;
+    });
+</script>
 
-    <!--for filter button-->
-    <script>
-        function updateFilters(param, value) {
-            let url = new URL(window.location.href);
-            let params = new URLSearchParams(url.search);
+<!--for filter button-->
+<script>
+    function updateFilters(param, value) {
+        let url = new URL(window.location.href);
+        let params = new URLSearchParams(url.search);
 
-            if (value) {
-                params.set(param, value);
-            } else {
-                params.delete(param);
-            }
-
-            // Keep existing parameters
-            window.location.href = `${window.location.pathname}?${params.toString()}`;
+        if (value) {
+            params.set(param, value);
+        } else {
+            params.delete(param);
         }
-    </script>
 
-    <!--all scripts  and disabled for dropdown filter-->
-    {% comment %} <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
-            crossorigin="anonymous">
-    </script> {% endcomment %}
+        // Keep existing parameters
+        window.location.href = `${window.location.pathname}?${params.toString()}`;
+    }
+</script>
+
+<!--all scripts  and disabled for dropdown filter-->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous">
+</script>  -->
+
+<!-- for table -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<!--propper js for dropdown-->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 
 
-    <!-- for table -->
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- Approval form -->
+<script>
+    document.getElementById('approve-confirm-btn').addEventListener('click', function () {
+        const leaveId = document.getElementById('leaveId').value;
+        const approvalStatus = document.getElementById('approvalStatus').value;
+        const remarks = document.getElementById('adminRemarks').value;
+        const description = document.getElementById('userRemarks').value;
+        
+        fetch("{% url 'approve_leave' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: JSON.stringify({
+                leave_id: leaveId,
+                approval_id: approvalStatus,
+                remarks: remarks,
+                description: description
 
-    <!--propper js for dropdown-->
-    <!-- jQuery (slim version) and Bootstrap 4 Bundle (includes Popper) -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+            })
+        }).then(response => {
+            if (response.ok) {
+                // Close modal and refresh page
+                $('#approveLeaveModal').modal('hide');
+
+                window.location.reload();
+            } else {
+                alert("Failed to approve leave.");
+            }
+        });
+        console.log({
+            leaveId,
+            approvalStatus,
+            remarks,
+            description
+        });
+    });
+</script>
+
+<!-- Filling approval form -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // When the modal is shown
+        const approveModal = document.getElementById('approveLeaveModal');
+        approveModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const leaveId = button.getAttribute('data-leave-id');
+            const approvalId = button.getAttribute('data-approval-id');
+            const remarks = button.getAttribute('data-remarks');
+            const description = button.getAttribute('data-description')
+            const exceededDays = button.getAttribute('data-exceededdays');
+
+            // Set values in modal inputs
+            document.getElementById('leaveId').value = leaveId;
+            document.getElementById('approvalStatus').value = approvalId;
+            document.getElementById('adminRemarks').value = remarks || "";
+            document.getElementById('userRemarks').value = description ;
+            document.getElementById('exceededDays').value = exceededDays || '0';
+        });
+    });
+</script>
+
+<!--for date for request modal-->
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+        let now = new Date();
+
+        // Format today's date
+        let year = now.getFullYear();
+        let month = String(now.getMonth() + 1).padStart(2, '0');
+        let day = String(now.getDate()).padStart(2, '0');
+        let formattedToday = `${year}-${month}-${day}`;
+
+        // Calculate max date 
+        let maxDate = new Date(now);
+        maxDate.setMonth(maxDate.getMonth() + 3);
+
+        // Handle month overflow 
+        if (maxDate.getMonth() !== (now.getMonth() + 3) % 12) {
+            // If adding months caused a month rollover, adjust to last day of previous month
+            maxDate.setDate(0);
+        }
+
+        let maxYear = maxDate.getFullYear();
+        let maxMonth = String(maxDate.getMonth() + 1).padStart(2, '0');
+        let maxDay = String(maxDate.getDate()).padStart(2, '0');
+        let formattedMaxDate = `${maxYear}-${maxMonth}-${maxDay}`;
+
+        // Apply to inputs
+        const leavefrom = document.getElementById("leavefromdate");
+        const leaveto = document.getElementById("leavetodate");
+
+        if (leavefrom) {
+            leavefrom.value = formattedToday;
+            leavefrom.min = formattedToday;
+            leavefrom.max = formattedMaxDate;
+        }
+        if (leaveto) {
+            leaveto.value = formattedToday;
+            leaveto.min = formattedToday;
+            leaveto.max = formattedMaxDate;
+        }
+    });
+</script>
 
 
-    <!-- Approval form -->
-    <script>
-        document.getElementById('approve-confirm-btn').addEventListener('click', function () {
-            const leaveId = document.getElementById('leaveId').value;
-            const approvalStatus = document.getElementById('approvalStatus').value;
-            const remarks = document.getElementById('adminRemarks').value;
+<!-- Count the days -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const fromInput = document.getElementById('leavefromdate');
+        const toInput = document.getElementById('leavetodate');
+        const countDisplay = document.getElementById('countofdays');
 
-            fetch("{% url 'approve_leave' %}", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": "{{ csrf_token }}"
-                },
-                body: JSON.stringify({
-                    leave_id: leaveId,
-                    approval_id: approvalStatus,
-                    remarks: remarks
-                })
-            }).then(response => {
-                if (response.ok) {
-                    // Close modal and refresh page
-                    $('#approveLeaveModal').modal('hide');
+        function calculateWeekdays(startDate, endDate) {
+            let count = 0;
+            let currentDate = new Date(startDate);
 
-                    window.location.reload();
-                } else {
-                    alert("Failed to approve leave.");
+            while (currentDate <= endDate) {
+                const day = currentDate.getDay();
+                if (day !== 0 && day !== 6) { // not Sunday (0) or Saturday (6)
+                    count++;
                 }
-            });
-            console.log({
-                leaveId,
-                approvalStatus,
-                remarks
-            });
-
-        });
-    </script>
-
-    <!-- Filling approval form -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // When the modal is shown
-            const approveModal = document.getElementById('approveLeaveModal');
-            approveModal.addEventListener('show.bs.modal', function (event) {
-                const button = event.relatedTarget;
-
-                const leaveId = button.getAttribute('data-leave-id');
-                const approvalId = button.getAttribute('data-approval-id');
-                const remarks = button.getAttribute('data-remarks');
-                const description = button.getAttribute('data-description')
-
-                // Set values in modal inputs
-                document.getElementById('leaveId').value = leaveId;
-                document.getElementById('approvalStatus').value = approvalId;
-                document.getElementById('adminRemarks').value = remarks || "";
-                document.getElementById('userRemarks').value = description ;
-            });
-        });
-    </script>
-
-    <!--for date for request modal-->
-    <script type="text/javascript">
-        document.addEventListener("DOMContentLoaded", function () {
-            let now = new Date();
-            let year = now.getFullYear();
-            let month = String(now.getMonth() + 1).padStart(2, '0');
-            let day = String(now.getDate()).padStart(2, '0');
-
-            let formattedDate = `${year}-${month}-${day}`;
-            const leavefrom = document.getElementById("leavefromdate");
-            const leaveto = document.getElementById("leavetodate");
-
-            if (leavefrom) {
-                leavefrom.value = formattedDate;
-                leavefrom.min = formattedDate;
+                currentDate.setDate(currentDate.getDate() + 1);
             }
-            if (leaveto) {
-                leaveto.value = formattedDate;
-                leaveto.min = formattedDate;
+            return count;
+        }
+
+        function updateCount() {
+            const fromDate = new Date(fromInput.value);
+            const toDate = new Date(toInput.value);
+
+            if (fromInput.value && toInput.value && fromDate <= toDate) {
+                const weekdays = calculateWeekdays(fromDate, toDate);
+                countDisplay.textContent = `${weekdays} days`;
+            } else {
+                countDisplay.textContent = "0 days";
             }
-        });
-    </script>
+        }
 
-    <!-- Count the days -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const fromInput = document.getElementById('leavefromdate');
-            const toInput = document.getElementById('leavetodate');
-            const countDisplay = document.getElementById('countofdays');
+        fromInput.addEventListener('change', updateCount);
+        toInput.addEventListener('change', updateCount);
+    });
+</script>
 
-            function calculateWeekdays(startDate, endDate) {
-                let count = 0;
-                let currentDate = new Date(startDate);
+<!-- <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // List of leave_from dates that a user already took
+        const existingLeaveFromDates = {{ existing_leave_from_dates|safe }};
 
-                while (currentDate <= endDate) {
-                    const day = currentDate.getDay();
-                    if (day !== 0 && day !== 6) { // not Sunday (0) or Saturday (6)
-                        count++;
-                    }
-                    currentDate.setDate(currentDate.getDate() + 1);
-                }
-                return count;
-            }
+        const leaveFromInput = document.getElementById('leavefromdate');
+        const sendRequestBtn = document.getElementById('sendRequestBtn');
+        const leaveFromAlert = document.getElementById('leaveFromAlert');
 
-            function updateCount() {
-                const fromDate = new Date(fromInput.value);
-                const toDate = new Date(toInput.value);
+        if (!leaveFromInput || !sendRequestBtn || !leaveFromAlert) {
+        // Required criteria not found
+        return;
+        }
 
-                if (fromInput.value && toInput.value && fromDate <= toDate) {
-                    const weekdays = calculateWeekdays(fromDate, toDate);
-                    countDisplay.textContent = `${weekdays} days`;
-                } else {
-                    countDisplay.textContent = "0 days";
-                }
-            }
-
-            fromInput.addEventListener('change', updateCount);
-            toInput.addEventListener('change', updateCount);
-        });
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // List of leave_from dates that a user already took
-            const existingLeaveFromDates = {{ existing_leave_from_dates|safe }};
-
-            const leaveFromInput = document.getElementById('leavefromdate');
-            const sendRequestBtn = document.getElementById('sendRequestBtn');
-            const leaveFromAlert = document.getElementById('leaveFromAlert');
-
-            if (!leaveFromInput || !sendRequestBtn || !leaveFromAlert) {
-            // Required criteria not found
-            return;
-            }
-
-            function checkLeaveDate() {
+        function checkLeaveDate() {
             const selectedDate = leaveFromInput.value;
             if (existingLeaveFromDates.includes(selectedDate)) {
                 // Show alert and disable button
@@ -545,74 +590,132 @@
                 leaveFromAlert.style.display = 'none';
                 sendRequestBtn.disabled = false;
             }
-            }
+        }
 
-            // Run check on input change
-            leaveFromInput.addEventListener('change', checkLeaveDate);
+        // Run check on input change
+        leaveFromInput.addEventListener('change', checkLeaveDate);
 
-            // Optionally run check on page load if value prefilled
-            checkLeaveDate();
-        });
-    </script>
+        // Optionally run check on page load if value prefilled
+        checkLeaveDate();
+    });
+</script> -->
 
-    <!--Adjust table width-->
-    <script>
-        $('.sidebar-toggle').on('click', function () {
-            setTimeout(() => {
-                $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
-            }, 300);
-        });
-    </script>
+<!--Adjust table width-->
+<script>
+    $('.sidebar-toggle').on('click', function () {
+        setTimeout(() => {
+            $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
+        }, 300);
+    });
+</script>
 
-    <script>
-        // Django context value passed into JS
-        const remainingLeaveDays = {{ remaining_leave_days }};
+<script>
+    // Django context value passed into JS
+    const remainingLeaveDays = {{ remaining_leave_days }};
 
-        document.addEventListener('DOMContentLoaded', function () {
-            const fromInput = document.getElementById('leavefromdate');
-            const toInput = document.getElementById('leavetodate');
-            const countDisplay = document.getElementById('countofdays');
-            const warningDisplay = document.getElementById('leave-warning');
+    document.addEventListener('DOMContentLoaded', function () {
+        const fromInput = document.getElementById('leavefromdate');
+        const toInput = document.getElementById('leavetodate');
+        const countDisplay = document.getElementById('countofdays');
+        const warningDisplay = document.getElementById('leave-warning');
 
-            function calculateWeekdays(startDate, endDate) {
-                let count = 0;
-                let currentDate = new Date(startDate);
-                while (currentDate <= endDate) {
-                    const day = currentDate.getDay();
-                    if (day !== 0 && day !== 6) {
-                        count++;
-                    }
-                    currentDate.setDate(currentDate.getDate() + 1);
+        function calculateWeekdays(startDate, endDate) {
+            let count = 0;
+            let currentDate = new Date(startDate);
+            while (currentDate <= endDate) {
+                const day = currentDate.getDay();
+                if (day !== 0 && day !== 6) {
+                    count++;
                 }
-                return count;
+                currentDate.setDate(currentDate.getDate() + 1);
             }
+            return count;
+        }
 
-            function updateCount() {
-                const fromDate = new Date(fromInput.value);
-                const toDate = new Date(toInput.value);
+        function updateCount() {
+            const fromDate = new Date(fromInput.value);
+            const toDate = new Date(toInput.value);
 
-                if (fromInput.value && toInput.value && fromDate <= toDate) {
-                    const weekdays = calculateWeekdays(fromDate, toDate);
-                    countDisplay.textContent = `${weekdays} days`;
+            if (fromInput.value && toInput.value && fromDate <= toDate) {
+                const weekdays = calculateWeekdays(fromDate, toDate);
+                countDisplay.textContent = `${weekdays} days`;
 
-                    if (weekdays > remainingLeaveDays) {
-                        warningDisplay.style.display = 'block';
-                        warningDisplay.textContent = ` You have only ${remainingLeaveDays} days remaining.`;
-                    } else {
-                        warningDisplay.style.display = 'none';
-                        warningDisplay.textContent = '';
-                    }
+                if (weekdays > remainingLeaveDays) {
+                    warningDisplay.style.display = 'block';
+                    warningDisplay.textContent = ` You have only ${remainingLeaveDays} days remaining.`;
                 } else {
-                    countDisplay.textContent = "0 days";
                     warningDisplay.style.display = 'none';
+                    warningDisplay.textContent = '';
                 }
+            } else {
+                countDisplay.textContent = "0 days";
+                warningDisplay.style.display = 'none';
+            }
+        }
+
+        fromInput.addEventListener('change', updateCount);
+        toInput.addEventListener('change', updateCount);
+    });
+</script>
+
+<script>
+    // existingLeaves is added by Django template as JSON-safe data
+    const existingLeaves = {{ existing_leaves|safe }};
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const leaveFromInput = document.getElementById('leavefromdate');
+        const sendRequestBtn = document.getElementById('sendRequestBtn');
+        const leaveFromAlert = document.getElementById('leaveFromAlert');
+
+        if (!leaveFromInput || !sendRequestBtn || !leaveFromAlert) return;
+
+        function isDateInRange(dateStr, startStr, endStr) {
+            const date = new Date(dateStr);
+            const start = new Date(startStr);
+            const end = new Date(endStr);
+            return date >= start && date <= end;
+        }
+
+        function checkLeaveDate() {
+            const selectedDate = leaveFromInput.value;
+            if (!selectedDate) {
+                leaveFromAlert.style.display = 'none';
+                sendRequestBtn.disabled = false;
+                return;
             }
 
-            fromInput.addEventListener('change', updateCount);
-            toInput.addEventListener('change', updateCount);
-        });
-    </script>
+            const isOverlap = existingLeaves.some(leave =>
+                isDateInRange(selectedDate, leave.leave_from, leave.leave_to)
+            );
 
-    
+            if (isOverlap) {
+                leaveFromAlert.style.display = 'block';
+                sendRequestBtn.disabled = true;
+            } else {
+                leaveFromAlert.style.display = 'none';
+                sendRequestBtn.disabled = false;
+            }
+        }
+
+        leaveFromInput.addEventListener('change', checkLeaveDate);
+        // Run check on page load if input pre-filled
+        checkLeaveDate();
+    });
+</script>
+
+<!--To remove the success email notification -->
+<script>
+    // Automatically remove alerts after 5 seconds
+    setTimeout(function() {
+        let alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => {
+            alert.classList.remove('show');  
+            alert.classList.add('fade');  
+            setTimeout(() => alert.remove(), 500); 
+        });
+    }, 5000);
+</script>
+
+
 
 {% endblock %}

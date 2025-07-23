@@ -1,9 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
-
 {% block title %}Attendance Report{% endblock title %}
 {% block page-title %}Attendance Report{% endblock page-title %}
-
 {% block style %}
     .small-btn {
         padding: 4px 16px 4px 16px; /* Adjust padding to reduce button size */
@@ -116,9 +114,11 @@
                             {{ selected_user.first_name|default:"Filter User" }}
                         </button>
                         <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" href="{% url 'report' %}">Show all</a>
+                            {% comment %} <a class="dropdown-item" href="{% url 'report' %}">Show all</a> {% endcomment %}
+                            <a class="dropdown-item" href="{% url 'userattendancereport' %}">Show all</a>
                             {% for user in users %}
-                                <a class="dropdown-item" href="{% url 'report' %}?user_id={{ user.id }}">
+                                {% comment %} <a class="dropdown-item" href="{% url 'report' %}?user_id={{ user.id }}"> {% endcomment %}
+                                <a class="dropdown-item" href="{% url 'userattendancereport' %}?user_id={{ user.id }}">
                                     {{ user.first_name }} ({{ user.username }})
                                 </a>
                             {% endfor %}

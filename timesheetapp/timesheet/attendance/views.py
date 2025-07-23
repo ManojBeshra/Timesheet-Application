@@ -39,6 +39,13 @@ from django.http import HttpResponse
 from datetime import datetime
 from .models import LeaveDetails, userLeaveDays, LeaveType
 
+from django.utils.safestring import mark_safe
+
+# Email 
+from django.conf import settings
+from email.message import EmailMessage
+from django.core.mail import send_mail
+
 
 @login_required
 def attendance_view(request):
@@ -63,8 +70,6 @@ def attendance_view(request):
             selected_user = None  
 
 
-
-
     selected_year = request.GET.get('year')
     selected_month = request.GET.get('month')
    
@@ -79,10 +84,6 @@ def attendance_view(request):
         attendance_records = attendance_records.filter(attendance__user=selected_user)
     else:
         attendance_records = attendance_records.filter(attendance__user__in=visible_users)
-
-
-
-
 
 
     if selected_year:
@@ -145,8 +146,6 @@ def attendance_view(request):
     # New: Handle selected record ID from GET request
     selected_record_id = request.GET.get('record_id')  # Assuming a `record_id` is passed via GET request
     selected_record = AttendanceDetail.objects.filter(id=selected_record_id).first()
-
-
 
 
     return render(request, 'attendance.html', {
@@ -256,6 +255,8 @@ def save_note_view(request, record_id):
 
     return JsonResponse({"error": "Invalid request method!"}, status=405)
 
+
+#LEAVE
 @login_required
 def leavedetails_view(request):
     # User list for admin/ users
@@ -273,6 +274,16 @@ def leavedetails_view(request):
     approvals = Approval.objects.all()
 
     leaves = LeaveDetails.objects.all()
+
+    # if request.user.is_staff:
+    #     unpaidcount = userLeaveDays.objects.filter(user_id=selected_user_id, type_id=5).first()
+    # else:
+    #     unpaidcount = userLeaveDays.objects.filter(user_id = request.user.id, type_id = 5).first()
+    
+    # if unpaidcount:
+    #     unpaidcount = unpaidcount.leaveTaken
+    # else:
+    #     unpaidcount = 0
 
     # Filter leaves by user
     if request.user.is_staff and selected_user_id:
@@ -309,13 +320,23 @@ def leavedetails_view(request):
             selected_user = None
 
     # Get leave_from dates for JS validation (format as 'YYYY-MM-DD')
-    if user_for_leaves:
-        existing_leave_from_dates = list(
-            LeaveDetails.objects.filter(user=user_for_leaves).values_list('leave_from', flat=True)
-        )
-        existing_leave_from_dates = [d.strftime('%Y-%m-%d') for d in existing_leave_from_dates]
-    else:
-        existing_leave_from_dates = []
+    # if user_for_leaves:
+    #     existing_leave_from_dates = list(
+    #         LeaveDetails.objects.filter(user=user_for_leaves).values_list('leave_from', flat=True)
+    #     )
+    #     existing_leave_from_dates = [d.strftime('%Y-%m-%d') for d in existing_leave_from_dates]
+    # else:
+    #     existing_leave_from_dates = []'
+
+    # # Get leave_from dates for JS validation (format as 'YYYY-MM-DD')
+    # leaves = LeaveDetails.objects.filter(user=request.user)
+
+    existing_leaves = [
+        {'leave_from': str(leave.leave_from), 'leave_to': str(leave.leave_to)}
+        for leave in leaves
+    ]
+
+
 
     # Calculate earned leave days from EarnedLeaveDay model
     earned_record = EarnedLeaveDay.objects.filter(user=user_for_leaves).first()
@@ -337,6 +358,10 @@ def leavedetails_view(request):
     if remaining_leave_days < 0:
         remaining_leave_days = 0  # Avoid negative
 
+    unpaidcount = total_leave_taken-earned_days
+    if unpaidcount < 0:
+        unpaidcount = 0  # Avoid negative
+
     return render(request, 'leavedetails.html', {
         'users': users,
         'selected_user': selected_user,
@@ -346,14 +371,14 @@ def leavedetails_view(request):
         'categories': categories,
         'approvals': approvals,
         'selected_date': selected_date,
-        'existing_leave_from_dates': existing_leave_from_dates,
+        # 'existing_leaves': mark_safe(json.dumps(existing_leaves)),
+        # 'existing_leave_from_dates': existing_leave_from_dates,
+        'existing_leaves': existing_leaves,
         'total_leave_taken': total_leave_taken,
         'earned_days': earned_days,
         'remaining_leave_days': remaining_leave_days,
+        'unpaidcount': unpaidcount,
     })
-
-
-
 
 
 def weekdayscount(start_date, end_date):
@@ -365,6 +390,8 @@ def weekdayscount(start_date, end_date):
         current_day += timedelta(days=1)
     return day_count
 
+
+
 @login_required
 def add_leave_details(request):
     if request.method != 'POST':
@@ -373,7 +400,6 @@ def add_leave_details(request):
     leave_type_id = request.POST.get("type")
     leave_from = request.POST.get("leave_from")
     leave_to = request.POST.get("leave_to")
-    approval_id = request.POST.get("approval")
     description = request.POST.get("description", "")
 
     if not leave_type_id or not leave_from or not leave_to:
@@ -410,18 +436,27 @@ def add_leave_details(request):
 
     remaining_days = earned_days - total_leave_taken
 
-    if remaining_days < days_requested:
-        return redirect(f"{reverse('leavedetails')}?error=Insufficient remaining leave days.")
+    # if remaining_days < days_requested:
+    #     return redirect(f"{reverse('leavedetails')}?error=Insufficient remaining leave days.")
 
-    # Create leave request with default approval (probably Pending)
-    LeaveDetails.objects.create(
+    approval = Approval.objects.get(name="Pending")
+
+
+    leave = LeaveDetails.objects.create(
         user=request.user,
         type_id=leave_type_id,
         leave_from=leave_from_date,
         leave_to=leave_to_date,
-        approval_id=approval_id,
-        description=description
+        description=description,
+        approval=approval,
     )
+
+    leave.exceededdays = leave.exceeded_days or 0
+
+    leave.save()
+
+
+    send_leave_request_email(request.user, leave)
 
     return redirect(reverse('leavedetails'))
 
@@ -435,13 +470,38 @@ def approve_leave(request):
         leave_id = data.get('leave_id')
         approval_id = data.get('approval_id')
         remarks = data.get('remarks')
+        description = data.get('description')
 
         try:
             leave = LeaveDetails.objects.get(id=leave_id)
             leave.approval_id = approval_id
             leave.approvedby = request.user
             leave.remarks = remarks
+            leave.description = description
             leave.save()
+
+
+            if leave.exceeded_days > 0:
+                try:
+                    unpaid_type = LeaveType.objects.get(name__iexact="Unpaid Leave")
+                except LeaveType.DoesNotExist:
+                    return JsonResponse({'status': 'error', 'message': 'Unpaid Leave type not found'}, status=500)
+
+                existing_unpaid = userLeaveDays.objects.filter(
+                    user=leave.user,
+                    type=unpaid_type  
+                ).first()
+
+                if existing_unpaid:
+                    existing_unpaid.leaveTaken += leave.exceeded_days 
+                    existing_unpaid.save()
+                else:
+                    userLeaveDays.objects.create(
+                        user=leave.user,
+                        type=unpaid_type,  
+                        leaveTaken=leave.exceeded_days  
+                    )
+
             
             return JsonResponse({'status': 'success'})
         except LeaveDetails.DoesNotExist:
@@ -449,6 +509,40 @@ def approve_leave(request):
     return JsonResponse({'status': 'invalid'}, status=400)
 
 
+
+def send_leave_request_email(user, leave):
+    try:
+        leave_type_name = leave.type.name
+    except:
+        leave_type_name = "Unknown"
+    
+    exceeded_line = f"Unpaid Days: {leave.exceededdays} days \n" if leave.exceededdays else ""
+    
+    manager_email = User.objects.get(username = 'manager').email
+
+    subject = f'Leave Request from {user.get_full_name()}'
+
+    message = (
+        f"Details of the Submitted Leave Request:\n\n"
+        "----------------------------------------\n"
+        f"Employee: {user.get_full_name()} ({user.email})\n"
+        f"Leave Type: {leave_type_name}\n"
+        f"From: {leave.leave_from}\n"
+        f"To: {leave.leave_to}\n"
+        f"Duration: {weekdayscount(leave.leave_from, leave.leave_to)} days \n"
+        f"{exceeded_line}"
+        f"Description: {leave.description}\n\n"
+        "----------------------------------------\n\n"
+        f"Please log in to the system to approve or reject this request."
+    )
+
+    send_mail(
+        subject=subject,
+        message=message,
+        from_email='noreply@glaciersystemsinc.com',
+        recipient_list=[manager_email],
+        fail_silently=False
+    )
 
 
 

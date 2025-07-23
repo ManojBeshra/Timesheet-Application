@@ -15,7 +15,7 @@ class ApprovalAdmin(admin.ModelAdmin):
     list_display = ('id','name')
 
 class LeaveDetailsAdmin(admin.ModelAdmin):
-    list_display = ('requested_date', 'type', 'leave_from', 'leave_to', 'approval', 'user', 'approvedby')
+    list_display = ('requested_date', 'type', 'leave_from', 'leave_to', 'approval', 'user', 'approvedby', 'duration')
 
 class userLeaveDaysAdmin(admin.ModelAdmin):
     list_display = ('user', 'type', 'leaveTaken')
