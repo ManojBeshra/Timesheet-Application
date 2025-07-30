@@ -1,3 +1,11 @@
+import os
+os.environ['MPLCONFIGDIR'] = os.path.join(os.path.dirname(__file__), 'matplotlib_config')
+
+import matplotlib
+matplotlib.use('Agg')  # Use non-GUI backend for server
+
+import matplotlib.pyplot as plt
+
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.http import JsonResponse, HttpResponse
@@ -20,7 +28,7 @@ from report.models import AttendanceReport
 from django.db.models.functions import ExtractYear
 import matplotlib.pyplot as plt
 from io import StringIO
-import numpy as np
+# import numpy as np
 import re
 # from .charts import createbargraphforteams, createbargraphbasedonteam  # Assuming location
 from django.db.models import Q

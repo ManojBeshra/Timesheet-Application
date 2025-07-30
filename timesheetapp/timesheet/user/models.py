@@ -29,3 +29,4 @@ class Teams(models.Model):
 
     def __str__(self):
             return f"{self.teamname}"
+    

@@ -182,7 +182,7 @@
                   Manage
                 </li>
                 <!--Accounts-->                 
-                <li  class="has-sub" >
+                {% comment %} <li  class="has-sub" >
                   <a class="sidenav-item-link" href="javascript:void(0)" data-toggle="collapse" data-target="#accounts"
                     aria-expanded="false" aria-controls="email">
                     <i class="fa-solid fa-file-invoice"></i>
@@ -193,11 +193,56 @@
                     <div class="sub-menu">
                       
                           <li >
-                            <a class="sidenav-item-link" href="{% url 'useramount' %}">
+                            <a class="sidenav-item-link" href="{% url 'userdetails' %}">
                               <span class="nav-text">Users</span>
                               
                             </a>
                           </li>
+                        
+                          <li >
+                            <a class="sidenav-item-link" href="#">
+                              <span class="nav-text">Company</span>
+                              
+                            </a>
+                          </li>
+
+                          <li >
+                            <a class="sidenav-item-link" href="#">
+                              <span class="nav-text">Customers</span>
+                              
+                            </a>
+                          </li>
+                        
+                    </div>
+                  </ul>
+                </li> {% endcomment %}
+
+                <!--Accounts-->                 
+                <li  class="has-sub" >
+                  <a class="sidenav-item-link" href="javascript:void(0)" data-toggle="collapse" data-target="#accounts"
+                    aria-expanded="false" aria-controls="email">
+                    <i class="fa-solid fa-file-invoice"></i>
+                    <span class="nav-text">Accounts</span> <b class="caret"></b>
+                  </a>
+                  <ul  class="collapse"  id="accounts"
+                    data-parent="#sidebar-menu">
+                    <div class="sub-menu">
+                      {% if  request.user.is_staff %}
+                          <li >
+                            <a class="sidenav-item-link" href="{% url 'teamdetail' %}">
+                              <span class="nav-text">Teams</span>
+                              
+                            </a>
+                          </li>
+                      {% else %}
+                          <li >
+                            <a class="sidenav-item-link" href="{% url 'userdetails' %}">
+                              <span class="nav-text">Users</span>
+                              
+                            </a>
+                          </li>
+                      {% endif %}
+
                         
                           <li >
                             <a class="sidenav-item-link" href="#">
