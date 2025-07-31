@@ -1,7 +1,12 @@
 from django.contrib import admin
-from .models import worklog, requestreview
+from .models import worklog, requestreview, status
 
 # Register your models here.
+
+class status_admin(admin.ModelAdmin):
+    list_display = ['id', 'status']
+
+
 class worklog_admin(admin.ModelAdmin):
     list_display = ['user', 'date','workdone', 'project_support', 'ticket', 'hours', 'billable', 'note', 'priority', 'category', 'week']
 
@@ -16,3 +21,4 @@ class requestreview_admin(admin.ModelAdmin):
 
 admin.site.register(requestreview, requestreview_admin)
 admin.site.register(worklog, worklog_admin)
+admin.site.register(status, status_admin)

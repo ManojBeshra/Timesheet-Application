@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from user.models import Profile, Teams
 from .models import User
 from attendance.models import EarnedLeaveDay, LeaveDetails
@@ -8,6 +8,7 @@ from datetime import datetime, timedelta, date
 from django.utils import timezone
 from django.db.models.functions import TruncMonth
 from calendar import monthrange
+from .forms import ProfileForm
 
 
 def weekdayscount(start_date, end_date):
@@ -22,10 +23,21 @@ def weekdayscount(start_date, end_date):
 
 def userdetails(request):
 
+    #checking for user/team dropdown
     if request.user.is_staff and request.GET.get('user_id'):
         user = get_object_or_404(User, id=request.GET.get('user_id'))
     else:
         user = request.user
+
+    #for profile picture
+    # user = request.user
+    profile = get_object_or_404(Profile, user=user)
+    form = ProfileForm(request.POST or None, request.FILES or None, instance=profile)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            return redirect('userdetails')  # or your current page name
 
     # user = request.user
     profile = get_object_or_404(Profile, user=user)
@@ -131,6 +143,7 @@ def userdetails(request):
     context = {
         'user': user,
         'profile': profile,
+        'form': form,
         'joined_date': joined_date,
         'issues_resolved': issues,
         'projects_involved': projectcount,

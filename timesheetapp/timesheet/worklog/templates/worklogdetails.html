@@ -20,6 +20,7 @@
 
 
 {% block content %}
+{% with worklog.status.status as current_status %}
 
             {% if form.errors %}
             <div class="alert alert-danger">
@@ -65,7 +66,7 @@
                     <div class = "row">
                         <div class="form-group col-12">
                             <label for="workdone">Work Done</label>
-                            <textarea class="form-control" id="workdone" name="workdone" rows="2">{{ worklog.workdone }}</textarea>
+                            <textarea class="form-control" id="workdone" name="workdone" rows="2" {% if current_status == "Reviewed" %}readonly{% endif %}>{{ worklog.workdone }}</textarea>
                         </div>
 
 
@@ -78,10 +79,10 @@
                         <!-- Ticket -->
                         <div class="form-group col-4">
                             <label for="ticket">Ticket</label>
-                            <select class="form-control" id="ticket" name="ticket">
-                                <option value="" {% if not worklog.ticket_id %}selected{% endif %} disabled hidden>Select a ticket</option>
+                            <select class="form-control" id="ticket" name="ticket" {% if current_status == "Reviewed" %}disabled{% endif %}>
+                                <option value="" {% if not worklog.ticket_id %}selected{% endif %} disabled hidden >Select a ticket</option>
                                 {% for i in tickets %}
-                                    <option value="{{ i.id }}" {% if i.id == worklog.ticket_id %}selected{% endif %}>{{ i.ticket_id }}</option>
+                                    <option value="{{ i.id }}" {% if i.id == worklog.ticket_id %}selected{% endif %} >{{ i.ticket_id }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -90,18 +91,18 @@
                        <!-- Category -->
                         <div class="form-group col-4">
                             <label for="exampleFormControlSelect12">Category</label>
-                            <input type="text" class="form-control" id="category" name="category" value="{{ worklog.category }}" >
+                            <input type="text" class="form-control" id="category" name="category" value="{{ worklog.category }}" {% if current_status == "Reviewed" %}readonly{% endif %} >
                         </div>
                    
                         <!-- Hours -->
                         <div class="form-group col-2">
                             <label for="hours">Hours</label>
-                            <input type="number" class="form-control" min="0" max="24" id="hours" name="hours" aria-describedby="titleHelp" placeholder="Enter hours" value = "{{worklog.hours}}">
+                            <input type="number" class="form-control" min="0" max="24" id="hours" name="hours" aria-describedby="titleHelp" placeholder="Enter hours" value = "{{worklog.hours}}" {% if current_status == "Reviewed" %}readonly{% endif %} >
                         </div>
                          <!-- Billable -->
                         <div class="form-group col-2">
                             <div class="custom-control custom-checkbox d-inline-block mt-7 mb-3">
-                                <input type="checkbox" class="custom-control-input" id="customCheck2" name="billable"{% if worklog.billable %} checked {% endif %}/>
+                                <input type="checkbox" class="custom-control-input" id="customCheck2" name="billable"{% if worklog.billable %} checked {% endif %} {% if current_status == "Reviewed" %}disabled{% endif %}>
 
 
                                 <label class="custom-control-label" for="customCheck2"></label>
@@ -116,7 +117,7 @@
                         <!--Notes-->
                         <div class="form-group col-12">
                             <label for="exampleFormControlTextarea1">Comments</label>
-                            <textarea class="form-control" id="shortdescriptionarea" name= "note" placeholder="Enter comments" rows="2" >{{ worklog.note|default_if_none:"" }}</textarea>
+                            <textarea class="form-control" id="shortdescriptionarea" name= "note" placeholder="Enter comments" rows="2" {% if current_status == "Reviewed" %}readonly{% endif %} >{{ worklog.note|default_if_none:"" }}</textarea>
                         </div>                        
                     </div>
 
@@ -131,11 +132,38 @@
                         </a>
                     </div>
                 </form>
+                {% if not request.user.is_staff %}
+                    {% if worklog.status.status == "Request Review" %}
+                        <form method="POST" action="{% url 'worklogdetails' worklog.id %}" style="display: inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="change_statusUser" value="true">
+                            <button type="submit" class="btn btn-warning small-btn">Request Review</button>
+                        </form>
+                    {% endif %}
+                {% endif %}
+                {% if request.user.is_staff %}
+                    {% if worklog.status.status == "Pending Review" %}
+                        <form method="POST" action="{% url 'worklogdetails' worklog.id %}" style="display: inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="change_statusStaff" value="true">
+                            <button type="submit" class="btn btn-warning small-btn">Mark as Reviewed</button>
+                        </form>
+                    {% endif %}
+                {% endif %}
+                {% if request.user.is_staff %}
+                    {% if worklog.status.status == "Reviewed" %}
+                        <form method="POST" action="{% url 'worklogdetails' worklog.id %}" style="display: inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="change_statusStaff2" value="true">
+                            <button type="submit" class="btn btn-warning small-btn">Back to Pending Review</button>
+                        </form>
+                    {% endif %}
+                {% endif %}
+
             </div>
         </div>
 
-
-   
+{% endwith %}
 {% endblock %}
 
 

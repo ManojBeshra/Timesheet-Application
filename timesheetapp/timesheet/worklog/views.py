@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .models import worklog, requestreview
+from .models import worklog, requestreview, status
 from task . models import ticket, priority_type, ticket_type, project
 from .forms import WorklogForm
 from django.contrib.auth.models import User
@@ -28,7 +28,8 @@ def worklog_list(request):
     visible_users = get_visible_users(request.user)
     worklogs = worklog.objects.filter(user__in=visible_users).order_by('-date')  # restrict to visible users
     priority = priority_type.objects.all()
-    users = visible_users  # only show users the current user can filter by
+    # users = visible_users  # only show users the current user can filter by
+    users = User.objects.all()
     tickettype = ticket_type.objects.all()
     if request.user.is_staff:
         tickets = ticket.objects.all()
@@ -86,6 +87,7 @@ def worklog_list(request):
     # Get unique dates for dropdowns
     unique_dates = worklog.objects.values_list('date', flat=True).distinct().order_by('date')
 
+    statuses = status.objects.all()
 
     context = {
         'worklogs': worklogs,
@@ -98,6 +100,7 @@ def worklog_list(request):
         'start_date': start_date,
         'end_date': end_date,
         'unique_dates': unique_dates,
+        'statuses': statuses
     }
 
 
@@ -108,13 +111,51 @@ def worklog_list(request):
 @login_required  
 def worklog_details(request, worklog_id):
     worklog_instance = get_object_or_404(worklog, id=worklog_id)
+   
     if request.method == 'POST':
        
+        form = worklog(request.POST)
+
+
         # Handle the billable field manually if not part of the form
         billable = request.POST.get('billable') == 'on'  # Check if the checkbox was checked
         form2 = WorklogForm(request.POST, instance=worklog_instance)
        
         current_user = User.objects.get(id = worklog_instance.user.id)
+
+
+        if request.method == 'POST':
+            if 'change_statusUser' in request.POST:
+                try:
+                    new_status = status.objects.get(status="Pending Review")
+                    worklog_instance.status = new_status
+                    worklog_instance.save()
+                    messages.success(request, "Status changed to 'Pending Review'.")
+                except status.DoesNotExist:
+                    messages.error(request, "Status 'Pending Review' does not exist.")
+                return redirect('worklog')
+       
+        if request.method == 'POST':
+            if 'change_statusStaff' in request.POST:
+                try:
+                    new_status = status.objects.get(status="Reviewed")
+                    worklog_instance.status = new_status
+                    worklog_instance.save()
+                    messages.success(request, "Status changed to 'Review'.")
+                except status.DoesNotExist:
+                    messages.error(request, "Status 'Pending Review' does not exist.")
+                return redirect('worklog')
+               
+        if request.method == 'POST':
+            if 'change_statusStaff2' in request.POST:
+                try:
+                    new_status = status.objects.get(status="Pending Review")
+                    worklog_instance.status = new_status
+                    worklog_instance.save()
+                    messages.success(request, "Status changed to 'Pending Review'.")
+                except status.DoesNotExist:
+                    messages.error(request, "Status 'Pending Review' does not exist.")
+                return redirect('worklog')
 
 
         # print(worklog_instance.user.username)
@@ -127,7 +168,6 @@ def worklog_details(request, worklog_id):
            
             return redirect('worklog')
     else:
-        
         form2 = WorklogForm(instance=worklog_instance)
 
 
@@ -136,6 +176,7 @@ def worklog_details(request, worklog_id):
     tickets = ticket.objects.all()
     tickettype = ticket_type.objects.all()
     projects = project.objects.all()
+    statuses = status.objects.all()
 
 
     return render(request, 'worklogdetails.html', {
@@ -145,7 +186,7 @@ def worklog_details(request, worklog_id):
         'users': users,
         'tickettype': tickettype,
         'projects': projects,
-        'errors': form2.errors
+        'statuses': statuses
     })
 
 

@@ -471,6 +471,7 @@
                     <table id="productsTable" class="table table-hover table-product" style="width:100%">
                         <thead>
                             <tr class="column-head">
+                                <th>Status</th>
                                 <th {% if not request.user.is_staff %}hidden{% endif %}>Resource&nbsp;&nbsp;&nbsp;&nbsp;</th>
                                 <th>Billable&nbsp;&nbsp;&nbsp;&nbsp;</th>
                                 <th class="date-header">Date&nbsp;&nbsp;</th>
@@ -487,41 +488,56 @@
 
                         <tbody>
                             {% for log in worklogs %}
-                                <tr onclick="window.location='{% url 'worklogdetails' log.id%}'">
-                                    <td {% if not request.user.is_staff %}hidden{% endif %}>{{ log.user.first_name }}</td>
-                                    <td align="center">
+                            <tr onclick="window.location='{% url 'worklogdetails' log.id%}'">
+                                <td>
+                                    {% if log.status.status == "Request Review" %}
+                                   
+                                    {% else %}
+                                    {{ log.status }}
+                                    {% endif %}
+                                </td>
+                                <td {% if not request.user.is_staff %}hidden{% endif %}>{{ log.user.first_name }}</td>
+                                {% comment %} <td align="center">
+                                    <div class="custom-control custom-checkbox checkbox-dark  d-inline-block mr-3 mb-3">
+                                        <input type="checkbox" onclick="return false;" class="custom-control-input" id="customCheckDanger{{ log.id }}" {% if log.billable %}checked{% endif %}>
+                                        <label class="custom-control-label" for="customCheckDanger{{ log.id }}"></label>
+                                    </div>
+                                </td> {% endcomment %}
+                                <td align="center">
                                         <div class="custom-control custom-checkbox checkbox-dark  d-inline-block mr-3 mb-3">
                                             <input type="checkbox" onclick="return false;" class="customCheckDark" id="customCheckDanger{{ log.id }}" {% if log.billable %}checked{% endif %}>
                                         </div>
                                     </td>
-                                    <td>{{ log.date|date:'m/d/Y'  }}</td>
-                                    <td>{{ log.week }}</td>
-                                    <td>
-                                        {% if log.ticket %}
-                                            {{ log.ticket.ticket_id }}
-                                        {% else %}
-                                            None  
-                                        {% endif %}
-                                    </td>
-                                
-                                    <td>{{ log.workdone }}</td>
+                                <td>{{ log.date|date:'m/d/Y'  }}</td>
+                                <td>{{ log.week }}</td>
+                                <td>
+                                    {% if log.ticket %}
+                                        {{ log.ticket.ticket_id }}
+                                    {% else %}
+                                        None  
+                                    {% endif %}
+                                </td>
+                               
+                                <td>{{ log.workdone }}</td>
 
 
-                                    <td>{{ log.hours }}</td>
-                        
-                                    <td>{{ log.category }}</td>
-                                    {% comment %} <td align="center">
-                                            <i data-toggle="modal" data-target="#NoteForm"
-                                            class="fa-regular fa-clipboard changes-color note-log"
-                                            data-id="{{ log.id }}"
-                                            data-note="{{ log.note }}">
-                                            </i>
-                                    </td> {% endcomment %}
-                                    <td align="center">
-                                        <i data-toggle="modal" data-target="#DeleteLogForm" class="fa-solid fa-trash-can hover delete-log" data-id="{{ log.id }}"  onclick="openDeleteModal(event, '{{ log.id }}')"></i>
-                                    
-                                    </td>
-                                </tr>
+                                <td>{{ log.hours }}</td>
+                       
+                                <td>{{ log.category }}</td>
+                                {% comment %} <td align="center">
+                                        <i data-toggle="modal" data-target="#NoteForm"
+                                        class="fa-regular fa-clipboard changes-color note-log"
+                                        data-id="{{ log.id }}"
+                                        data-note="{{ log.note }}">
+                                        </i>
+                                </td> {% endcomment %}
+                                <td align="center">
+                                    <i data-toggle="modal" data-target="#DeleteLogForm" class="fa-solid fa-trash-can hover delete-log" data-id="{{ log.id }}"  onclick="openDeleteModal(event, '{{ log.id }}')"></i>
+                                   
+                                </td>
+                               
+                            </tr>
+                           
                             {% endfor %}
                         </tbody>
                   </table>

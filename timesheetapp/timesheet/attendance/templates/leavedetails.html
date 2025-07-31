@@ -265,7 +265,8 @@
                         <!-- Requested Date -->
                         <div class="col-md-6 mb-3">
                             <label for="daterequest" class="col-form-label">Requested Date:</label>
-                            <input type="datetime-local" class="form-control" id="daterequest" readonly name="req_date">
+                            {% comment %} <input type="datetime-local" class="form-control" id="daterequest" readonly name="req_date"> {% endcomment %}
+                            <input type="datetime-local" class="form-control" id="daterequest"  name="req_date">
                         </div>
 
                         <!-- Category -->

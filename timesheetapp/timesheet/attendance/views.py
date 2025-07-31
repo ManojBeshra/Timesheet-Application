@@ -274,6 +274,7 @@ def leavedetails_view(request):
     approvals = Approval.objects.all()
 
     leaves = LeaveDetails.objects.all()
+    
 
     # if request.user.is_staff:
     #     unpaidcount = userLeaveDays.objects.filter(user_id=selected_user_id, type_id=5).first()
@@ -294,6 +295,10 @@ def leavedetails_view(request):
         user_for_leaves = request.user
     else:
         user_for_leaves = None
+
+    #current year leave records
+    current_year = datetime.now().year
+    leaves = leaves.filter(requested_date__year=current_year)
 
     # Filter by date
     if selected_date:

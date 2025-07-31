@@ -2,6 +2,14 @@ from django.db import models
 from django.contrib.auth.models import User
 from task.models import ticket, priority_type, ticket_type
 
+class status(models.Model):
+   status = models.CharField(max_length=100)
+   def __str__(self):
+        return f"{self.status}"
+   
+def get_default_status():
+    return status.objects.get(status="Request Review").id
+
 
 class worklog(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
@@ -15,6 +23,8 @@ class worklog(models.Model):
     priority = models.ForeignKey(priority_type, on_delete=models.CASCADE, null=True, blank=True)
     category = models.CharField(max_length=100, blank=True)
     week = models.CharField(max_length=100, blank=True)
+    status = models.ForeignKey(status, on_delete=models.CASCADE, default=get_default_status)
+
 
     def __str__(self):
         return f"Worklog - {self.workdone} (User: {self.user})"

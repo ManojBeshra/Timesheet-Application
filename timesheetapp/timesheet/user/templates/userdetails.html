@@ -67,14 +67,28 @@
     <div class="card card-default m-2">
         <div class="container mt-4">
             <div class="row">
-                <!-- Left Column: Profile -->
+
+                <!-- Profile Section -->
                 <div class="col-md-4 text-center">
-                    <img src="{% static 'images/default-profile.png' %}" alt="Profile Picture" class="profile-img mb-3">
+                    {% if profile.profile_picture %}
+                        {% comment %} <img src="{{ profile.profile_picture.url }}" alt="Profile Picture" class="profile-img mb-3" style="max-width: 200px; border-radius: 50%;"> {% endcomment %}
+                        <img src="{{ profile.profile_picture.url }}" alt="Profile Picture" class="profile-img mb-3" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%; border: 2px solid #ccc;">
+                    {% else %}
+                        <img src="{% static 'images/default-profile.png' %}" alt="Default Profile Picture" class="profile-img mb-3" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%; border: 2px solid #ccc;">
+                    {% endif %}
                     <h5>{{ user.first_name }} {{ user.last_name }}</h5>
-                    <p class="text-muted">{{ user.profile.role }}</p>
+                    <p class="text-muted">{{ profile.designation }}</p>
                 </div>
 
-                <!-- Right Column: Details -->
+
+                {% comment %} <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.profile_picture.label_tag }}
+                    {{ form.profile_picture }}
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </form> {% endcomment %}
+
+                <!-- Details -->
                 <div class="col-md-8">
                     <div class="row g-3">
                         <!-- Username -->
@@ -95,17 +109,24 @@
                             <input type="text" class="form-control" value="{{ user.profile.phone }}" readonly>
                         </div>
 
+                        <!-- Address  -->
+                        <div class="col-md-4">
+                            <label class="form-label">Address</label>
+                            <input type="text" class="form-control" value="{{ user.profile.address }}" readonly>
+                        </div>
+
                         <!-- Joined date  -->
                         <div class="col-md-4">
                             <label class="form-label">Joined Date</label>
                             <input type="text" class="form-control" value="{{ joined_date }}" readonly>
                         </div>
 
-                        <!-- Address  -->
+                        <!-- Login Type  -->
                         <div class="col-md-4">
-                            <label class="form-label">Address</label>
-                            <input type="text" class="form-control" value="{{ user.profile.address }}" readonly>
+                            <label class="form-label">Login Type</label>
+                            <input type="text" class="form-control" value="{{ user.profile.login_type }}" readonly>
                         </div>
+                        
 
                         <!-- Enable MFA  -->
                         <div class="col-md-4">
@@ -116,11 +137,7 @@
                             </div>
                         </div>
 
-                        <!-- Login Type  -->
-                        <div class="col-md-4">
-                            <label class="form-label">Login Type</label>
-                            <input type="text" class="form-control" value="{{ user.profile.login_type }}" readonly>
-                        </div>
+                        
                     </div>
                 </div>
             </div>
@@ -128,8 +145,7 @@
     </div>
     
     <!-- Summary Section -->
-    <div class="card card-default m-2">
-        <div class="mt-5">
+    {% comment %} <div class="card card-default m-2">
             <h5 class="mb-3">Summary</h5>
             <div class="row g-3">
 
@@ -203,7 +219,88 @@
                 {% endif %}
 
             </div>
+    </div> {% endcomment %}
+
+
+    <!-- Summary Section -->
+    <div class="card card-default m-2 p-3">
+        <h5 class="mb-4">Summary</h5>
+
+        <!-- First Row -->
+        <div class="row g-4">
+            <div class="col-md-3">
+                {% comment %} <div class="card card-body bg-success text-center text-white"> {% endcomment %}
+                <div class="card card-body text-center text-white">
+                    <h5>Issues Resolved</h5>
+                    <h3>{{ issues_resolved }}</h3>
+                </div>
+            </div>
+            <div class="col-md-3">
+                {% comment %} <div class="card card-body bg-primary text-center"> {% endcomment %}
+                <div class="card card-body text-center">
+                    <h5>Projects Involved</h5>
+                    <h3>{{ projects_involved }}</h3>
+                </div>
+            </div>
+            <div class="col-md-3">
+                {% comment %} <div class="card card-body bg-info text-center text-white"> {% endcomment %}
+                <div class="card card-body text-center text-white">
+                    <h5>Billable Hours</h5>
+                    <h3>{{ billable_hours }}</h3>
+                </div>
+            </div>
+            <div class="col-md-3">
+                {% comment %} <div class="card card-body bg-secondary text-center"> {% endcomment %}
+                <div class="card card-body text-center">
+                    <h5>PTO Taken</h5>
+                    <h3>{{ pto_taken }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Second Row -->
+        <div class="row g-4 mt-1">
+            <div class="col-md-3">
+                {% comment %} <div class="card card-body bg-secondary text-center"> {% endcomment %}
+                <div class="card card-body text-center">
+                    <h5>Unpaid PTO</h5>
+                    <h3>{{ unpaid_leave_days }}</h3>
+                </div>
+            </div>
+
+            {% if profile.salaried == False %}
+                <div class="col-md-3">
+                    {% comment %} <div class="card card-body bg-warning text-center"> {% endcomment %}
+                    <div class="card card-body text-center">
+                        <h5>Hourly Rate</h5>
+                        <h3>{{ profile.wages }}</h3>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    {% comment %} <div class="card card-body bg-warning text-center"> {% endcomment %}
+                    <div class="card card-body text-center">
+                        <h5>Wages this Month</h5>
+                        <h3>{{ totalamount }}</h3>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-md-3">
+                    {% comment %} <div class="card card-body bg-warning text-center"> {% endcomment %}
+                    <div class="card card-body text-center">
+                        <h5>Salary</h5>
+                        <h3>{{ profile.wages }}</h3>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    {% comment %} <div class="card card-body bg-warning text-center"> {% endcomment %}
+                    <div class="card card-body text-center">
+                        <h5>Adjusted Salary</h5>
+                        <h3>{{ adjusted_salary }}</h3>
+                    </div>
+                </div>
+            {% endif %}
         </div>
     </div>
+
 
 {% endblock %}
